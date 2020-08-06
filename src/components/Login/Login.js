@@ -10,6 +10,7 @@ class Login extends Component{
         this.state = {
             username: '',
             password: '',
+            errors: {}
         }
 
         this.handleUsernameChange = this.handleUsernameChange.bind(this)
@@ -31,9 +32,33 @@ class Login extends Component{
         })
     }
 
+    handleValidation(){
+        
+        let errors = {};
+        let formIsValid = true;
+
+        if(this.state.username == ''){
+           formIsValid = false;
+           errors["name"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.password == ''){
+            formIsValid = false;
+            errors["pswd"] = "\u2757Cannot be empty";
+        }
+
+        this.setState({errors: errors});
+
+        return formIsValid;
+    }
+
     handleFormSubmit = event => {
         event.preventDefault()
-        this.props.app_state.handleLoginSubmission(event, this.state)
+
+        if(this.handleValidation()){
+            this.props.app_state.handleLoginSubmission(event, this.state)
+        }
+
     }
 
     render(){
@@ -49,7 +74,10 @@ class Login extends Component{
                 <div>
                     <form onSubmit={this.handleFormSubmit}>
                         <h2> Enter your name here:<input name="username" onChange={this.handleUsernameChange} /></h2> <br/>
+                        <span style={{color: "red"}}>{this.state.errors["name"]}</span>
                         <h2> Enter your password here:<input name="pswd" type="password" onChange={this.handlePasswordChange} /></h2>
+                        <span style={{color: "red"}}>{this.state.errors["pswd"]}</span>
+                        <br/>
                         <button>Login now!</button>
                     </form>
                 </div>

@@ -18,7 +18,8 @@ class Register extends Component{
             email:'',
             phone:'',
             host: false,
-            renter: false
+            renter: false,
+            errors: {}
             //MUST ADD PHOTO AS WELL
         }
 
@@ -96,21 +97,7 @@ class Register extends Component{
         }})
     }
 
-    Password_check = (password, valid_pswd) => {
-        let isValid = true
-        if (password !== valid_pswd) {
-            isValid = false
-        }
-        return isValid;
-    }
-    
-    handleFormSubmit = event => {
-        event.preventDefault()
-        let valid_check = this.Password_check(this.state.password, this.state.validation_pswd)
-        if (valid_check === false){
-            alert('wrong passwords')
-        }
-
+    proceedSubmission(){
         let approval = true
         if(this.state.host){
             approval = false
@@ -146,6 +133,88 @@ class Register extends Component{
                 this.props.history.push("/");
             })
     }
+    
+    handleFormSubmit = event => {
+        event.preventDefault()
+        
+        if(this.handleValidation()){
+            this.proceedSubmission()
+        }
+
+    }
+
+    handleValidation(){
+        
+        let errors = {};
+        let formIsValid = true;
+
+        //Name
+        if(this.state.username == ''){
+           formIsValid = false;
+           errors["name"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.password == ''){
+            formIsValid = false;
+            errors["pswd"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.validation_pswd == ''){
+            formIsValid = false;
+            errors["v_pswd"] = "\u2757Password is not validated";
+        }
+        
+        if(this.state.password !== this.state.validation_pswd){
+            formIsValid = false;
+            errors["v_pswd"] = "\u2757The two password fields are not the same";
+        }
+
+        if(this.state.first_name == ''){
+            formIsValid = false;
+            errors["f_name"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.first_name != ''){
+            if(!this.state.first_name.match(/^[a-zA-Z]+$/)){
+                formIsValid = false;
+                errors["f_name"] = "\u2757Only letters";
+            }        
+        }
+         
+        if(this.state.last_name == ''){
+            formIsValid = false;
+            errors["l_name"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.last_name != ''){
+            if(!this.state.last_name.match(/^[a-zA-Z]+$/)){
+                formIsValid = false;
+                errors["l_name"] = "\u2757Only letters";
+            }
+        }
+
+        if(this.state.email == ''){
+            formIsValid = false;
+            errors["email"] = "\u2757Cannot be empty";
+        }
+
+       
+        if(!this.state.phone.match(/^[0-9]+$/)){
+            formIsValid = false;
+            errors["phone"] = "\u2757Only numbers";
+        }
+
+        if(this.state.host === false && this.state.renter === false){
+            formIsValid = false;
+            errors['role'] = '\u2757Pick at least one role'
+        }
+        
+
+        this.setState({errors: errors});
+
+        return formIsValid;
+    }
+
 
     render(){
 
@@ -159,16 +228,24 @@ class Register extends Component{
 
                 <div>
                     <form onSubmit={this.handleFormSubmit}>
-                        <h5> Enter your name here:<input name="username" onChange={this.handleUsernameChange} /></h5> <br/>
+                        <h5> Enter your name here:<input name="username" onChange={this.handleUsernameChange} /></h5> 
+                        <span style={{color: "red"}}>{this.state.errors["name"]}</span>
                         <h5> Enter your password here:<input name="pswd" type="password" onChange={this.handlePasswordChange} /></h5>
+                        <span style={{color: "red"}}>{this.state.errors["pswd"]}</span>
                         <h5> Please validate your password:<input name="valid_pswd" type="password" onChange={this.handleValidPasswordChange} /></h5>
-                        <h5> Enter your first name here:<input name="fist_name" onChange={this.handleFirstnameChange} /></h5> <br/>
-                        <h5> Enter your last name here:<input name="last_name" onChange={this.handleLastnameChange} /></h5> <br/>
-                        <h5> Enter your email here:<input type="email" name="email" size="30" onChange={this.handleEmailChange}/></h5> <br/>
-                        <h5> Enter your phone here:<input type="tel" name="phone" size="30" onChange={this.handlePhoneChange}/></h5> <br/>
+                        <span style={{color: "red"}}>{this.state.errors["v_pswd"]}</span>
+                        <h5> Enter your first name here:<input name="fist_name" onChange={this.handleFirstnameChange} /></h5> 
+                        <span style={{color: "red"}}>{this.state.errors["f_name"]}</span>
+                        <h5> Enter your last name here:<input name="last_name" onChange={this.handleLastnameChange} /></h5> 
+                        <span style={{color: "red"}}>{this.state.errors["l_name"]}</span>
+                        <h5> Enter your email here:<input type="email" name="email" size="30" onChange={this.handleEmailChange}/></h5> 
+                        <span style={{color: "red"}}>{this.state.errors["email"]}</span>
+                        <h5> Enter your phone here:<input type="tel" name="phone" size="30" onChange={this.handlePhoneChange}/></h5>
+                        <span style={{color: "red"}}>{this.state.errors["phone"]}</span>
                         <h5>Choose your role here. You may choose host or renter or both</h5>
-                        <h5> Host:<input type="checkbox" name="host" onChange={this.handleHostChange}/></h5> <br/>
-                        <h5> Renter:<input type="checkbox" name="renter" onChange={this.handleRenterChange}/></h5> <br/>
+                        <h5> Host:<input type="checkbox" name="host" onChange={this.handleHostChange}/></h5> 
+                        <h5> Renter:<input type="checkbox" name="renter" onChange={this.handleRenterChange}/></h5> 
+                        <span style={{color: "red"}}>{this.state.errors["role"]}</span> <br/>
                         <button>Submit!</button>
                     </form>
                 </div>

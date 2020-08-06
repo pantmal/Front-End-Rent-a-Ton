@@ -8,12 +8,13 @@ import NavbarClass from '../Navbar/Navbar'
 import Register from '../Register/Register'
 import Login from '../Login/Login'
 import Home from '../Home/Home'
-
-import axios from '../AXIOS_conf'
 import EditProfile from '../EditProfile/EditProfile';
 
 
-class AppBase extends Component {
+import axios from '../AXIOS_conf'
+
+
+class App extends Component {
 
   constructor(props){
     super(props);
@@ -22,9 +23,13 @@ class AppBase extends Component {
     if (localStorage.getItem('storage_token')){
       login_check = true
     }
+    let pk_check = null
+    if (localStorage.getItem('storage_pk')){
+      pk_check = localStorage.getItem('storage_pk')
+    }
     this.state = {
       username: '',
-      user_primary_key: localStorage.getItem('storage_pk'),
+      user_primary_key: pk_check,
       isLoggedIn: login_check,
       isAdmin: false,
       isHost: false,
@@ -135,7 +140,9 @@ class AppBase extends Component {
       )
     } 
       ).catch(error => {console.log(error.response);  
-        console.log("Yes, we have an error."); }
+        console.log("Yes, we have an error.");
+        alert('Some kind of error occured, please try again.')
+       }
         ).finally( () => { 
           this.props.history.push("/");
         } )
@@ -143,8 +150,7 @@ class AppBase extends Component {
 
   handleLogoutClick = () => {
     console.log('logout check')
-    localStorage.removeItem('storage_token');
-    localStorage.removeItem('storage_pk');
+    localStorage.clear();
     this.setState({
       username:'',
       user_primary_key: -1,
@@ -176,16 +182,16 @@ class AppBase extends Component {
   }
 }
 
-let AppBaseRouter = withRouter(AppBase)
+/*let AppRouter = withRouter(AppBase)
 
 class App extends Component{
+  
   render(){
-    return(
-      <BrowserRouter>
-        <AppBaseRouter />
-      </BrowserRouter>
-    )
+    return(<BrowserRouter>
+            <AppRouter />
+      </BrowserRouter>)
   }
-}
+  
+}*/
 
-export default App;
+export default withRouter(App)
