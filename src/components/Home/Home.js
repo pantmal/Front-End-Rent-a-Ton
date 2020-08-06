@@ -20,10 +20,9 @@ class Home extends Component{
                 role = 'host'
             }else if(this.props.app_state.isRenter && !this.props.app_state.isHost){
                 role = 'renter'
-                search = <h1> Search form that is coming soon... </h1> 
+                
             }else if(this.props.app_state.isRenter && this.props.app_state.isHost){
                 role = 'host and renter'
-                search = <h1> Search form that is coming soon... </h1> 
             }else{
                 role = 'um...'
             } 
@@ -32,7 +31,10 @@ class Home extends Component{
 
         }else{
             anon_message = <h1> Welcome anon user </h1>
-            search = <h1> Search form that is coming soon... </h1>
+        }
+
+        if(login_check === false || this.props.app_state.isRenter){
+            search = <h1> Search form that is coming soon... </h1> 
         }
 
         return(

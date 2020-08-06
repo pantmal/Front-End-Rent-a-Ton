@@ -118,7 +118,9 @@ class Register extends Component{
         //"{\"username\":[\"A user with that username already exists.\"]}"
         console.log(data)
         axios.post('users/userList/', JSON.stringify(data), {headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `JWT ${localStorage.getItem('storage_token')}`
+        
           }}).then(response => {alert('You have successfully registered! Now proceed to log in at the navigation bar to continue using the application.');
           if (data.is_host){
             alert('Since you have chosen the role of the host you will have to wait until further notice. The admin will activate your account someday')

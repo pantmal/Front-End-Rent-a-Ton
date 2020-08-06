@@ -42,7 +42,10 @@ class EditProfile extends Component{
             alert('You can only edit your own profile')
             this.props.history.push("/")
         }
-        axios.get(`users/userList/${id}`).then( 
+        axios.get(`users/userList/${id}`, {
+            headers: {
+              Authorization: `JWT ${localStorage.getItem('storage_token')}`
+            }}).then( 
             response => {
                 const res_user = response.data
                 //if (this._isMounted){
@@ -120,12 +123,19 @@ class EditProfile extends Component{
             email: this.state.email,
             telephone: this.state.phone
         }
-        
+        /*axios.patch(`users/userList/${id_match}/`, JSON.stringify(data), {headers: {
+            'Content-Type': 'application/json',
+             Authorization: `JWT ${localStorage.getItem('storage_token')}`
+                
+          }}*/
         console.log(data)
         axios.patch(`users/userList/${this.props.app_state.user_primary_key}/`, JSON.stringify(data), {headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+                  Authorization: `JWT ${localStorage.getItem('storage_token')}`
+                
           }}).then(response => {alert('Your changes have been saved. ');  
-            }).catch(error => {console.log(error.response);   
+            }).catch(error => {
+                console.log(error.response);   
                 if(error.response.request.response.includes("A user with that username already exists")){
                     alert('A user with that username already exists. Please fill in the edit form again with another username.')
                 }else{

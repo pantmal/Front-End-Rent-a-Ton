@@ -6,11 +6,8 @@ import './navbar.css'
 
 class NavbarClass extends Component{
 
-    constructor(props){
-        super(props)
-    }
 
-    handleClick = () => {
+    handleNavLogOffClick = () => {
         this.props.app_state.handleLogoutClick();
     }
 
@@ -23,15 +20,15 @@ class NavbarClass extends Component{
             let edit_link
             if (this.props.app_state.isAdmin){
                 role = 'admin'
-                admin_link = <button><span>Admin Page</span></button>
+                admin_link = <Link to={'/adminPage/'}> <button><span>Admin Page</span></button> </Link>
             }else if(this.props.app_state.isHost && !this.props.app_state.isRenter ){
                 role = 'host'
-                host_link = <button><span>Host Page</span></button>
+                host_link = <Link to={'/hostPage/'}> <button><span>Host Page</span></button> </Link>
             }else if(this.props.app_state.isRenter && !this.props.app_state.isHost){
                 role = 'renter'
             }else if(this.props.app_state.isRenter && this.props.app_state.isHost){
                 role = 'host and renter'
-                host_link = <button><span>Host Page</span></button>
+                host_link = <Link to={'/hostPage/'}> <button><span>Host Page</span></button> </Link>
             }else{
                 role = 'um...'
             }
@@ -45,7 +42,7 @@ class NavbarClass extends Component{
                     {admin_link}
                     {host_link}
                     {edit_link}
-                    <button onClick={this.handleClick} ><span>Logout</span></button>
+                    <button onClick={this.handleNavLogOffClick} ><span>Logout</span></button>
                     
                 </nav>
     

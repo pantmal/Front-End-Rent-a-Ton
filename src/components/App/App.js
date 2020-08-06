@@ -9,7 +9,10 @@ import Register from '../Register/Register'
 import Login from '../Login/Login'
 import Home from '../Home/Home'
 import EditProfile from '../EditProfile/EditProfile';
-
+import HostPage from '../HostPage/HostPage';
+import AdminPage from '../AdminPage/AdminPage';
+import UserList from '../UserList/UserList';
+import UserDetail from '../UserDetail/UserDetail';
 
 import axios from '../AXIOS_conf'
 
@@ -46,11 +49,11 @@ class App extends Component {
   
   componentDidMount(){
     if (this.state.isLoggedIn === true){
-      axios.get(`users/userList/${this.state.user_primary_key}`/*,
+      axios.get(`users/userList/${this.state.user_primary_key}`,
       {
         headers: {
           Authorization: `JWT ${localStorage.getItem('storage_token')}`
-        }}*/).then(
+        }}).then(
         response => { const user = response.data;
           this.setState({
             username: user.username
@@ -102,11 +105,11 @@ class App extends Component {
         user_primary_key: res_user.pk,
         isLoggedIn: true,
       });
-      axios.get(`users/userList/${this.state.user_primary_key}`/*,
+      axios.get(`users/userList/${this.state.user_primary_key}`,
       {
         headers: {
           Authorization: `JWT ${localStorage.getItem('storage_token')}`
-        }}*/).then(
+        }}).then(
         response => { const user = response.data;
           if (user.is_staff === true){ 
             this.setState({
@@ -174,6 +177,10 @@ class App extends Component {
           <Route path='/register/' render = {props => <Register {...props} app_state={{...this.state}} />} />
           <Route path='/login/' render = {props => <Login {...props} app_state={{...this.state}}/>} />
           <Route path='/editProfile/:id' render = {props => <EditProfile {...props} app_state={{...this.state}}/>} />
+          <Route path='/adminPage/' render = {props => <AdminPage {...props} app_state={{...this.state}}/>} />
+          <Route path='/userList/' render = {props => <UserList {...props} app_state={{...this.state}}/>} />
+          <Route path='/userDetail/:id' render = {props => <UserDetail {...props} app_state={{...this.state}}/>} />
+          <Route path='/hostPage/' render = {props => <HostPage {...props} app_state={{...this.state}}/>} />
           </Switch>
 
         </div>
