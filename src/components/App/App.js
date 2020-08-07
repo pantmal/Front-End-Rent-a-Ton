@@ -174,7 +174,7 @@ class App extends Component {
       
         <div className = "App">
       
-          <NavbarClass app_state={{...this.state}}/>
+          <NavbarClass {...this.props} app_state={{...this.state}}/>
           <Switch>
           <Route path='/' exact render = {props => <Home {...props} app_state={{...this.state}}/>} /> 
           <Route path='/register/' render = {props => <Register {...props} app_state={{...this.state}} />} />

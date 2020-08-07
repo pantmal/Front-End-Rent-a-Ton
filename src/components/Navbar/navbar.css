@@ -1,9 +1,69 @@
 
 .nav{
     display: flex;
-    justify-content: space-around;
+    /*justify-content: space-around;*/
     align-items: center;
-    min-height: 10vh;
-    background: grey;
-    color: white;
+    min-height: 1vh;
+    background: rgb(102, 101, 102);
+    
+}
+
+.logo{
+    position: relative;
+    left: 100px;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.admin-host{
+    border: none;
+    background-color: rgb(2, 136, 245);
+    position: relative;
+    left: 150px;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.register{
+    border: none;
+    background-color: rgb(2, 136, 245);
+    position: relative;
+    left: 860px;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+    float: right;
+}
+
+.login{
+    border: none;
+    background-color: rgb(2, 136, 245);
+    position: relative;
+    left: 900px;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.edit{
+    border: none;
+    background-color: rgb(255, 255, 255);
+    position: relative;
+    left: 720px;
+    color: black;
+    font-size: 25px;
+    font-family: Arial, Helvetica, sans-serif;
+    float: right;
+}
+
+.logout{
+    border: none;
+    background-color: rgb(2, 136, 245);
+    position: relative;
+    left: 750px;
+    color: rgb(255, 255, 255);
+    font-size: 25px;
+    font-family: Arial, Helvetica, sans-serif;
 }
