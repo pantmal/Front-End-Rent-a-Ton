@@ -56,8 +56,8 @@ class UserDetail extends Component{
         const data_send = {ID: id_match, activation: !this.state.approval}
         axios.post(
             'users/approveUser/', JSON.stringify(data_send), {headers: {
-                'Content-Type': 'application/json'/*,
-            Authorization: `JWT ${localStorage.getItem('storage_token')}`*/
+                'Content-Type': 'application/json',
+                Authorization: `JWT ${localStorage.getItem('storage_token')}`
             }}
         ).then( response => {
             alert('Successfully approved the current host!')

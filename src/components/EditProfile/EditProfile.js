@@ -35,8 +35,12 @@ class EditProfile extends Component{
         this._handleImageChange = this._handleImageChange.bind(this);
     }
 
+    pic_change = false;
+
     _handleImageChange(e) {
         e.preventDefault();
+
+        this.pic_change = true;
     
         let reader = new FileReader();
         let file = e.target.files[0];
@@ -140,26 +144,47 @@ class EditProfile extends Component{
     }
     
     proceedSubmission(){
-        const data = {
-            username: this.state.username,
-            password: this.state.password,
-            first_name: this.state.first_name,
-            last_name: this.state.last_name,
-            email: this.state.email,
-            telephone: this.state.phone,
-            picture: this.state.picture
-        }
 
         const formData = new FormData();
 
-        formData.append("username", data.username);
-        formData.append("password", data.password);
-        formData.append("first_name", data.first_name);
-        formData.append("last_name", data.last_name);
-        formData.append("email", data.email);
-        formData.append("telephone", data.telephone);
-        formData.append("picture", data.picture);
+        if (this.pic_change){
+            const data = {
+                username: this.state.username,
+                password: this.state.password,
+                first_name: this.state.first_name,
+                last_name: this.state.last_name,
+                email: this.state.email,
+                telephone: this.state.phone,
+                picture: this.state.picture
+            }
 
+            formData.append("username", data.username);
+            formData.append("password", data.password);
+            formData.append("first_name", data.first_name);
+            formData.append("last_name", data.last_name);
+            formData.append("email", data.email);
+            formData.append("telephone", data.telephone);
+            formData.append("picture", data.picture);
+
+
+        }else{
+            const data = {
+                username: this.state.username,
+                password: this.state.password,
+                first_name: this.state.first_name,
+                last_name: this.state.last_name,
+                email: this.state.email,
+                telephone: this.state.phone
+            }
+
+            formData.append("username", data.username);
+            formData.append("password", data.password);
+            formData.append("first_name", data.first_name);
+            formData.append("last_name", data.last_name);
+            formData.append("email", data.email);
+            formData.append("telephone", data.telephone);
+
+        }
 
         /*axios.patch(`users/userList/${id_match}/`, JSON.stringify(data), {headers: {
             'Content-Type': 'application/json',
@@ -169,7 +194,7 @@ class EditProfile extends Component{
         console.log(formData)
         axios.patch(`users/userList/${this.props.app_state.user_primary_key}/`, formData, {headers: {
             'Content-Type': 'application/json',
-            /*Authorization: `JWT ${localStorage.getItem('storage_token')}`*/
+            Authorization: `JWT ${localStorage.getItem('storage_token')}`
                 
           }}).then(response => {alert('Your changes have been saved. ');  
             }).catch(error => {
