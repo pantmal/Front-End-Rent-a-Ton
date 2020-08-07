@@ -14,7 +14,7 @@ class UserList extends Component{
         this.state = {
             offset: 0,
             users: [],
-            perPage: 2,
+            perPage: 10,
             currentPage: 0
         };
 
@@ -22,14 +22,15 @@ class UserList extends Component{
     }
 
     receivedData() {
-        axios
-            .get('users/userList/')
+        axios.get('users/userList/')
             .then(res => {
 
+                //check results if picture is null
                 const data = res.data;
                 const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
                 const postData = slice.map(pd => <React.Fragment>
                     <Link to={`/userDetail/${pd.pk}`}> <p>{pd.username}</p> </Link>
+                    <Link to={`/userDetail/${pd.pk}`}><img src={pd.picture} style={{width:250,height: 250}} alt=""/> </Link> <br/>
                     <p>{pd.first_name}</p>
                     <p>{pd.last_name}</p>
                     <p>Approved: {pd.approved?'yes':'no'}</p>

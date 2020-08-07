@@ -28,10 +28,10 @@ class UserDetail extends Component{
     componentDidMount(){
 
         const {id} = this.props.match.params
-        axios.get(`users/userList/${id}`, {
+        axios.get(`users/userList/${id}`/*, {
             headers: {
               Authorization: `JWT ${localStorage.getItem('storage_token')}`
-            }}).then( 
+            }}*/).then( 
             response => {
                 const res_user = response.data
                 //if (this._isMounted){
@@ -56,8 +56,8 @@ class UserDetail extends Component{
         const data_send = {ID: id_match, activation: !this.state.approval}
         axios.post(
             'users/approveUser/', JSON.stringify(data_send), {headers: {
-                'Content-Type': 'application/json',
-                Authorization: `JWT ${localStorage.getItem('storage_token')}`
+                'Content-Type': 'application/json'/*,
+            Authorization: `JWT ${localStorage.getItem('storage_token')}`*/
             }}
         ).then( response => {
             alert('Successfully approved the current host!')

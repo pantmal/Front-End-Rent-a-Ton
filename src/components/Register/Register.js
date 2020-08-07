@@ -19,6 +19,8 @@ class Register extends Component{
             phone:'',
             host: false,
             renter: false,
+            picture: '',
+            imagePreviewUrl: '',
             errors: {}
             //MUST ADD PHOTO AS WELL
         }
@@ -32,8 +34,26 @@ class Register extends Component{
         this.handlePhoneChange = this.handlePhoneChange.bind(this)
         this.handleHostChange = this.handleHostChange.bind(this)
         this.handleRenterChange = this.handleRenterChange.bind(this)
+        this._handleImageChange = this._handleImageChange.bind(this); 
         this.handleFormSubmit = this.handleFormSubmit.bind(this)
     }
+
+    _handleImageChange(e) {
+        e.preventDefault();
+    
+        let reader = new FileReader();
+        let file = e.target.files[0];
+    
+        reader.onloadend = () => {
+          this.setState({
+            picture: file,
+            imagePreviewUrl: reader.result
+          });
+        }
+        
+        console.log(reader.result)
+        reader.readAsDataURL(file)
+      }
 
     handleUsernameChange = event => {
         const form_name = event.target.value
@@ -113,14 +133,28 @@ class Register extends Component{
             telephone: this.state.phone,
             approved: approval,
             is_host: this.state.host,
-            is_renter: this.state.renter
+            is_renter: this.state.renter,
+            picture: this.state.picture
         }
+
+        const formData = new FormData();
+
+        formData.append("username", data.username);
+        formData.append("password", data.password);
+        formData.append("first_name", data.first_name);
+        formData.append("last_name", data.last_name);
+        formData.append("email", data.email);
+        formData.append("telephone", data.telephone);
+        formData.append("is_staff", data.is_staff);
+        formData.append("approved", data.approved);
+        formData.append("is_host", data.is_host);
+        formData.append("is_renter", data.is_renter);
+        formData.append("picture", data.picture);
+
         //"{\"username\":[\"A user with that username already exists.\"]}"
         console.log(data)
-        axios.post('users/userList/', JSON.stringify(data), {headers: {
-            'Content-Type': 'application/json',
-            Authorization: `JWT ${localStorage.getItem('storage_token')}`
-        
+        axios.post('users/userList/', formData, {headers: {
+            'Content-Type': 'application/json'
           }}).then(response => {alert('You have successfully registered! Now proceed to log in at the navigation bar to continue using the application.');
           if (data.is_host){
             alert('Since you have chosen the role of the host you will have to wait until further notice. The admin will activate your account someday')
@@ -220,6 +254,12 @@ class Register extends Component{
 
     render(){
 
+        let {imagePreviewUrl} = this.state;
+        let $imagePreview = null;
+        if (imagePreviewUrl) {
+            $imagePreview = (<img src={imagePreviewUrl} style={{width:500,height: 500}} />);
+        }
+
         let login_check = this.props.app_state.isLoggedIn;
         if (login_check === true){
             return(
@@ -248,6 +288,8 @@ class Register extends Component{
                         <h5> Host:<input type="checkbox" name="host" onChange={this.handleHostChange}/></h5> 
                         <h5> Renter:<input type="checkbox" name="renter" onChange={this.handleRenterChange}/></h5> 
                         <span style={{color: "red"}}>{this.state.errors["role"]}</span> <br/>
+                        {$imagePreview} <br/>
+                        <h5>Choose your picture here: <input type="file" onChange={this._handleImageChange} /> </h5> <br/> <br/>
                         <button>Submit!</button>
                     </form>
                 </div>

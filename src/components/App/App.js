@@ -49,11 +49,11 @@ class App extends Component {
   
   componentDidMount(){
     if (this.state.isLoggedIn === true){
-      axios.get(`users/userList/${this.state.user_primary_key}`,
+      axios.get(`users/userList/${this.state.user_primary_key}`/*,
       {
         headers: {
           Authorization: `JWT ${localStorage.getItem('storage_token')}`
-        }}).then(
+        }}*/).then(
         response => { const user = response.data;
           this.setState({
             username: user.username
@@ -105,11 +105,11 @@ class App extends Component {
         user_primary_key: res_user.pk,
         isLoggedIn: true,
       });
-      axios.get(`users/userList/${this.state.user_primary_key}`,
+      axios.get(`users/userList/${this.state.user_primary_key}`/*,
       {
         headers: {
           Authorization: `JWT ${localStorage.getItem('storage_token')}`
-        }}).then(
+        }}*/).then(
         response => { const user = response.data;
           if (user.is_staff === true){ 
             this.setState({
@@ -153,7 +153,7 @@ class App extends Component {
 
   handleLogoutClick = () => {
     console.log('logout check')
-    localStorage.clear();
+    
     this.setState({
       username:'',
       user_primary_key: -1,
@@ -162,6 +162,9 @@ class App extends Component {
       isHost: false,
       isRenter: false
     })
+    
+    localStorage.clear();
+    
     this.props.history.push("/");
   }
 

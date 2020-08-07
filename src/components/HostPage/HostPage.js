@@ -16,11 +16,11 @@ class HostPage extends Component{
 
     componentDidMount(){
         const id = this.props.app_state.user_primary_key
-        axios.get(`users/userList/${id}`,
+        axios.get(`users/userList/${id}`/*,
       {
         headers: {
           Authorization: `JWT ${localStorage.getItem('storage_token')}`
-        }}).then(response => { const user = response.data;
+        }}*/).then(response => { const user = response.data;
           this.setState({
             approved: user.approved
           })}).catch(error => {console.log(error.response);})
