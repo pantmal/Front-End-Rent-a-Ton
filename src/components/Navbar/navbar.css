@@ -4,9 +4,10 @@
     /*justify-content: space-around;*/
     align-items: center;
     min-height: 1vh;
-    background: rgb(102, 101, 102);
-    
+    background: rgb(102, 101, 102,.5);
 }
+
+/* make buttons or button text smaller. actually just change the fucking font some time. and try to make the bar smaller like Maria said */
 
 .logo{
     position: relative;
@@ -18,52 +19,105 @@
 
 .admin-host{
     border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
     background-color: rgb(2, 136, 245);
     position: relative;
     left: 150px;
+
+    padding-right: 2vh;
+    padding-left: 2vh;
+    padding-bottom: 1vh;
+    
+    margin: 4px 2px;
+
     color: rgb(255, 255, 255);
     font-size: 25px;
+    text-align: center;
     font-family: Arial, Helvetica, sans-serif;
 }
 
 .register{
     border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
     background-color: rgb(2, 136, 245);
     position: relative;
     left: 860px;
+
+    padding-right: 2vh;
+    padding-left: 2vh;
+    padding-bottom: 1vh;
+    
+    margin: 4px 2px;
+    
     color: rgb(255, 255, 255);
     font-size: 25px;
-    font-family: Arial, Helvetica, sans-serif;
-    float: right;
+    text-align: center;
 }
 
 .login{
     border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    
     background-color: rgb(2, 136, 245);
+    
     position: relative;
     left: 900px;
+
+    
+    padding-right: 2vh;
+    padding-left: 2vh;
+    padding-bottom: 1vh;
+    
+    margin: 4px 2px;
+
     color: rgb(255, 255, 255);
+    text-align: center;
     font-size: 25px;
-    font-family: Arial, Helvetica, sans-serif;
+    
 }
 
 .edit{
     border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
     background-color: rgb(255, 255, 255);
     position: relative;
-    left: 720px;
+    left: 700px;
+
+    padding-right: 2vh;
+    padding-left: 2vh;
+    padding-bottom: 1vh;
+    
+    margin: 4px 2px;
+
     color: black;
     font-size: 25px;
     font-family: Arial, Helvetica, sans-serif;
-    float: right;
+    text-align: center;
 }
 
 .logout{
     border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+    padding-right: 2vh;
+    padding-left: 2vh;
+    padding-bottom: 1vh;
+    
+    margin: 4px 2px;
+
     background-color: rgb(2, 136, 245);
     position: relative;
-    left: 750px;
+    left: 720px;
     color: rgb(255, 255, 255);
+    text-align: center;
     font-size: 25px;
     font-family: Arial, Helvetica, sans-serif;
 }

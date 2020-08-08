@@ -3,6 +3,8 @@ import {Component} from 'react';
 
 import {Link} from 'react-router-dom';
 
+import './adminPage.css'
+
 class AdminPage extends Component{
 
     
@@ -20,12 +22,12 @@ class AdminPage extends Component{
         
         if (!permission){
             return(
-                <h1>You can't access this page!</h1>
+                <h1 className="message">You can't access this page!</h1>
             )
         }else{
             return(
                 <div>
-                <h1>Welcome admin. You make click <Link to={'/userList/'}><span>here</span> </Link>  to manage users. If you want to export data choose between XML or JSON format.</h1>   
+                <h1 className="message">Welcome admin. You make click <Link to={'/userList/'}><span>here</span> </Link>  to manage users. If you want to export data choose between XML or JSON format.</h1>   
                 </div>
             )
         }

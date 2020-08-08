@@ -4,6 +4,7 @@ import ImageUploader from 'react-images-upload';
 
 import axios from '../AXIOS_conf'
 
+import './editProfile.css'
 
 class EditProfile extends Component{
     
@@ -290,23 +291,24 @@ class EditProfile extends Component{
 
                 <div>
                     <form onSubmit={this.handleFormSubmit}>
-                        <h5> Update your username here:<input name="username" defaultValue={this.state.username} onChange={this.handleUsernameChange} /></h5>
+                        <h5 className="message-edit"> Update your username here:<input name="username" defaultValue={this.state.username} onChange={this.handleUsernameChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["name"]}</span>
-                        <h5> Enter your new password here, or your previous one if you don't want to update it:<input name="pswd" type="password" onChange={this.handlePasswordChange} /></h5>
+                        <h5 className="message-edit"> Enter your new password here, or your previous one if you don't want to update it:<input name="pswd" type="password" onChange={this.handlePasswordChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["pswd"]}</span>
-                        <h5> Please validate your password:<input name="valid_pswd" type="password" onChange={this.handleValidPasswordChange} /></h5>
+                        <h5 className="message-edit"> Please validate your password:<input name="valid_pswd" type="password" onChange={this.handleValidPasswordChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["v_pswd"]}</span>
-                        <h5> Update your first name here:<input name="fist_name" defaultValue={this.state.first_name} onChange={this.handleFirstnameChange} /></h5> 
+                        <h5 className="message-edit"> Update your first name here:<input name="fist_name" defaultValue={this.state.first_name} onChange={this.handleFirstnameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["f_name"]}</span>
-                        <h5> Update your last name here:<input name="last_name" defaultValue={this.state.last_name} onChange={this.handleLastnameChange} /></h5>
+                        <h5 className="message-edit"> Update your last name here:<input name="last_name" defaultValue={this.state.last_name} onChange={this.handleLastnameChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["l_name"]}</span>
-                        <h5> Update your email here:<input type="email" name="email" size="30" defaultValue={this.state.email} onChange={this.handleEmailChange}/></h5> 
+                        <h5 className="message-edit"> Update your email here:<input type="email" name="email" size="30" defaultValue={this.state.email} onChange={this.handleEmailChange}/></h5> 
                         <span style={{color: "red"}}>{this.state.errors["email"]}</span>
-                        <h5> Update your phone here:<input type="tel" name="phone" size="30" defaultValue={this.state.phone} onChange={this.handlePhoneChange}/></h5> 
+                        <h5 className="message-edit"> Update your phone here:<input type="tel" name="phone" size="30" defaultValue={this.state.phone} onChange={this.handlePhoneChange}/></h5> 
                         <span style={{color: "red"}}>{this.state.errors["phone"]}</span>
                         {$imagePreview} <br/>
-                        <h5>Update your picture here: <input type="file" onChange={this._handleImageChange} /> </h5> <br/> <br/>
-                        <button>Apply changes!</button>
+                        <h5 className="message-edit">Update your picture here: <input type="file" onChange={this._handleImageChange} /> </h5> <br/> <br/>
+                        <button className="apply"><span>Apply changes!</span></button>
+                        <br/>
                     </form>
                 </div>
 

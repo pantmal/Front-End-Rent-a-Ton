@@ -6,3 +6,9 @@ body{
   background-repeat: no-repeat;
   background-size: cover;
 }
+
+.message{
+
+  font-family: "Georgia", serif;
+  color: white;
+}

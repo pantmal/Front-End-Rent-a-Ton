@@ -270,27 +270,27 @@ class Register extends Component{
 
                 <div>
                     <form onSubmit={this.handleFormSubmit}>
-                        <h5> Enter your name here:<input name="username" onChange={this.handleUsernameChange} /></h5> 
+                        <h5 className="message" > Enter your name here:<input name="username" onChange={this.handleUsernameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["name"]}</span>
-                        <h5> Enter your password here:<input name="pswd" type="password" onChange={this.handlePasswordChange} /></h5>
+                        <h5 className="message" > Enter your password here:<input name="pswd" type="password" onChange={this.handlePasswordChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["pswd"]}</span>
-                        <h5> Please validate your password:<input name="valid_pswd" type="password" onChange={this.handleValidPasswordChange} /></h5>
+                        <h5 className="message" > Please validate your password:<input name="valid_pswd" type="password" onChange={this.handleValidPasswordChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["v_pswd"]}</span>
-                        <h5> Enter your first name here:<input name="fist_name" onChange={this.handleFirstnameChange} /></h5> 
+                        <h5 className="message" > Enter your first name here:<input name="fist_name" onChange={this.handleFirstnameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["f_name"]}</span>
-                        <h5> Enter your last name here:<input name="last_name" onChange={this.handleLastnameChange} /></h5> 
+                        <h5 className="message" > Enter your last name here:<input name="last_name" onChange={this.handleLastnameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["l_name"]}</span>
-                        <h5> Enter your email here:<input type="email" name="email" size="30" onChange={this.handleEmailChange}/></h5> 
+                        <h5 className="message" > Enter your email here:<input type="email" name="email" size="30" onChange={this.handleEmailChange}/></h5> 
                         <span style={{color: "red"}}>{this.state.errors["email"]}</span>
-                        <h5> Enter your phone here:<input type="tel" name="phone" size="30" onChange={this.handlePhoneChange}/></h5>
+                        <h5 className="message" > Enter your phone here:<input type="tel" name="phone" size="30" onChange={this.handlePhoneChange}/></h5>
                         <span style={{color: "red"}}>{this.state.errors["phone"]}</span>
-                        <h5>Choose your role here. You may choose host or renter or both</h5>
-                        <h5> Host:<input type="checkbox" name="host" onChange={this.handleHostChange}/></h5> 
-                        <h5> Renter:<input type="checkbox" name="renter" onChange={this.handleRenterChange}/></h5> 
+                        <h5 className="message" >Choose your role here. You may choose host or renter or both</h5>
+                        <h5 className="message" > Host:<input type="checkbox" name="host" onChange={this.handleHostChange}/></h5> 
+                        <h5 className="message" > Renter:<input type="checkbox" name="renter" onChange={this.handleRenterChange}/></h5> 
                         <span style={{color: "red"}}>{this.state.errors["role"]}</span> <br/>
                         {$imagePreview} <br/>
-                        <h5>Choose your picture here: <input type="file" onChange={this._handleImageChange} /> </h5> <br/> <br/>
-                        <button>Submit!</button>
+                        <h5 className="message" >Choose your picture here: <input type="file" onChange={this._handleImageChange} /> </h5> <br/> <br/>
+                        <button className="apply" >Submit!</button>
                     </form>
                 </div>
 

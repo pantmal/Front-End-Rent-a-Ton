@@ -6,6 +6,8 @@ import {Link} from 'react-router-dom';
 
 import axios from '../AXIOS_conf'
 
+import './userList.css'
+
 class UserList extends Component{
 
 
@@ -14,7 +16,7 @@ class UserList extends Component{
         this.state = {
             offset: 0,
             users: [],
-            perPage: 10,
+            perPage: 2,
             currentPage: 0
         };
 
@@ -28,12 +30,17 @@ class UserList extends Component{
                 //check results if picture is null
                 const data = res.data;
                 const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
-                const postData = slice.map(pd => <React.Fragment>
-                    <Link to={`/userDetail/${pd.pk}`}> <p>{pd.username}</p> </Link>
+                const postData = slice.map(pd =>
+                //add a message if it's him!
+                <React.Fragment>
+                    <Link to={`/userDetail/${pd.pk}`}> <p>Username: {pd.username}</p> </Link>
                     <Link to={`/userDetail/${pd.pk}`}><img src={pd.picture} style={{width:250,height: 250}} alt=""/> </Link> <br/>
-                    <p>{pd.first_name}</p>
-                    <p>{pd.last_name}</p>
-                    <p>Approved: {pd.approved?'yes':'no'}</p>
+                    <p className="message">Fist name: {pd.first_name}</p>
+                    <p className="message">Last name: {pd.last_name}</p>
+                    <p className="message"> Admin: {pd.is_staff ? '\u2705':'\u274c'}</p>
+                    <p className="message"> Host: {pd.is_host ? '\u2705':'\u274c'}</p>
+                    <p className="message"> Renter: {pd.is_renter ? '\u2705':'\u274c'}</p>
+                    <p className="message"> Approved: {pd.approved ? '\u2705':'\u274c'}</p>
                     <hr/>
                 </React.Fragment>)
 
@@ -85,6 +92,18 @@ class UserList extends Component{
         }else{
             return (
                 <div>
+                    <ReactPaginate
+                        previousLabel={"Previous"}
+                        nextLabel={"Next"}
+                        breakLabel={"..."}
+                        breakClassName={"break-me"}
+                        pageCount={this.state.pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        containerClassName={"pagination"}
+                        subContainerClassName={"pages pagination"}
+                        activeClassName={"active"}/>
                     {this.state.postData}
                     <ReactPaginate
                         previousLabel={"prev"}
@@ -98,6 +117,7 @@ class UserList extends Component{
                         containerClassName={"pagination"}
                         subContainerClassName={"pages pagination"}
                         activeClassName={"active"}/>
+                    
                 </div>
     
             )

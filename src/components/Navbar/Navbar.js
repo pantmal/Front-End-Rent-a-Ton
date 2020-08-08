@@ -38,7 +38,7 @@ class NavbarClass extends Component{
             return(
         
                 <nav className="nav">
-                    <Link to="/"><h3><span className="logo">Logo</span></h3></Link> 
+                    <Link to="/"><h3><span className="logo">Rent-a-Ton</span></h3></Link> 
                     {admin_link}
                     {host_link}
                     {edit_link}

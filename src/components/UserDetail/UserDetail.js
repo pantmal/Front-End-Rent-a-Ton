@@ -16,6 +16,7 @@ class UserDetail extends Component{
             last_name: '',
             email: '',
             phone: '',
+            picture: '',
             host: false,
             approval: false
             //MUST ADD PHOTO AS WELL
@@ -37,6 +38,7 @@ class UserDetail extends Component{
                 //if (this._isMounted){
                 this.setState({
                     username: res_user.username,
+                    picture: res_user.picture,
                     first_name: res_user.first_name,
                     last_name: res_user.last_name,
                     email: res_user.email,
@@ -89,23 +91,24 @@ class UserDetail extends Component{
         let button_obj
         
         if(this.state.host){
-            button_string = this.state.approval ? "Deactivate" : "Approve"
-            button_obj = <button onClick={this.handleApprovalChange}>{button_string}</button>
+            button_string = this.state.approval ? "Deactivate this host" : "Approve this host"
+            button_obj = <button className="apply" onClick={this.handleApprovalChange}>{button_string}</button>
         }
         
         if (!permission){
             return(
-                <h1>You can't access this page!</h1>
+                <h1 className="message">You can't access this page!</h1>
             )
         }else{
             return(
                 <div>
-                <div>{this.state.username}</div>    
-                <div>{this.state.first_name}</div>    
-                <div>{this.state.last_name}</div>    
-                <div>{this.state.email}</div>    
-                <div>{this.state.phone}</div>    
-                {button_obj}        
+                    <div className="message">Username: {this.state.username}</div> <br/>
+                    <div className="message">Profile picture: <img src={this.state.picture} style={{width:500,height: 500}} /> </div> <br/>
+                    <div className="message">First name: {this.state.first_name}</div>  <br/>  
+                    <div className="message">Last name: {this.state.last_name}</div>   <br/> 
+                    <div className="message">Email: {this.state.email}</div>   <br/> 
+                    <div className="message">Phone: {this.state.phone}</div>   <br/> 
+                    {button_obj}        
                 </div>
             )
         }

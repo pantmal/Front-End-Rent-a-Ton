@@ -28,14 +28,14 @@ class Home extends Component{
                 role = 'um...'
             } 
 
-            user_message = <h1> Congrats you are loggin in as {role} </h1>       
+            user_message = <h1 className="message"> <span> Congrats you are loggin in as {role} </span> </h1>       
 
         }else{
-            anon_message = <h1> Welcome anon user </h1>
+            anon_message = <h1 className="message"> Welcome anon user </h1>
         }
 
         if(login_check === false || this.props.app_state.isRenter){
-            search = <h1> Search form that is coming soon... </h1> 
+            search = <h1 className="message"> Search form that is coming soon... </h1> 
         }
 
         return(
