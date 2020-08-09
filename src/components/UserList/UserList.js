@@ -8,6 +8,8 @@ import axios from '../AXIOS_conf'
 
 import './userList.css'
 
+//CSS note: change view
+
 class UserList extends Component{
 
 
@@ -33,8 +35,8 @@ class UserList extends Component{
                 const postData = slice.map(pd =>
                 //add a message if it's him!
                 <React.Fragment>
-                    <Link to={`/userDetail/${pd.pk}`}> <p>Username: {pd.username}</p> </Link>
-                    <Link to={`/userDetail/${pd.pk}`}><img src={pd.picture} style={{width:250,height: 250}} alt=""/> </Link> <br/>
+                    <Link to={`/userList/${pd.pk}`}> <p>Username: {pd.username}</p> </Link>
+                    <Link to={`/userList/${pd.pk}`}><img src={pd.picture} style={{width:250,height: 250}} alt=""/> </Link> <br/>
                     <p className="message">Fist name: {pd.first_name}</p>
                     <p className="message">Last name: {pd.last_name}</p>
                     <p className="message"> Admin: {pd.is_staff ? '\u2705':'\u274c'}</p>
@@ -87,7 +89,7 @@ class UserList extends Component{
         
         if (!permission){
             return(
-                <h1>You can't access this page!</h1>
+                <h1 className="message">You can't access this page!</h1>
             )
         }else{
             return (

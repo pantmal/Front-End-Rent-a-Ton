@@ -316,7 +316,7 @@ class EditProfile extends Component{
             
         }else{
             return(
-                <h1>You can't edit profile as an anonymous user!</h1>
+                <h1 className="message" >You can't edit profile as an anonymous user!</h1>
             )
         }
     }

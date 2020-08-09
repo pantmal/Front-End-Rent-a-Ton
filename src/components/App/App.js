@@ -181,8 +181,8 @@ class App extends Component {
           <Route path='/login/' render = {props => <Login {...props} app_state={{...this.state}}/>} />
           <Route path='/editProfile/:id' render = {props => <EditProfile {...props} app_state={{...this.state}}/>} />
           <Route path='/adminPage/' render = {props => <AdminPage {...props} app_state={{...this.state}}/>} />
-          <Route path='/userList/' render = {props => <UserList {...props} app_state={{...this.state}}/>} />
-          <Route path='/userDetail/:id' render = {props => <UserDetail {...props} app_state={{...this.state}}/>} />
+          <Route path='/userList/' exact render = {props => <UserList {...props} app_state={{...this.state}}/>} />
+          <Route path='/userList/:id' render = {props => <UserDetail {...props} app_state={{...this.state}}/>} />
           <Route path='/hostPage/' render = {props => <HostPage {...props} app_state={{...this.state}}/>} />
           </Switch>
 

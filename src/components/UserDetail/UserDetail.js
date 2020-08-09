@@ -5,6 +5,8 @@ import {Link, Route} from 'react-router-dom';
 
 import axios from '../AXIOS_conf'
 
+//CSS note: change view
+
 class UserDetail extends Component{
 
     constructor(props){
