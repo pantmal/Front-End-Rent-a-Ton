@@ -235,7 +235,7 @@ class Register extends Component{
         }
 
        
-        if(!this.state.phone.match(/^[0-9]+$/)){
+        if(!this.state.phone.match(/^[0-9]+$/)){ //forgot some stuff here lol
             formIsValid = false;
             errors["phone"] = "\u2757Only numbers";
         }
