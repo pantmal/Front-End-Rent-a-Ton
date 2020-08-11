@@ -19,7 +19,8 @@ class UserList extends Component{
             offset: 0,
             users: [],
             perPage: 2,
-            currentPage: 0
+            currentPage: 0,
+            receivedData: this.receivedData
         };
 
         this.handlePageClick = this.handlePageClick.bind(this);
@@ -31,6 +32,15 @@ class UserList extends Component{
 
                 //check results if picture is null
                 const data = res.data;
+                /*let count = 0
+                const price_data = data.map(d =>
+                    (
+                    { ...d,
+                    price: count+=1
+                    }
+                    )
+                    )
+                */
                 const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
                 const postData = slice.map(pd =>
                 //add a message if it's him!
@@ -48,11 +58,11 @@ class UserList extends Component{
 
                 this.setState({
                     pageCount: Math.ceil(data.length / this.state.perPage),
-                   
                     postData
                 })
             });
     }
+
 
     handlePageClick = (e) => {
         const selectedPage = e.selected;
@@ -60,9 +70,8 @@ class UserList extends Component{
 
         this.setState({
             currentPage: selectedPage,
-            offset: offset
-        }, () => {
-            this.receivedData()
+            offset: offset,
+            receivedData: this.receivedData()
         });
 
     };
@@ -71,9 +80,6 @@ class UserList extends Component{
         this.receivedData()
     }
     
-        
-    
-
     
     render(){
 
@@ -92,34 +98,31 @@ class UserList extends Component{
                 <h1 className="message">You can't access this page!</h1>
             )
         }else{
+
+            let paginate = 
+                
+                <ReactPaginate
+                            previousLabel={"Previous"}
+                            nextLabel={"Next"}
+                            breakLabel={"..."}
+                            breakClassName={"break-me"}
+                            pageCount={this.state.pageCount}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={this.handlePageClick}
+                            containerClassName={"pagination"}
+                            subContainerClassName={"pages pagination"}
+                            activeClassName={"active"}
+                            forcePage={this.state.currentPage}
+                />
+            
+            
+            
             return (
                 <div>
-                    <ReactPaginate
-                        previousLabel={"Previous"}
-                        nextLabel={"Next"}
-                        breakLabel={"..."}
-                        breakClassName={"break-me"}
-                        pageCount={this.state.pageCount}
-                        marginPagesDisplayed={2}
-                        pageRangeDisplayed={5}
-                        onPageChange={this.handlePageClick}
-                        containerClassName={"pagination"}
-                        subContainerClassName={"pages pagination"}
-                        activeClassName={"active"}/>
+                    {paginate}
                     {this.state.postData}
-                    <ReactPaginate
-                        previousLabel={"prev"}
-                        nextLabel={"next"}
-                        breakLabel={"..."}
-                        breakClassName={"break-me"}
-                        pageCount={this.state.pageCount}
-                        marginPagesDisplayed={2}
-                        pageRangeDisplayed={5}
-                        onPageChange={this.handlePageClick}
-                        containerClassName={"pagination"}
-                        subContainerClassName={"pages pagination"}
-                        activeClassName={"active"}/>
-                    
+                    {paginate}
                 </div>
     
             )

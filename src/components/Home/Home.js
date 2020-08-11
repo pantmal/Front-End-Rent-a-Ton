@@ -184,6 +184,11 @@ class Home extends Component{
 
     proceedSubmission(){
         console.log(this.state)
+
+        let search_values
+        search_values = `hood=${this.state.hood}&city=${this.state.city}&country=${this.state.country}&start_date=${this.state.s_date}&end_date=${this.state.e_date}&people=${this.state.people}`
+
+        this.props.history.push({pathname:'/search/', search: search_values})
     }
     
     render(){

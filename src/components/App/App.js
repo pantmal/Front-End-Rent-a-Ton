@@ -13,6 +13,7 @@ import HostPage from '../HostPage/HostPage';
 import AdminPage from '../AdminPage/AdminPage';
 import UserList from '../UserList/UserList';
 import UserDetail from '../UserDetail/UserDetail';
+import Search from '../Search/Search';
 
 import axios from '../AXIOS_conf'
 
@@ -184,6 +185,7 @@ class App extends Component {
           <Route path='/userList/' exact render = {props => <UserList {...props} app_state={{...this.state}}/>} />
           <Route path='/userList/:id' render = {props => <UserDetail {...props} app_state={{...this.state}}/>} />
           <Route path='/hostPage/' render = {props => <HostPage {...props} app_state={{...this.state}}/>} />
+          <Route path='/search/:parameters?' render = {props => <Search {...props} app_state={{...this.state}}/>} />
           </Switch>
 
         </div>
