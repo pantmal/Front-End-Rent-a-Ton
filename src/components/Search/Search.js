@@ -6,6 +6,8 @@ import queryString from 'query-string'
 
 import axios from '../AXIOS_conf'
 
+import './search.css'
+
 class Search extends Component{
 
     constructor(props){
@@ -23,13 +25,87 @@ class Search extends Component{
             people: search_values.people,
             offset: 0,
             users: [],
-            perPage: 10,
+            perPage: 1,
             currentPage: 0,
             not_found: false,
+            room_type: '',
+            max_price: '',
+            wifi: false,
+            freezer: false,
+            heating: false,
+            kitchen: false,
+            TV: false,
+            parking: false,
+            elevator: false,
             receivedData: this.receivedData
         }
 
         this.handlePageClick = this.handlePageClick.bind(this);
+        this.handleRadioChange = this.handleRadioChange.bind(this);
+        this.handleMaxPriceChange = this.handleMaxPriceChange.bind(this);
+        this.handleWiFiChange = this.handleWiFiChange.bind(this);
+        this.handleFreezerChange = this.handleFreezerChange.bind(this);
+        this.handleHeatingChange = this.handleHeatingChange.bind(this);
+        this.handleKitchenChange = this.handleKitchenChange.bind(this);
+        this.handleTVChange = this.handleTVChange.bind(this);
+        this.handleParkingChange = this.handleParkingChange.bind(this);
+        this.handleElevatorChange = this.handleElevatorChange.bind(this);
+    }
+
+    handleRadioChange = (event) => {
+        this.setState({
+          room_type: event.target.value
+        });
+    }
+
+    handleMaxPriceChange = event => {
+        const form_price = event.target.value
+        this.setState({
+            max_price: form_price
+        })
+    }
+
+
+    handleWiFiChange = event => {
+        this.setState(prevState => {return{
+            wifi: !prevState.wifi
+        }})
+    }
+
+    handleFreezerChange = event => {
+        this.setState(prevState => {return{
+            freezer: !prevState.freezer
+        }})
+    }
+
+    handleHeatingChange = event => {
+        this.setState(prevState => {return{
+            heating: !prevState.heating
+        }})
+    }
+    
+    handleKitchenChange = event => {
+        this.setState(prevState => {return{
+            kitchen: !prevState.kitchen
+        }})
+    }
+
+    handleTVChange = event => {
+        this.setState(prevState => {return{
+            TV: !prevState.TV
+        }})
+    }
+
+    handleParkingChange = event => {
+        this.setState(prevState => {return{
+            parking: !prevState.parking
+        }})
+    }
+    
+    handleElevatorChange = event => {
+        this.setState(prevState => {return{
+            elevator: !prevState.elevator
+        }})
     }
 
     
@@ -48,16 +124,16 @@ class Search extends Component{
 
                 //check results if picture is null
                 const data = res.data;
-                /*let count = 0
+                let count = 0
                 const price_data = data.map(d =>
-                    (
-                    { ...d,
-                    price: count+=1
-                    }
+                    ({ ...d,
+                    total_price: d.price + ((this.state.people-1) * d.price_per_person)})
                     )
-                    )
-                */
-                const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
+                
+                
+                price_data.sort( (a, b) => parseFloat(a.total_price) - parseFloat(b.total_price) )
+                console.log(price_data)
+                const slice = price_data.slice(this.state.offset, this.state.offset + this.state.perPage)
                 console.log(slice)
                 const postData = slice.map(pd =>
                 //add a message if it's him!
@@ -94,6 +170,51 @@ class Search extends Component{
         });
 
     };
+
+    handleExtraFormSubmit = event => {
+        event.preventDefault()
+
+        let search_values
+        search_values = `${this.props.location.search}`
+
+        if(this.state.room_type !== ''){
+            search_values += `&type=${this.state.room_type}`
+        }
+
+        if(this.state.max_price !== ''){
+            search_values += `&max_price=${this.state.max_price}`
+        }
+
+        if(this.state.wifi !== false){
+            search_values += `&wifi=${this.state.wifi}`
+        }
+
+        if(this.state.freezer !== false){
+            search_values += `&freezer=${this.state.freezer}`
+        }
+
+        if(this.state.heating !== false){
+            search_values += `&heating=${this.state.heating}`
+        }
+
+        if(this.state.kitchen !== false){
+            search_values += `&kitchen=${this.state.kitchen}`
+        }
+
+        if(this.state.TV !== false){
+            search_values += `&TV=${this.state.TV}`
+        }
+
+        if(this.state.parking !== false){
+            search_values += `&max_price=${this.state.parking}`
+        }
+
+        if(this.state.elevator !== false){
+            search_values += `&elevator=${this.state.elevator}`
+        }
+
+        console.log(search_values)
+    }
 
 
     render(){
@@ -132,6 +253,44 @@ class Search extends Component{
                 
                 return(
                     <div>
+                        <h1 className="message"> You may include additional filters here: </h1>
+                            
+                            <form onSubmit={this.handleExtraFormSubmit}>
+                            <div className="radio">
+                            <h5 className="message"> Choose room type here:</h5> 
+                            <h5 className="message">Private Room<input type="radio" value="Private_room" name="room_type" checked={this.state.room_type === "Private_room"} onChange={this.handleRadioChange}/>  </h5>
+                            <h5 className="message">Shared Room <input type="radio" value="Shared_room" name="room_type"  checked={this.state.room_type === "Shared_room"} onChange={this.handleRadioChange}/> </h5>
+                            <h5 className="message">Entire home/apt <input type="radio" value="Entire_home/apt" name="room_type" checked={this.state.room_type === "Entire_home/apt"} onChange={this.handleRadioChange} /> </h5>
+                            </div>
+                            <div className="price">
+                            <h5 className="message"> Enter max price here:<input name="max_price" onChange={this.handleMaxPriceChange} /></h5>
+                            </div>
+                            <div className="wifi">
+                            <h5 className="message" > WiFi:<input type="checkbox" name="WiFi" onChange={this.handleWiFiChange}/></h5> 
+                            </div>
+                            <div className="freezer">
+                            <h5 className="message" > Freezer:<input type="checkbox" name="Freezer" onChange={this.handleFreezerChange}/></h5> 
+                            </div>
+                            <div className="heating">
+                            <h5 className="message" > Heating:<input type="checkbox" name="Heating" onChange={this.handleHeatingChange}/></h5> 
+                            </div>
+                            <div className="kitchen">
+                            <h5 className="message" > Kitchen:<input type="checkbox" name="Kitchen" onChange={this.handleKitchenChange}/></h5> 
+                            </div>
+                            <div className="tv">
+                            <h5 className="message" > TV:<input type="checkbox" name="TV" onChange={this.handleTVChange}/></h5> 
+                            </div>
+                            <div className="parking">
+                            <h5 className="message" > Parking:<input type="checkbox" name="Parking" onChange={this.handleParkingChange}/></h5> 
+                            </div>
+                            <div className="elevator">
+                            <h5 className="message" > Elevator:<input type="checkbox" name="Elevator" onChange={this.handleElevatorChange}/></h5> 
+                            </div>
+                            <br/>
+                            
+                            <button className="apply-with">Search with additional filters</button>
+                    </form>
+
                         {paginate}
                         {this.state.postData}
                         {paginate}
