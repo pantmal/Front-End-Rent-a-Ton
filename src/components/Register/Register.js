@@ -22,7 +22,6 @@ class Register extends Component{
             picture: '',
             imagePreviewUrl: '',
             errors: {}
-            //MUST ADD PHOTO AS WELL
         }
 
         this.handleUsernameChange = this.handleUsernameChange.bind(this)

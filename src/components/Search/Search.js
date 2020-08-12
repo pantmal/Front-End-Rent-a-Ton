@@ -270,7 +270,7 @@ class Search extends Component{
             search_values += `&type=${this.state.room_type}`
         }
 
-        if(this.state.max_price !== '' ){
+        if(this.state.max_price !== '' ){ //maybe some changes needed here
             search_values += `&max_price=${this.state.max_price}`
         }
 
