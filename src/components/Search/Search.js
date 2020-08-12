@@ -1,6 +1,7 @@
 import React from 'react';
 import {Component} from 'react';
 import ReactPaginate from 'react-paginate';
+import { useHistory } from 'react-router'
 
 import queryString from 'query-string'
 
@@ -14,6 +15,62 @@ class Search extends Component{
         super(props)
 
         const search_values = queryString.parse(this.props.location.search)
+
+        let ext_search = false
+
+        let room_type = ''
+        if (search_values.type!=null){
+            room_type = search_values.type
+            ext_search = true
+        }
+        
+        let max_price = ''
+        if (search_values.max_price!=null){
+            max_price = search_values.max_price
+            ext_search = true
+        }
+
+        let wifi = false
+        if (search_values.wifi!=null){
+            wifi = search_values.wifi
+            ext_search = true
+        }
+
+        let freezer = false
+        if (search_values.freezer!=null){
+            freezer = search_values.freezer
+            ext_search = true
+        }
+
+        let heating = false
+        if (search_values.heating!=null){
+            heating = search_values.heating
+            ext_search = true
+        }
+
+        let kitchen = false
+        if (search_values.kitchen!=null){
+            kitchen = search_values.kitchen
+            ext_search = true
+        }
+
+        let TV = false
+        if (search_values.TV!=null){
+            TV = search_values.TV
+            ext_search = true
+        }
+
+        let parking = false
+        if (search_values.parking!=null){
+            parking = search_values.parking
+            ext_search = true
+        }
+
+        let elevator = false
+        if (search_values.elevator!=null){
+            elevator = search_values.elevator
+            ext_search = true
+        }
         
 
         this.state = {
@@ -28,15 +85,16 @@ class Search extends Component{
             perPage: 1,
             currentPage: 0,
             not_found: false,
-            room_type: '',
-            max_price: '',
-            wifi: false,
-            freezer: false,
-            heating: false,
-            kitchen: false,
-            TV: false,
-            parking: false,
-            elevator: false,
+            room_type: room_type,
+            max_price: max_price,
+            wifi: wifi,
+            freezer: freezer,
+            heating: heating,
+            kitchen: kitchen,
+            TV: TV,
+            parking: parking,
+            elevator: elevator,
+            ext_search: ext_search,
             receivedData: this.receivedData
         }
 
@@ -110,7 +168,38 @@ class Search extends Component{
 
     
     receivedData() {
-        axios.post('/rooms/search/',JSON.stringify(this.state), {headers: { //change the data being sent
+
+        let data 
+        if (this.state.ext_search === false){ //this shit is wrong (kinda)
+            data = {
+                hood: this.state.hood,
+                city: this.state.city,
+                country: this.state.country,
+                s_date: this.state.s_date,
+                e_date: this.state.e_date,
+                people: this.state.people
+            }
+        }else{
+            data = {
+                hood: this.state.hood,
+                city: this.state.city,
+                country: this.state.country,
+                s_date: this.state.s_date,
+                e_date: this.state.e_date,
+                people: this.state.people,
+                room_type: this.state.room_type,
+                max_price: this.state.max_price,
+                wifi: this.state.wifi,
+                freezer: this.state.freezer,
+                heating: this.state.heating,
+                kitchen: this.state.kitchen,   
+                TV: this.state.TV,
+                parking: this.state.parking,
+                elevator: this.state.elevator
+            }
+        }
+
+        axios.post('/rooms/search/',JSON.stringify(data), {headers: { //change the data being sent
             'Content-Type': 'application/json'
           }})
             .then(res => {
@@ -175,45 +264,50 @@ class Search extends Component{
         event.preventDefault()
 
         let search_values
-        search_values = `${this.props.location.search}`
-
-        if(this.state.room_type !== ''){
+        search_values = `hood=${this.state.hood}&city=${this.state.city}&country=${this.state.country}&start_date=${this.state.s_date}&end_date=${this.state.e_date}&people=${this.state.people}`
+        
+        if(this.state.room_type !== '' ){
             search_values += `&type=${this.state.room_type}`
         }
 
-        if(this.state.max_price !== ''){
+        if(this.state.max_price !== '' ){
             search_values += `&max_price=${this.state.max_price}`
         }
 
-        if(this.state.wifi !== false){
+        if(this.state.wifi !== false ){
             search_values += `&wifi=${this.state.wifi}`
         }
 
-        if(this.state.freezer !== false){
+        if(this.state.freezer !== false ){
             search_values += `&freezer=${this.state.freezer}`
         }
 
-        if(this.state.heating !== false){
+        if(this.state.heating !== false ){
             search_values += `&heating=${this.state.heating}`
         }
 
-        if(this.state.kitchen !== false){
+        if(this.state.kitchen !== false ){
             search_values += `&kitchen=${this.state.kitchen}`
         }
 
-        if(this.state.TV !== false){
+        if(this.state.TV !== false ){
             search_values += `&TV=${this.state.TV}`
         }
 
-        if(this.state.parking !== false){
-            search_values += `&max_price=${this.state.parking}`
+        if(this.state.parking !== false ){
+            search_values += `&parking=${this.state.parking}`
         }
 
-        if(this.state.elevator !== false){
+        if(this.state.elevator !== false ){
             search_values += `&elevator=${this.state.elevator}`
         }
 
         console.log(search_values)
+     
+        this.props.history.push({pathname:'/search/', search: search_values})
+        window.location.reload();
+        
+                
     }
 
 
@@ -263,28 +357,28 @@ class Search extends Component{
                             <h5 className="message">Entire home/apt <input type="radio" value="Entire_home/apt" name="room_type" checked={this.state.room_type === "Entire_home/apt"} onChange={this.handleRadioChange} /> </h5>
                             </div>
                             <div className="price">
-                            <h5 className="message"> Enter max price here:<input name="max_price" onChange={this.handleMaxPriceChange} /></h5>
+                            <h5 className="message"> Enter max price here:<input name="max_price" defaultValue={this.state.max_price} onChange={this.handleMaxPriceChange} /></h5>
                             </div>
                             <div className="wifi">
-                            <h5 className="message" > WiFi:<input type="checkbox" name="WiFi" onChange={this.handleWiFiChange}/></h5> 
+                            <h5 className="message" > WiFi:<input type="checkbox" name="WiFi" defaultChecked={this.state.wifi} onChange={this.handleWiFiChange}/></h5> 
                             </div>
                             <div className="freezer">
-                            <h5 className="message" > Freezer:<input type="checkbox" name="Freezer" onChange={this.handleFreezerChange}/></h5> 
+                            <h5 className="message" > Freezer:<input type="checkbox" name="Freezer" defaultChecked={this.state.freezer} onChange={this.handleFreezerChange}/></h5> 
                             </div>
                             <div className="heating">
-                            <h5 className="message" > Heating:<input type="checkbox" name="Heating" onChange={this.handleHeatingChange}/></h5> 
+                            <h5 className="message" > Heating:<input type="checkbox" name="Heating" defaultChecked={this.state.heating} onChange={this.handleHeatingChange}/></h5> 
                             </div>
                             <div className="kitchen">
-                            <h5 className="message" > Kitchen:<input type="checkbox" name="Kitchen" onChange={this.handleKitchenChange}/></h5> 
+                            <h5 className="message" > Kitchen:<input type="checkbox" name="Kitchen" defaultChecked={this.state.kitchen} onChange={this.handleKitchenChange}/></h5> 
                             </div>
                             <div className="tv">
-                            <h5 className="message" > TV:<input type="checkbox" name="TV" onChange={this.handleTVChange}/></h5> 
+                            <h5 className="message" > TV:<input type="checkbox" name="TV" defaultChecked={this.state.TV} onChange={this.handleTVChange}/></h5> 
                             </div>
                             <div className="parking">
-                            <h5 className="message" > Parking:<input type="checkbox" name="Parking" onChange={this.handleParkingChange}/></h5> 
+                            <h5 className="message" > Parking:<input type="checkbox" name="Parking" defaultChecked={this.state.parking} onChange={this.handleParkingChange}/></h5> 
                             </div>
                             <div className="elevator">
-                            <h5 className="message" > Elevator:<input type="checkbox" name="Elevator" onChange={this.handleElevatorChange}/></h5> 
+                            <h5 className="message" > Elevator:<input type="checkbox" name="Elevator" defaultChecked={this.state.elevator} onChange={this.handleElevatorChange}/></h5> 
                             </div>
                             <br/>
                             
