@@ -170,7 +170,7 @@ class Search extends Component{
     receivedData() {
 
         let data 
-        if (this.state.ext_search === false){ //this shit is wrong (kinda)
+        if (this.state.ext_search === false){ 
             data = {
                 hood: this.state.hood,
                 city: this.state.city,
@@ -199,7 +199,7 @@ class Search extends Component{
             }
         }
 
-        axios.post('/rooms/search/',JSON.stringify(data), {headers: { //change the data being sent
+        axios.post('/rooms/search/',JSON.stringify(data), {headers: { 
             'Content-Type': 'application/json'
           }})
             .then(res => {

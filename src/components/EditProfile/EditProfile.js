@@ -22,7 +22,6 @@ class EditProfile extends Component{
             picture: '',
             imagePreviewUrl:'',
             errors: {}
-            //MUST ADD PHOTO AS WELL
         }
 
         this.handleUsernameChange = this.handleUsernameChange.bind(this)
@@ -58,9 +57,6 @@ class EditProfile extends Component{
       }
     
 
-
-    _isMounted = false;
-
     componentDidMount(){
 
         this._isMounted = true;
@@ -76,7 +72,6 @@ class EditProfile extends Component{
             }}*/).then( 
             response => {
                 const res_user = response.data
-                //if (this._isMounted){
                 this.setState({
                     username: res_user.username,
                     first_name: res_user.first_name,
@@ -85,15 +80,10 @@ class EditProfile extends Component{
                     phone: res_user.telephone,
                     picture: res_user.picture,
                     imagePreviewUrl: res_user.picture
-                    //MUST ADD PHOTO AS WELL
                 })
             }
         )
     }
-
-    //componentWillUnmount(){
-    //    this._isMounted = false;
-    //}
 
     handleUsernameChange = event => {
         const form_name = event.target.value
@@ -212,7 +202,7 @@ class EditProfile extends Component{
         let errors = {};
         let formIsValid = true;
 
-        //Name
+
         if(this.state.username == ''){
            formIsValid = false;
            errors["name"] = "\u2757Cannot be empty";

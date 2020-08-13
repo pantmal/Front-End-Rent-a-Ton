@@ -1,7 +1,14 @@
+// @flow
 import React from 'react';
 import {Component} from 'react';
 
 import axios from '../AXIOS_conf'
+//import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+import styled from 'styled-components'
+
+import Map from './Map.js'
 
 
 class HostPage extends Component{
@@ -14,6 +21,8 @@ class HostPage extends Component{
             name: '',
             street: '',
             hood: '',
+            city:'',
+            country:'',
             transit: '',
             s_date: '',
             e_date: '',
@@ -40,12 +49,19 @@ class HostPage extends Component{
             pets: false,
             events: false,
             min_nights: '',
+            lat: '',
+            lng: '',
+            handleGeoChange: this.handleGeoChange,
+            files: [],
+            imagesPreviewUrls: [],
             errors: {}
         }
 
         this.handleNameChange = this.handleNameChange.bind(this)
         this.handleAddressChange = this.handleAddressChange.bind(this)
         this.handleHoodChange = this.handleHoodChange.bind(this)
+        this.handleCityChange = this.handleCityChange.bind(this)
+        this.handleCountryChange = this.handleCountryChange.bind(this)
         this.handleTransitChange = this.handleTransitChange.bind(this)
         this.handleStartDateChange = this.handleStartDateChange.bind(this) 
         this.handleEndDateChange = this.handleEndDateChange.bind(this)
@@ -72,11 +88,46 @@ class HostPage extends Component{
         this.handleEventsChange = this.handleEventsChange.bind(this)
         this.handleMinNightsChange = this.handleMinNightsChange.bind(this)
         this.handleFormSubmit = this.handleFormSubmit.bind(this)
-
+        this.handleGeoChange = this.handleGeoChange.bind(this)
+        this._handleMultipleImageChange = this._handleMultipleImageChange.bind(this)
 
     }
 
+    _handleMultipleImageChange = e =>{
+        e.preventDefault();
+
+        // FileList to Array
+        let files = Array.from(e.target.files);
+
+        // File Reader for Each file and and update state arrays
+        files.forEach((file, i) => {
+            let reader = new FileReader();
+
+            reader.onloadend = () => {
+                this.setState(prevState => ({
+                    files: [...prevState.files, file],
+                    imagesPreviewUrls: [...prevState.imagesPreviewUrls, reader.result]
+                }));
+            }
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+
+    handleGeoChange = (landscape) => {
+        this.setState({
+                     lat: landscape.lat,
+                     lng: landscape.lng
+                 })
+        console.log(this.state)
+    }
+    
+
     componentDidMount(){
+
+        
+        
         const id = this.props.app_state.user_primary_key
         axios.get(`users/userList/${id}`/*,
       {
@@ -106,6 +157,20 @@ class HostPage extends Component{
         const form_hood = event.target.value
         this.setState({
             hood: form_hood
+        })
+    }
+
+    handleCityChange = event => {
+        const form_city = event.target.value
+        this.setState({
+            city: form_city
+        })
+    }
+
+    handleCountryChange = event => {
+        const form_country = event.target.value
+        this.setState({
+            country: form_country
         })
     }
 
@@ -282,7 +347,7 @@ class HostPage extends Component{
         })
     }
 
-    handleValidation(){
+    handleValidation(){ // validation  remaining
         
         return true
     }
@@ -298,6 +363,102 @@ class HostPage extends Component{
 
     proceedSubmission(){
         console.log(this.state)
+
+        let geolocation = `POINT(${this.state.lng} ${this.state.lat})`
+
+        const data = {
+            name: this.state.name,
+            geolocation: geolocation,
+            street: this.state.street,
+            neighborhood: this.state.hood,
+            city: this.state.city,
+            country: this.state.country,
+            transit: this.state.transit,
+            start_date: this.state.s_date,
+            end_date: this.state.e_date,
+            price: this.state.price,
+            price_per_person: this.state.extra_price,
+            max_people: this.state.max_people,
+            beds: this.state.beds,
+            bedrooms: this.state.bedrooms,
+            bathrooms: this.state.bathrooms,
+            rep_photo: this.state.picture,
+            room_type: this.state.room_type,
+            has_wifi: this.state.wifi,
+            has_heating: this.state.heating,
+            has_freezer: this.state.freezer,
+            has_kitchen: this.state.kitchen,
+            has_TV: this.state.TV,
+            has_parking: this.state.parking,
+            has_elevator: this.state.elevator,
+            has_living_room: this.state.living_room,
+            square_feet: this.state.feet,
+            description: this.state.desc,
+            smoking: this.state.smoking,
+            pets: this.state.pets,
+            events: this.state.events,
+            pets: this.state.pets,
+            min_nights: this.state.min_nights,
+            host_id: this.props.app_state.user_primary_key,
+            reserved: false
+        }
+
+        const formData = new FormData();
+
+        formData.append("name", data.name);
+        formData.append("geolocation", data.geolocation);
+        formData.append("street", data.street);
+        formData.append("neighborhood", data.neighborhood);
+        formData.append("city", data.city);
+        formData.append("country", data.country);
+        formData.append("transit", data.transit);
+        formData.append("start_date", data.start_date);
+        formData.append("end_date", data.end_date);
+        formData.append("price", data.price);
+        formData.append("price_per_person", data.price_per_person);
+        formData.append("max_people", data.max_people);
+        formData.append("beds", data.beds);
+        formData.append("bedrooms", data.bedrooms);
+        formData.append("bathrooms", data.bathrooms);
+        formData.append("rep_photo", data.rep_photo);
+        formData.append("room_type", data.room_type);
+        formData.append("has_wifi", data.has_wifi);
+        formData.append("has_heating", data.has_heating);
+        formData.append("has_freezer", data.has_freezer);
+        formData.append("has_kitchen", data.has_kitchen);
+        formData.append("has_TV", data.has_TV);
+        formData.append("has_parking", data.has_parking);
+        formData.append("has_elevator", data.has_elevator);
+        formData.append("has_living_room", data.has_living_room);
+        formData.append("square_feet", data.square_feet);
+        formData.append("description", data.description);
+        formData.append("smoking", data.smoking);
+        formData.append("pets", data.pets);
+        formData.append("events", data.events);
+        formData.append("minimum_nights", data.min_nights);
+        formData.append("host_id", data.host_id);
+        formData.append("reserved", data.reserved);
+
+        axios.post('rooms/roomList/', formData, {headers: {
+            'Content-Type': 'application/json'
+          }}).then(response => {
+              alert('Your new room has been added! You may see it in the room list');
+              this.state.files.forEach(function(value, index, array) {
+                const formData = new FormData();
+   
+                formData.append("room_id_img", response.data.pk);
+                formData.append("picture", value);
+                axios.post('rooms/roomImages/',formData, {headers: {
+                    'Content-Type': 'application/json'
+                  }}).then(response => {console.log('ok')}).catch(error => {console.log(error.response);})  
+           })    
+
+            }).catch(error => {console.log(error.response);  
+                               alert('Some kind of error occured, please try again.')                
+            })
+
+            
+        
     }
 
     
@@ -312,6 +473,8 @@ class HostPage extends Component{
         //ALSO HE CAN ADD EXTRA PHOTOS
         //PLUS: CHANGE DESC TO TEXT AREA
 
+        let {imagesPreviewUrls} = this.state;        
+
         let disapproved_msg
         let approved_msg
         let denial
@@ -321,22 +484,28 @@ class HostPage extends Component{
 
             if(this.props.app_state.isHost){
                 if(this.state.approved){
-                    approved_msg = 
+                    return(
                     <div>
                     <h1 className="message">You may click here to manage your existing rooms, or </h1>
                     <h1 className="message"> You may add a new room by filling in the form below: </h1>
                     <form onSubmit={this.handleFormSubmit}>
                         <h5 className="message" > Name:<input name="name" onChange={this.handleNameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["name"]}</span>
-                        <h5 className="message" > Address (make sure to specify city and country too):<input name="address" onChange={this.handleAddressChange} /></h5> 
+                        <h5 className="message">Specify the geographic location of the room using the map:</h5> 
+                        <Map form_state={{...this.state}}/>
+                        <h5 className="message" > Address:<input name="address" onChange={this.handleAddressChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["address"]}</span>
                         <h5 className="message" > Neighborhood:<input name="hood" onChange={this.handleHoodChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["hood"]}</span>
+                        <h5 className="message"> City:<input name="city" onChange={this.handleCityChange} /></h5>
+                        <span style={{color: "red"}}>{this.state.errors["city"]}</span>
+                        <h5 className="message"> Country:<input name="country" onChange={this.handleCountryChange} /></h5>
+                        <span style={{color: "red"}}>{this.state.errors["country"]}</span>
                         <h5 className="message" > Transit:<input name="transit" onChange={this.handleTransitChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["transit"]}</span>
-                        <h2 className="message"> Enter starting date here:<input type="date" name="start_date" onChange={this.handleStartDateChange} /></h2>
+                        <h5 className="message"> Enter starting date here:<input type="date" name="start_date" onChange={this.handleStartDateChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["s_date"]}</span>
-                        <h2 className="message"> Enter ending date here:<input type="date" name="end_date" onChange={this.handleEndDateChange} /></h2>
+                        <h5 className="message"> Enter ending date here:<input type="date" name="end_date" onChange={this.handleEndDateChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["e_date"]}</span>
                         <h5 className="message" > Max number of people:<input name="max_people" onChange={this.handlePeopleChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["max_people"]}</span>
@@ -345,11 +514,18 @@ class HostPage extends Component{
                         <h5 className="message" > Price per extra people:<input name="ext_price" onChange={this.handleExtraPriceChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["ext_price"]}</span>
                         <h5 className="message">Choose room type here:</h5> 
-                        <h5 className="message">Private Room<input type="radio" value="Private_room" name="room_type" checked={this.state.room_type === "Private_room"} onChange={this.handleRadioChange}/>  </h5>
-                        <h5 className="message">Shared Room<input type="radio" value="Shared_room" name="room_type"  checked={this.state.room_type === "Shared_room"} onChange={this.handleRadioChange}/> </h5>
-                        <h5 className="message">Entire home/apt<input type="radio" value="Entire_home/apt" name="room_type" checked={this.state.room_type === "Entire_home/apt"} onChange={this.handleRadioChange} /> </h5>
+                        <h5 className="message">Private Room<input type="radio" value="Private room" name="room_type" checked={this.state.room_type === "Private room"} onChange={this.handleRadioChange}/>  </h5>
+                        <h5 className="message">Shared Room<input type="radio" value="Shared room" name="room_type"  checked={this.state.room_type === "Shared room"} onChange={this.handleRadioChange}/> </h5>
+                        <h5 className="message">Entire home/apt<input type="radio" value="Entire home/apt" name="room_type" checked={this.state.room_type === "Entire home/apt"} onChange={this.handleRadioChange} /> </h5>
                         {$imagePreview} <br/>
                         <h5 className="message" >Choose at least one picture that represents your property: <input type="file" onChange={this._handleImageChange} /> </h5> <br/>
+                        <div>
+                        <h5 className="message" >Add more images: </h5>
+                        <input className="message" type="file" onChange={this._handleMultipleImageChange} multiple/>
+                        {imagesPreviewUrls.map(function(imagePreviewUrl, i){
+                        return <div> <img key={i} src={imagePreviewUrl} style={{width:100,height: 100}} /> <br/> </div>
+                        })}
+                        </div>
                         <h5 className="message" > Number of beds:<input name="beds" onChange={this.handleBedsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["beds"]}</span>
                         <h5 className="message" > Number of bedrooms:<input name="bedrooms" onChange={this.handleBedroomsChange} /></h5> 
@@ -358,7 +534,7 @@ class HostPage extends Component{
                         <span style={{color: "red"}}>{this.state.errors["bathrooms"]}</span>
                         <h5 className="message" > Square feet:<input name="feet" onChange={this.handleFeetChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["feet"]}</span>
-                        <h5 className="message" > Description:<input name="desc" onChange={this.handleDescChange} /></h5> 
+                        <h5 className="message" > Description:<textarea onChange={this.handleDescChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["desc"]}</span>
                         <h5 className="message">Amenities this room provides:</h5> 
                         <h5 className="message" > WiFi:<input type="checkbox" name="WiFi" onChange={this.handleWiFiChange}/></h5> 
@@ -377,9 +553,11 @@ class HostPage extends Component{
                         <span style={{color: "red"}}>{this.state.errors["min_nights"]}</span>
                         <button className="apply">Add a room</button>
                     </form>
+                    
                     </div>
+                    )
                 }else{
-                    disapproved_msg = <h1 className="message">You don't have permission to access this page yet, please be patient</h1>
+                    return(<h1 className="message">You don't have permission to access this page yet, please be patient</h1>)
                 }
             }
 
@@ -387,17 +565,19 @@ class HostPage extends Component{
         }
 
         if(login_check === false || !this.props.app_state.isHost){
-            denial = <h1 className="message">You can't access this page!</h1>
+            return( <h1 className="message">You can't access this page!</h1>)
         }
 
-        return(
-            <div>
-                {approved_msg}
-                {disapproved_msg}
-                {denial}
+        // return(
+        //     <div>
                 
-            </div>
-        )
+        //         {approved_msg}
+        //         {wrap}
+        //         {disapproved_msg}
+        //         {denial}
+                
+        //     </div>
+        // )
     }
 
 }
