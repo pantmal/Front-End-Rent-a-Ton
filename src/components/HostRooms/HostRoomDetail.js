@@ -1,18 +1,11 @@
-// @flow
 import React from 'react';
 import {Component} from 'react';
-import {Link} from 'react-router-dom';
 
 import axios from '../AXIOS_conf'
-//import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
-import L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
-import styled from 'styled-components'
 
-import Map from './Map.js'
+import EditMap from './EditMap.js'
 
-
-class HostPage extends Component{
+class HostRoomDetail extends Component{
 
     constructor(props){
         super(props)
@@ -91,7 +84,6 @@ class HostPage extends Component{
         this.handleFormSubmit = this.handleFormSubmit.bind(this)
         this.handleGeoChange = this.handleGeoChange.bind(this)
         this._handleMultipleImageChange = this._handleMultipleImageChange.bind(this)
-
     }
 
     _handleMultipleImageChange = e =>{
@@ -124,7 +116,7 @@ class HostPage extends Component{
         console.log(this.state)
     }
     
-
+    //!!!
     componentDidMount(){
 
         
@@ -137,7 +129,69 @@ class HostPage extends Component{
         }}*/).then(response => { const user = response.data;
           this.setState({
             approved: user.approved
-          })}).catch(error => {console.log(error.response);})
+          })
+           if(this.state.approved){
+            const {id} = this.props.match.params
+            axios.get(`rooms/roomList/${id}`/*, {
+                headers: {
+                  Authorization: `JWT ${localStorage.getItem('storage_token')}`
+                }}*/).then( 
+                    response => {
+                    const res_room = response.data
+                    this.setState({
+                        name: res_room.name,
+                        street: res_room.street,
+                        hood: res_room.neighborhood,
+                        city: res_room.city,
+                        country: res_room.country,
+                        transit: res_room.transit,
+                        s_date: res_room.start_date,
+                        e_date: res_room.end_date,
+                        price: res_room.price,
+                        extra_price: res_room.price_per_person,
+                        max_people: res_room.max_people,
+                        beds: res_room.beds,
+                        bedrooms: res_room.bedrooms,
+                        bathrooms: res_room.bathrooms,
+                        picture: res_room.rep_photo,
+                        imagePreviewUrl: res_room.rep_photo,
+                        room_type: res_room.room_type,
+                        wifi: res_room.has_wifi,
+                        heating: res_room.has_heating,
+                        freezer: res_room.has_freezer,
+                        kitchen: res_room.has_kitchen,
+                        TV: res_room.has_TV,
+                        parking: res_room.has_parking,
+                        elevator: res_room.has_elevator,
+                        living_room: res_room.has_living_room,
+                        feet: res_room.square_feet,
+                        desc: res_room.description,
+                        smoking: res_room.smoking,
+                        pets: res_room.pets,
+                        events: res_room.events,
+                        min_nights: res_room.minimum_nights,
+                        host_id: res_room.host_id
+                    })
+
+                    let location = res_room.geolocation.split(' ')
+                    let lng = location[1].replace('(','')
+                    let lat = location[2].replace(')','')
+                    this.setState({
+                        lat: lat,
+                        lng: lng
+                    })
+
+                    console.log(lat)
+                    if(this.state.host_id != this.props.app_state.user_primary_key){
+                        alert('You can only edit your own rooms')
+                        this.props.history.push("/")
+                    }
+                }
+            )
+           }   
+        }).catch(error => {console.log(error.response);})
+
+
     }
 
     handleNameChange = event => {
@@ -530,6 +584,7 @@ class HostPage extends Component{
 
     }
 
+    //!!!
     proceedSubmission(){
         console.log(this.state)
 
@@ -631,7 +686,6 @@ class HostPage extends Component{
         
     }
 
-    
     render(){
 
         let {imagePreviewUrl} = this.state;
@@ -656,33 +710,33 @@ class HostPage extends Component{
                 if(this.state.approved){
                     return(
                     <div>
-                    <h1 className="message">You may click  <Link to={'/hostRooms/'}><span>here</span> </Link> to manage your existing rooms, or </h1>
+                    <h1 className="message"> You may click here to check your messages </h1>    
                     <h1 className="message"> You may add a new room by filling in the form below: </h1>
                     <form onSubmit={this.handleFormSubmit}>
-                        <h5 className="message" > Name:<input name="name" onChange={this.handleNameChange} /></h5> 
+                        <h5 className="message" > Name:<input name="name" defaultValue={this.state.name} onChange={this.handleNameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["name"]}</span>
                         <h5 className="message">Specify the geographic location of the room using the map:</h5> 
-                        <Map form_state={{...this.state}}/>
+                        <EditMap form_state={{...this.state}}/>
                         <span style={{color: "red"}}>{this.state.errors["geolocation"]}</span>
-                        <h5 className="message" > Address:<input name="address" onChange={this.handleAddressChange} /></h5> 
+                        <h5 className="message" > Address:<input name="address" defaultValue={this.state.street} onChange={this.handleAddressChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["street"]}</span>
-                        <h5 className="message" > Neighborhood:<input name="hood" onChange={this.handleHoodChange} /></h5> 
+                        <h5 className="message" > Neighborhood:<input name="hood" defaultValue={this.state.hood} onChange={this.handleHoodChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["hood"]}</span>
-                        <h5 className="message"> City:<input name="city" onChange={this.handleCityChange} /></h5>
+                        <h5 className="message"> City:<input name="city" defaultValue={this.state.city} onChange={this.handleCityChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["city"]}</span>
-                        <h5 className="message"> Country:<input name="country" onChange={this.handleCountryChange} /></h5>
+                        <h5 className="message"> Country:<input name="country" defaultValue={this.state.country} onChange={this.handleCountryChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["country"]}</span>
-                        <h5 className="message" > Transit:<input name="transit" onChange={this.handleTransitChange} /></h5> 
+                        <h5 className="message" > Transit:<input name="transit" defaultValue={this.state.transit} onChange={this.handleTransitChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["transit"]}</span>
-                        <h5 className="message"> Enter starting date here:<input type="date" name="start_date" onChange={this.handleStartDateChange} /></h5>
+                        <h5 className="message"> Enter starting date here:<input type="date" name="start_date" defaultValue={this.state.s_date} onChange={this.handleStartDateChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["s_date"]}</span>
-                        <h5 className="message"> Enter ending date here:<input type="date" name="end_date" onChange={this.handleEndDateChange} /></h5>
+                        <h5 className="message"> Enter ending date here:<input type="date" name="end_date" defaultValue={this.state.e_date} onChange={this.handleEndDateChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["e_date"]}</span>
-                        <h5 className="message" > Max number of people:<input name="max_people" onChange={this.handlePeopleChange} /></h5> 
+                        <h5 className="message" > Max number of people:<input name="max_people" defaultValue={this.state.max_people} onChange={this.handlePeopleChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["max_people"]}</span>
-                        <h5 className="message" > Starting price:<input name="price" onChange={this.handlePriceChange} /></h5> 
+                        <h5 className="message" > Starting price:<input name="price" defaultValue={this.state.price} onChange={this.handlePriceChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["price"]}</span>
-                        <h5 className="message" > Price per extra people:<input name="ext_price" onChange={this.handleExtraPriceChange} /></h5> 
+                        <h5 className="message" > Price per extra people:<input name="ext_price" defaultValue={this.state.extra_price} onChange={this.handleExtraPriceChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["ext_price"]}</span>
                         <h5 className="message">Choose room type here:</h5> 
                         <h5 className="message">Private Room<input type="radio" value="Private room" name="room_type" checked={this.state.room_type === "Private room"} onChange={this.handleRadioChange}/>  </h5>
@@ -699,32 +753,32 @@ class HostPage extends Component{
                         return <div> <img key={i} src={imagePreviewUrl} style={{width:100,height: 100}} /> <br/> </div>
                         })}
                         </div>
-                        <h5 className="message" > Number of beds:<input name="beds" onChange={this.handleBedsChange} /></h5> 
+                        <h5 className="message" > Number of beds:<input name="beds" defaultValue={this.state.beds} onChange={this.handleBedsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["beds"]}</span>
-                        <h5 className="message" > Number of bedrooms:<input name="bedrooms" onChange={this.handleBedroomsChange} /></h5> 
+                        <h5 className="message" > Number of bedrooms:<input name="bedrooms" defaultValue={this.state.bedrooms} onChange={this.handleBedroomsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["bedrooms"]}</span>
-                        <h5 className="message" > Number of bathrooms:<input name="bathrooms" onChange={this.handleBathroomsChange} /></h5> 
+                        <h5 className="message" > Number of bathrooms:<input name="bathrooms" defaultValue={this.state.bathrooms} onChange={this.handleBathroomsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["bathrooms"]}</span>
-                        <h5 className="message" > Square feet:<input name="feet" onChange={this.handleFeetChange} /></h5> 
+                        <h5 className="message" > Square feet:<input name="feet" defaultValue={this.state.feet} onChange={this.handleFeetChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["feet"]}</span>
-                        <h5 className="message" > Description:<textarea onChange={this.handleDescChange} /></h5> 
+                        <h5 className="message" > Description:<textarea defaultValue={this.state.desc} onChange={this.handleDescChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["desc"]}</span>
                         <h5 className="message">Amenities this room provides:</h5> 
-                        <h5 className="message" > WiFi:<input type="checkbox" name="WiFi" onChange={this.handleWiFiChange}/></h5> 
-                        <h5 className="message" > Freezer:<input type="checkbox" name="Freezer" onChange={this.handleFreezerChange}/></h5> 
-                        <h5 className="message" > Heating:<input type="checkbox" name="Heating" onChange={this.handleHeatingChange}/></h5> 
-                        <h5 className="message" > Kitchen:<input type="checkbox" name="Kitchen" onChange={this.handleKitchenChange}/></h5> 
-                        <h5 className="message" > TV:<input type="checkbox" name="TV"  onChange={this.handleTVChange}/></h5> 
-                        <h5 className="message" > Parking:<input type="checkbox" name="Parking" onChange={this.handleParkingChange}/></h5> 
-                        <h5 className="message" > Elevator:<input type="checkbox" name="Elevator" onChange={this.handleElevatorChange}/></h5> 
-                        <h5 className="message" > Living room:<input type="checkbox" name="LivingRoom" onChange={this.handleLivingRoomChange}/></h5> 
+                        <h5 className="message" > WiFi:<input type="checkbox" name="WiFi" defaultChecked={this.state.wifi} onChange={this.handleWiFiChange}/></h5> 
+                        <h5 className="message" > Freezer:<input type="checkbox" name="Freezer" defaultChecked={this.state.freezer} onChange={this.handleFreezerChange}/></h5> 
+                        <h5 className="message" > Heating:<input type="checkbox" name="Heating" defaultChecked={this.state.heating} onChange={this.handleHeatingChange}/></h5> 
+                        <h5 className="message" > Kitchen:<input type="checkbox" name="Kitchen" defaultChecked={this.state.kitchen} onChange={this.handleKitchenChange}/></h5> 
+                        <h5 className="message" > TV:<input type="checkbox" name="TV" defaultChecked={this.state.TV} onChange={this.handleTVChange}/></h5> 
+                        <h5 className="message" > Parking:<input type="checkbox" name="Parking" defaultChecked={this.state.parking} onChange={this.handleParkingChange}/></h5> 
+                        <h5 className="message" > Elevator:<input type="checkbox" name="Elevator" defaultChecked={this.state.elevator} onChange={this.handleElevatorChange}/></h5> 
+                        <h5 className="message" > Living room:<input type="checkbox" name="LivingRoom" defaultChecked={this.state.living_room} onChange={this.handleLivingRoomChange}/></h5> 
                         <h5 className="message">Specify rules:</h5> 
-                        <h5 className="message" > Smoking:<input type="checkbox" name="Smoking"  onChange={this.handleSmokingChange}/></h5> 
-                        <h5 className="message" > Pets:<input type="checkbox" name="Pets"  onChange={this.handlePetsChange}/></h5> 
-                        <h5 className="message" > Events:<input type="checkbox" name="Events"  onChange={this.handleEventsChange}/></h5> 
-                        <h5 className="message" > Minimum nights:<input name="min_nights" onChange={this.handleMinNightsChange} /></h5> 
+                        <h5 className="message" > Smoking:<input type="checkbox" name="Smoking" defaultChecked={this.state.smoking} onChange={this.handleSmokingChange}/></h5> 
+                        <h5 className="message" > Pets:<input type="checkbox" name="Pets" defaultChecked={this.state.pets} onChange={this.handlePetsChange}/></h5> 
+                        <h5 className="message" > Events:<input type="checkbox" name="Events" defaultChecked={this.state.events} onChange={this.handleEventsChange}/></h5> 
+                        <h5 className="message" > Minimum nights:<input name="min_nights" defaultValue={this.state.min_nights} onChange={this.handleMinNightsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["min_nights"]}</span> <br/>
-                        <button className="apply">Add a room</button>
+                        <button className="apply">Update your room</button>
                     </form>
                     
                     </div>
@@ -755,4 +809,7 @@ class HostPage extends Component{
 
 }
 
-export default HostPage
+
+
+
+export default HostRoomDetail

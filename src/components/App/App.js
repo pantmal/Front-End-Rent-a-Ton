@@ -10,6 +10,9 @@ import Login from '../Login/Login'
 import Home from '../Home/Home'
 import EditProfile from '../EditProfile/EditProfile';
 import HostPage from '../HostPage/HostPage';
+import HostRooms from '../HostRooms/HostRooms';
+import HostRoomDetail from '../HostRooms/HostRoomDetail';
+//import RoomImageDetail from '../HostRooms/RoomImageDetail';
 import AdminPage from '../AdminPage/AdminPage';
 import UserList from '../UserList/UserList';
 import UserDetail from '../UserDetail/UserDetail';
@@ -186,6 +189,9 @@ class App extends Component {
           <Route path='/userList/:id' render = {props => <UserDetail {...props} app_state={{...this.state}}/>} />
           <Route path='/hostPage/' render = {props => <HostPage {...props} app_state={{...this.state}}/>} />
           <Route path='/search/:parameters?' render = {props => <Search {...props} app_state={{...this.state}}/>} />
+          <Route path='/hostRooms/' exact render = {props => <HostRooms {...props} app_state={{...this.state}}/>} />
+          <Route path='/hostRooms/:id' render = {props => <HostRoomDetail {...props} app_state={{...this.state}}/>} />
+          {/* <Route path='/hostRoomImages/:id' render = {props => <RoomImageDetail {...props} app_state={{...this.state}}/>} /> */}
           </Switch>
 
         </div>
