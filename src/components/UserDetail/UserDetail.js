@@ -21,7 +21,6 @@ class UserDetail extends Component{
             picture: '',
             host: false,
             approval: false
-            //MUST ADD PHOTO AS WELL
         }
 
         this.handleApprovalChange = this.handleApprovalChange.bind(this)
@@ -37,7 +36,6 @@ class UserDetail extends Component{
             }}*/).then( 
             response => {
                 const res_user = response.data
-                //if (this._isMounted){
                 this.setState({
                     username: res_user.username,
                     picture: res_user.picture,
@@ -47,7 +45,6 @@ class UserDetail extends Component{
                     phone: res_user.telephone,
                     host: res_user.is_host,
                     approval: res_user.approved
-                    //MUST ADD PHOTO AS WELL
                 })
             }
         )

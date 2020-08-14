@@ -12,7 +12,8 @@ import EditProfile from '../EditProfile/EditProfile';
 import HostPage from '../HostPage/HostPage';
 import HostRooms from '../HostRooms/HostRooms';
 import HostRoomDetail from '../HostRooms/HostRoomDetail';
-//import RoomImageDetail from '../HostRooms/RoomImageDetail';
+import RoomImages from '../RoomImages/RoomImages';
+import RoomImageDetail from '../RoomImages/RoomImageDetail';
 import AdminPage from '../AdminPage/AdminPage';
 import UserList from '../UserList/UserList';
 import UserDetail from '../UserDetail/UserDetail';
@@ -191,7 +192,8 @@ class App extends Component {
           <Route path='/search/:parameters?' render = {props => <Search {...props} app_state={{...this.state}}/>} />
           <Route path='/hostRooms/' exact render = {props => <HostRooms {...props} app_state={{...this.state}}/>} />
           <Route path='/hostRooms/:id' render = {props => <HostRoomDetail {...props} app_state={{...this.state}}/>} />
-          {/* <Route path='/hostRoomImages/:id' render = {props => <RoomImageDetail {...props} app_state={{...this.state}}/>} /> */}
+          <Route path='/roomImages/:id' render = {props => <RoomImages {...props} app_state={{...this.state}}/>} /> 
+          <Route path='/roomImageDetail/:id' render = {props => <RoomImageDetail {...props} app_state={{...this.state}}/>} /> 
           </Switch>
 
         </div>

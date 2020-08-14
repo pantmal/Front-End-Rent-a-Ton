@@ -1,5 +1,6 @@
 import React from 'react';
 import {Component} from 'react';
+import {Link} from 'react-router-dom';
 
 import axios from '../AXIOS_conf'
 
@@ -12,6 +13,7 @@ class HostRoomDetail extends Component{
 
         this.state = {
             approved: false,
+            room_id: '',
             name: '',
             street: '',
             hood: '',
@@ -139,6 +141,7 @@ class HostRoomDetail extends Component{
                     response => {
                     const res_room = response.data
                     this.setState({
+                        room_id: res_room.pk,
                         name: res_room.name,
                         street: res_room.street,
                         hood: res_room.neighborhood,
@@ -697,8 +700,6 @@ class HostRoomDetail extends Component{
         //ALSO HE CAN ADD EXTRA PHOTOS
         //PLUS: CHANGE DESC TO TEXT AREA
 
-        let {imagesPreviewUrls} = this.state;        
-
         let disapproved_msg
         let approved_msg
         let denial
@@ -747,11 +748,7 @@ class HostRoomDetail extends Component{
                         <h5 className="message" >Choose at least one picture that represents your property: <input type="file" onChange={this._handleImageChange} /> </h5> <br/>
                         <div>
                         <span style={{color: "red"}}>{this.state.errors["picture"]}</span>
-                        <h5 className="message" >Add more images: </h5>
-                        <input className="message" type="file" onChange={this._handleMultipleImageChange} multiple/>
-                        {imagesPreviewUrls.map(function(imagePreviewUrl, i){
-                        return <div> <img key={i} src={imagePreviewUrl} style={{width:100,height: 100}} /> <br/> </div>
-                        })}
+                        <h5 className="message" > Click <Link to={`/roomImages/${this.state.room_id}`}>here</Link> to manage the other images related to this room </h5>
                         </div>
                         <h5 className="message" > Number of beds:<input name="beds" defaultValue={this.state.beds} onChange={this.handleBedsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["beds"]}</span>

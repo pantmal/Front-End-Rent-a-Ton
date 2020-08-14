@@ -3,6 +3,7 @@ import {Component} from 'react';
 
 import axios from '../AXIOS_conf'
 import ReactPaginate from 'react-paginate';
+import {Link} from 'react-router-dom';
 
 
 class HostRooms extends Component{
@@ -16,6 +17,7 @@ class HostRooms extends Component{
             users: [],
             perPage: 2,
             currentPage: 0,
+            not_found: false,
             receivedData: this.receivedData()
         }
 
@@ -49,7 +51,7 @@ class HostRooms extends Component{
         
         
             const data = {host_id: this.props.app_state.user_primary_key}
-            console.log(data)
+            
             axios.post('/rooms/search/', JSON.stringify(data), {headers: { 
                 'Content-Type': 'application/json'
               }})
@@ -79,8 +81,8 @@ class HostRooms extends Component{
                 //add a message if it's him!
                 //this url shit will change hopefully
                 <React.Fragment>
-                    <p className="message">Name: {pd.name}</p> 
-                    <img src={"http://localhost:8000"+pd.rep_photo} style={{width:250,height: 250}} alt=""/> 
+                    <Link to={`/hostRooms/${pd.pk}`}><p className="message">Name: {pd.name}</p> </Link>
+                    <Link to={`/hostRooms/${pd.pk}`}><img src={"http://localhost:8000"+pd.rep_photo} style={{width:250,height: 250}} alt=""/> </Link>
                     <p className="message">Type: {pd.room_type}</p>
                     <p className="message">Beds: {pd.beds}</p>
                     <hr/>
@@ -112,6 +114,7 @@ class HostRooms extends Component{
 
 
     render(){
+        let not_found_msg = <h1 className="message">Sorry, nothing found</h1>
 
         let login_check = this.props.app_state.isLoggedIn;
         if (login_check){
@@ -119,7 +122,7 @@ class HostRooms extends Component{
             if(this.props.app_state.isHost){
                 if(this.state.approved){
 
-
+                    if (this.state.not_found === false){
                     let paginate = 
                 
                     <ReactPaginate
@@ -144,6 +147,14 @@ class HostRooms extends Component{
                             {paginate}
                         </div>
                     )
+                }else{
+                    return(
+                        <div>
+                        {not_found_msg}
+                        </div>
+                    )
+                }
+
                 }else{
                     return(<h1 className="message">You don't have permission to access this page yet, please be patient</h1>)
                 }

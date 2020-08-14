@@ -38,7 +38,6 @@ class EditMap extends Component{
 
     popupPop(e){
 
-        //trry to fix the marker sometime
         let marker = L.marker([this.props.form_state.lat, this.props.form_state.lng]).addTo(this.map);
         marker.bindPopup("This is your current location.").openPopup();
 
