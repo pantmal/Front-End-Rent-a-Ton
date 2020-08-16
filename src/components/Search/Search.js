@@ -75,6 +75,7 @@ class Search extends Component{
         
 
         this.state = {
+            rats: '',
             hood: search_values.hood,
             city: search_values.city,
             country: search_values.country,
@@ -223,7 +224,18 @@ class Search extends Component{
                 }else{
                 
 
-                const data = res.data;    
+                let data = res.data;    
+                console.log(data)
+                
+                
+                
+                // let price_data = data.rooms.map(d =>
+                //     ({ ...d,
+                //     ratings_count: -1,
+                //     ratings_avg: -1
+                //     })
+                //     )
+                
                 this.count++
                 if(this.count === 0){
                     if(this.props.app_state.user_primary_key != -1){
@@ -231,7 +243,6 @@ class Search extends Component{
                         
                         
                         data.forEach(function(value, index, array) {
-                            
                             
                             const formData = new FormData();
                             formData.append("search", 'search');
@@ -244,28 +255,46 @@ class Search extends Component{
                     }
 
                 }
-                
-                const price_data = data.map(d =>
+
+                let price_data = data.map(d =>
                     ({ ...d,
                     total_price: d.price + ((this.state.people-1) * d.price_per_person)})
                     )
+
+                /*
+                price_data.forEach(function(element) {
+                    const formData = new FormData();    
+                    formData.append("room", 'room');
+                    formData.append("room_id", element.pk);
                 
-                
+                    axios.post('rooms/ratCount/',formData, {headers: {
+                        'Content-Type': 'application/json'
+                    }}).then(response => {
+                    rats.push(response.data)  
+                    this.setState({
+                        rats: response.data
+                    })  
+                    }).catch(error => {console.log(error.response);})
+                })*/
+
+            
                 price_data.sort( (a, b) => parseFloat(a.total_price) - parseFloat(b.total_price) )
                 console.log(price_data)
-                const slice = price_data.slice(this.state.offset, this.state.offset + this.state.perPage)
+                let slice = price_data.slice(this.state.offset, this.state.offset + this.state.perPage)
                 console.log(slice)
-                const postData = slice.map(pd =>
+                let postData = slice.map(pd =>
                 //add a message if it's him!
                 //this url shit will change hopefully
-                <React.Fragment>
-                    <Link to={`/renterRooms/${pd.pk}/start_date=${this.state.s_date}&end_date=${this.state.e_date}`} ><p className="message">Name: {pd.name}</p> </Link>
-                    <Link to={`/renterRooms/${pd.pk}/start_date=${this.state.s_date}&end_date=${this.state.e_date}`} ><img src={"http://localhost:8000"+pd.rep_photo} style={{width:250,height: 250}} alt=""/> </Link>
-                    <p className="message">Price: {pd.total_price}</p>
-                    <p className="message">Type: {pd.room_type}</p>
-                    <p className="message">Beds: {pd.beds}</p>
-                    <hr/>
-                </React.Fragment>)
+                //console.log(pd.ratings_count))
+                 <React.Fragment>
+                     <Link to={`/renterRooms/${pd.pk}/start_date=${this.state.s_date}&end_date=${this.state.e_date}`} ><p className="message">Name: {pd.name}</p> </Link>
+                     <Link to={`/renterRooms/${pd.pk}/start_date=${this.state.s_date}&end_date=${this.state.e_date}`} ><img src={"http://localhost:8000"+pd.rep_photo} style={{width:250,height: 250}} alt=""/> </Link>
+                     <p className="message">Price: {pd.total_price}</p>
+                     <p className="message">Type: {pd.room_type}</p>
+                     <p className="message">Beds: {pd.beds}</p>
+                     
+                     <hr/>
+                 </React.Fragment>)
 
                 this.setState({
                     pageCount: Math.ceil(data.length / this.state.perPage),

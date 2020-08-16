@@ -1,6 +1,7 @@
 import React from 'react';
 import {Component} from 'react';
 import {Link} from 'react-router-dom';
+import ReactStars from "react-rating-stars-component";
 
 import axios from '../AXIOS_conf'
 
@@ -35,11 +36,16 @@ class RenterRoomDetail extends Component{
         }
 
         this.state = {
+            count:'',
+            avg:'',
+            h_count:'',
+            h_avg:'',
             approved: false,
             date_mode: date_mode,
             date_free: false,
             start_date: start_date,
             end_date: end_date,
+            can_review: false,
             room_id: '',
             name: '',
             street: '',
@@ -83,23 +89,24 @@ class RenterRoomDetail extends Component{
         }
 
         this.handleRentChange = this.handleRentChange.bind(this)
-
+        this.roomRatingChanged = this.roomRatingChanged.bind(this)
+        this.hostRatingChanged = this.hostRatingChanged.bind(this)
     }
 
 
     componentDidMount(){
 
                 
-        const id = this.props.app_state.user_primary_key
-        axios.get(`users/userList/${id}`/*,
-      {
-        headers: {
-          Authorization: `JWT ${localStorage.getItem('storage_token')}`
-        }}*/).then(response => { const user = response.data;
-          this.setState({
-            approved: user.approved
-          })
-           if(this.state.approved){
+    //     const id = this.props.app_state.user_primary_key
+    //     axios.get(`users/userList/${id}`/*,
+    //   {
+    //     headers: {
+    //       Authorization: `JWT ${localStorage.getItem('storage_token')}`
+    //     }}*/).then(response => { const user = response.data;
+    //       this.setState({
+    //         approved: user.approved
+    //       })
+        //   if(this.state.approved){
             const {id} = this.props.match.params
             axios.get(`rooms/roomList/${id}`/*, {
                 headers: {
@@ -202,7 +209,7 @@ class RenterRoomDetail extends Component{
                         const formData = new FormData();
                         formData.append("click", 'click');
                         formData.append("room_id_click", this.state.room_id);
-                        formData.append("renter_id_click", this.props.app_state.user_primary_key);
+                        formData.append("renter_id_click", this.props.app_state.user_primary_key);//fix for anon
                         axios.post('rooms/addSearchesClicks/',formData, {headers: {
                         'Content-Type': 'application/json'
                         }}).then(response => {console.log('click ok')}).catch(error => {console.log(error.response);})
@@ -225,17 +232,73 @@ class RenterRoomDetail extends Component{
                                     })
                                 }
                             }).catch(error => {console.log(error.response);})
-
-                            
-
                         }
+
+                        if(this.props.app_state.user_primary_key != -1){
+
+                            let date = new Date();
+                            let year = date.getFullYear()
+                            let month = date.getMonth()+1
+                            let day = date.getDate()
+
+                            let date_now = `${year}-${month}-${day}`
+
+                            const dateData = new FormData();
+                            dateData.append("room_id", this.state.room_id);
+                            dateData.append("user_id", this.props.app_state.user_primary_key);
+                            dateData.append("date_now", date_now);
+
+                            axios.post('rooms/ratCheck/',dateData, {headers: {
+                                'Content-Type': 'application/json'
+                                }}).then(response => {console.log(response.data)
+                                    if(response.data==='free'){
+                                        this.setState({
+                                            can_review: true
+                                        })
+                                    }else{
+                                        this.setState({
+                                            can_review: false
+                                        })
+                                    }
+                                }).catch(error => {console.log(error.response);})
+    
+                        }
+
+                        
+                        const revData = new FormData();    
+                        revData.append("room", 'room');
+                        revData.append("room_id", this.state.room_id);
+                        
+                        axios.post('rooms/ratCount/',revData, {headers: {
+                                'Content-Type': 'application/json'
+                        }}).then(response => {
+                        console.log(response.data)
+                        this.setState({
+                            count: response.data.count,
+                            avg: response.data.avg.rating__avg
+                        })  
+                        }).catch(error => {console.log(error.response);})
+
+                        const hostData = new FormData();    
+                        hostData.append("host", 'host');
+                        hostData.append("host_id", this.state.host_id);
+                        
+                        axios.post('rooms/ratCount/',hostData, {headers: {
+                                'Content-Type': 'application/json'
+                        }}).then(response => {
+                        console.log(response.data)
+                        this.setState({
+                            h_count: response.data.count,
+                            h_avg: response.data.avg.rating__avg
+                        })  
+                        }).catch(error => {console.log(error.response);})
                         
 
 
                 }
             )
-           }   
-        }).catch(error => {console.log(error.response);})
+          // }   
+        //}).catch(error => {console.log(error.response);})
 
 
     }
@@ -257,6 +320,52 @@ class RenterRoomDetail extends Component{
         }).catch(error => {console.log(error.response);})
     }
 
+    roomRatingChanged = (newRating) => {
+
+        let date = new Date();
+        let year = date.getFullYear()
+        let month = date.getMonth()+1
+        let day = date.getDate()
+
+        let date_now = `${year}-${month}-${day}`
+
+
+        const rateData = new FormData();
+        rateData.append("room_id_rate", this.state.room_id);
+        rateData.append("renter_id_rate", this.props.app_state.user_primary_key);
+        rateData.append("date", date_now);
+        rateData.append("rating", newRating);
+        
+        axios.post('rooms/roomRatings/',rateData, {headers: {
+            'Content-Type': 'application/json'
+            }}).then(response => {console.log(response.data)
+                alert('Your rating for this room has been recorded.')
+            }).catch(error => {console.log(error.response);})
+    };
+
+    hostRatingChanged = (newRating) => {
+
+        let date = new Date();
+        let year = date.getFullYear()
+        let month = date.getMonth()+1
+        let day = date.getDate()
+
+        let date_now = `${year}-${month}-${day}`
+
+
+        const rateData = new FormData();
+        rateData.append("host_id_hostRate", this.state.host_id);
+        rateData.append("renter_id_hostRate", this.props.app_state.user_primary_key);
+        rateData.append("date", date_now);
+        rateData.append("rating", newRating);
+        
+        axios.post('rooms/hostRatings/',rateData, {headers: {
+            'Content-Type': 'application/json'
+            }}).then(response => {console.log(response.data)
+                alert('Your rating for this host has been recorded.')
+            }).catch(error => {console.log(error.response);})
+    };
+
     render(){
 
         let {imagePreviewUrl} = this.state;
@@ -264,15 +373,42 @@ class RenterRoomDetail extends Component{
         if (imagePreviewUrl) {
             $imagePreview = (<img src={imagePreviewUrl} style={{width:500,height: 500}} />);
         }
-        //CAN'T BE NULL
-        //ALSO HE CAN ADD EXTRA PHOTOS
-        //PLUS: CHANGE DESC TO TEXT AREA
-
+        
         let {imagesPreviewUrls} = this.state;     
         
         let button_obj
         if (this.state.date_mode && this.state.date_free && this.props.app_state.isRenter){
             button_obj = <button className="apply" onClick={this.handleRentChange}>Make a reservation!</button>
+        }
+
+        let review_stuff
+        if (this.state.can_review && this.props.app_state.isRenter){
+            review_stuff = 
+            <div>
+                <h5 className="message"> Looks like you have rented this room in the past. Would you like to leave a rating?</h5> 
+                <ReactStars
+                count={5}
+                onChange={this.roomRatingChanged}
+                size={24}
+                isHalf={true}
+                emptyIcon={<i className="far fa-star"></i>}
+                halfIcon={<i className="fa fa-star-half-alt"></i>}
+                fullIcon={<i className="fa fa-star"></i>}
+                activeColor="#ffd700"
+                />
+                <h5 className="message"> You may also rate the host here:</h5> 
+                <ReactStars
+                count={5}
+                onChange={this.hostRatingChanged}
+                size={24}
+                isHalf={true}
+                emptyIcon={<i className="far fa-star"></i>}
+                halfIcon={<i className="fa fa-star-half-alt"></i>}
+                fullIcon={<i className="fa fa-star"></i>}
+                activeColor="#ffd700"
+                />
+            </div>
+            
         }
         
         if(this.props.app_state.isRenter || !this.props.app_state.isLoggedIn){
@@ -322,13 +458,20 @@ class RenterRoomDetail extends Component{
                 <h5 className="message" > TV: {this.state.TV ? '\u2705':'\u274c' }</h5> 
                 <h5 className="message" > Parking: {this.state.parking ? '\u2705':'\u274c' }</h5> 
                 <h5 className="message" > Elevator: {this.state.elevator ? '\u2705':'\u274c' }</h5> 
-                
+                <br/>
+                <h5 className="message">Number of ratings: {this.state.count} </h5>
+                <h5 className="message">Average number of rating (out of 5 stars):{this.state.avg} </h5>
                 <br/>
                 <h5 className="message">Host information (click on the host to get to contact him!):</h5> 
                 <h5 className="message" > Host name: {this.state.host_username} </h5> 
                 <h5 className="message" > Host picture: <img src={this.state.host_picture} style={{width:100,height: 100}}/> </h5> 
+                <h5 className="message">Number of ratings: {this.state.h_count} </h5>
+                <h5 className="message">Average number of rating (out of 5 stars):{this.state.h_avg} </h5>
 
+                
                 {button_obj}
+                <br/>
+                {review_stuff}
                 </div>
                 )
             }else{
