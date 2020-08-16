@@ -12,6 +12,8 @@ import EditProfile from '../EditProfile/EditProfile';
 import HostPage from '../HostPage/HostPage';
 import HostRooms from '../HostRooms/HostRooms';
 import HostRoomDetail from '../HostRooms/HostRoomDetail';
+import RenterRooms from '../RenterRooms/RenterRooms';
+import RenterRoomDetail from '../RenterRooms/RenterRoomDetail';
 import RoomImages from '../RoomImages/RoomImages';
 import RoomImageDetail from '../RoomImages/RoomImageDetail';
 import AdminPage from '../AdminPage/AdminPage';
@@ -31,13 +33,17 @@ class App extends Component {
     if (localStorage.getItem('storage_token')){
       login_check = true
     }
+
+
     let pk_check = null
+    let user_id = -1
     if (localStorage.getItem('storage_pk')){
-      pk_check = localStorage.getItem('storage_pk')
+      user_id = localStorage.getItem('storage_pk') 
     }
+    
     this.state = {
       username: '',
-      user_primary_key: pk_check,
+      user_primary_key: user_id,
       isLoggedIn: login_check,
       isAdmin: false,
       isHost: false,
@@ -192,6 +198,8 @@ class App extends Component {
           <Route path='/search/:parameters?' render = {props => <Search {...props} app_state={{...this.state}}/>} />
           <Route path='/hostRooms/' exact render = {props => <HostRooms {...props} app_state={{...this.state}}/>} />
           <Route path='/hostRooms/:id' render = {props => <HostRoomDetail {...props} app_state={{...this.state}}/>} />
+          <Route path='/renterRooms/' exact render = {props => <RenterRooms {...props} app_state={{...this.state}}/>} />
+          <Route path='/renterRooms/:id/:parameters?' render = {props => <RenterRoomDetail {...props} app_state={{...this.state}}/>} />
           <Route path='/roomImages/:id' render = {props => <RoomImages {...props} app_state={{...this.state}}/>} /> 
           <Route path='/roomImageDetail/:id' render = {props => <RoomImageDetail {...props} app_state={{...this.state}}/>} /> 
           </Switch>

@@ -2,6 +2,7 @@ import React from 'react';
 import {Component} from 'react';
 import ReactPaginate from 'react-paginate';
 import { useHistory } from 'react-router'
+import {Link} from 'react-router-dom';
 
 import queryString from 'query-string'
 
@@ -108,7 +109,14 @@ class Search extends Component{
         this.handleTVChange = this.handleTVChange.bind(this);
         this.handleParkingChange = this.handleParkingChange.bind(this);
         this.handleElevatorChange = this.handleElevatorChange.bind(this);
+    
     }
+
+    
+        
+    
+
+    
 
     handleRadioChange = (event) => {
         this.setState({
@@ -166,12 +174,15 @@ class Search extends Component{
         }})
     }
 
-    
+    count = -1
+
     receivedData() {
 
+        let user_id = parseInt(this.props.app_state.user_primary_key)
         let data 
         if (this.state.ext_search === false){ 
             data = {
+                user_id: user_id,
                 hood: this.state.hood,
                 city: this.state.city,
                 country: this.state.country,
@@ -181,6 +192,7 @@ class Search extends Component{
             }
         }else{
             data = {
+                user_id: user_id,
                 hood: this.state.hood,
                 city: this.state.city,
                 country: this.state.country,
@@ -211,9 +223,28 @@ class Search extends Component{
                 }else{
                 
 
-                //check results if picture is null
-                const data = res.data;
-                let count = 0
+                const data = res.data;    
+                this.count++
+                if(this.count === 0){
+                    if(this.props.app_state.user_primary_key != -1){
+                        user_id = this.props.app_state.user_primary_key
+                        
+                        
+                        data.forEach(function(value, index, array) {
+                            
+                            
+                            const formData = new FormData();
+                            formData.append("search", 'search');
+                            formData.append("room_id_search", value.pk);
+                            formData.append("renter_id_search", user_id);
+                            axios.post('rooms/addSearchesClicks/',formData, {headers: {
+                                'Content-Type': 'application/json'
+                              }}).then(response => {console.log('ok')}).catch(error => {console.log(error.response);})  
+                            })
+                    }
+
+                }
+                
                 const price_data = data.map(d =>
                     ({ ...d,
                     total_price: d.price + ((this.state.people-1) * d.price_per_person)})
@@ -228,8 +259,9 @@ class Search extends Component{
                 //add a message if it's him!
                 //this url shit will change hopefully
                 <React.Fragment>
-                    <p className="message">Name: {pd.name}</p> 
-                    <img src={"http://localhost:8000"+pd.rep_photo} style={{width:250,height: 250}} alt=""/> 
+                    <Link to={`/renterRooms/${pd.pk}/start_date=${this.state.s_date}&end_date=${this.state.e_date}`} ><p className="message">Name: {pd.name}</p> </Link>
+                    <Link to={`/renterRooms/${pd.pk}/start_date=${this.state.s_date}&end_date=${this.state.e_date}`} ><img src={"http://localhost:8000"+pd.rep_photo} style={{width:250,height: 250}} alt=""/> </Link>
+                    <p className="message">Price: {pd.total_price}</p>
                     <p className="message">Type: {pd.room_type}</p>
                     <p className="message">Beds: {pd.beds}</p>
                     <hr/>

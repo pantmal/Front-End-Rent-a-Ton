@@ -1,5 +1,6 @@
 import React from 'react';
 import {Component} from 'react';
+import {Link} from 'react-router-dom';
 
 import './home.css'
 
@@ -238,16 +239,28 @@ class Home extends Component{
                         <br/>
                         <button className="apply">Search</button>
                     </form>
-                    <h4 className="message">or</h4>
-                    <button className="apply">Recommend me something</button>
                 </div> 
+        }
+        
+        let res_list
+        let recommend
+        if(this.props.app_state.isRenter){
+            res_list = <div>
+            <h2 className="message">You may click <Link to={'/renterRooms/'}>here</Link> to check your reservations</h2>
+            </div>
+
+            recommend = <div><h4 className="message">or</h4>
+            <button className="apply">Recommend me something</button>
+            </div>
         }
 
         return(
             <div>
                 {user_message}
                 {anon_message}
+                {res_list}
                 {search}
+                {recommend}
             </div>
         )
     }
