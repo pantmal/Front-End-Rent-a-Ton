@@ -5,8 +5,6 @@ import ReactStars from "react-rating-stars-component";
 
 import axios from '../AXIOS_conf'
 
-import queryString from 'query-string'
-
 import ViewMap from './ViewMap.js'
 
 
@@ -197,7 +195,6 @@ class RenterRoomDetail extends Component{
                         }
                     )
 
-                    //++critics here
 
                     if(this.props.app_state.isHost && this.props.app_state.isRenter){
                         if (this.state.host_id == this.props.app_state.user_primary_key){
@@ -206,6 +203,8 @@ class RenterRoomDetail extends Component{
                         }
                     }
 
+                    if(this.props.app_state.isRenter){
+
                         const formData = new FormData();
                         formData.append("click", 'click');
                         formData.append("room_id_click", this.state.room_id);
@@ -213,6 +212,8 @@ class RenterRoomDetail extends Component{
                         axios.post('rooms/addSearchesClicks/',formData, {headers: {
                         'Content-Type': 'application/json'
                         }}).then(response => {console.log('click ok')}).catch(error => {console.log(error.response);})
+
+                    }
 
                         if (this.state.date_mode){
                             const dateData = new FormData();
@@ -315,7 +316,7 @@ class RenterRoomDetail extends Component{
             this.setState({
                 date_free: false
             })
-            alert(`You have successfully rented the current room from ${this.state.start_date} to ${this.state.start_date}.\n You may see your reservations at the reservation list in the navigation bar and click on their details to contact the host for more information.`)
+            alert(`You have successfully rented the current room from ${this.state.start_date} to ${this.state.start_date}.\n You may see your reservations at the reservation list in the home page and click on their details to contact the host for more information.`)
             window.location.reload();
         }).catch(error => {console.log(error.response);})
     }
@@ -478,16 +479,6 @@ class RenterRoomDetail extends Component{
                 return( <h1 className="message">You can't access this page!</h1>)
             }
     
-        // return(
-        //     <div>
-                
-        //         {approved_msg}
-        //         {wrap}
-        //         {disapproved_msg}
-        //         {denial}
-                
-        //     </div>
-        // )
     }
 
 

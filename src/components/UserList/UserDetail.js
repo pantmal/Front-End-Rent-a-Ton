@@ -1,8 +1,6 @@
 import React from 'react';
 import {Component} from 'react';
 
-import {Link, Route} from 'react-router-dom';
-
 import axios from '../AXIOS_conf'
 
 //CSS note: change view
@@ -61,7 +59,7 @@ class UserDetail extends Component{
                 Authorization: `JWT ${localStorage.getItem('storage_token')}`
             }}
         ).then( response => {
-            alert('Successfully approved the current host!')
+            alert('The status of this host has been successfully updated.')
         }).catch(error => {
             console.log(error.response)
             alert('Some kind of error occured...')
@@ -70,8 +68,6 @@ class UserDetail extends Component{
                 approval: !prevState.approval
             }
         }))
-
-        
 
     }
     

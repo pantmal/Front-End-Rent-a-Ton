@@ -26,31 +26,10 @@ class RoomImages extends Component{
         }
 
         this.handlePageClick = this.handlePageClick.bind(this);
-        this._handleMultipleImageChange = this._handleMultipleImageChange.bind(this)
+        this.handleMultipleImageChange = this.handleMultipleImageChange.bind(this)
         this.handleNewImages = this.handleNewImages.bind(this);
-        //this.receivedData = this.receivedData.bind(this)
     }
 
-    _handleMultipleImageChange = e =>{
-        e.preventDefault();
-
-        // FileList to Array
-        let files = Array.from(e.target.files);
-
-        // File Reader for Each file and and update state arrays
-        files.forEach((file, i) => {
-            let reader = new FileReader();
-
-            reader.onloadend = () => {
-                this.setState(prevState => ({
-                    files: [...prevState.files, file],
-                    imagesPreviewUrls: [...prevState.imagesPreviewUrls, reader.result]
-                }));
-            }
-
-            reader.readAsDataURL(file);
-        });
-    }
 
     componentDidMount(){
     
@@ -95,41 +74,41 @@ class RoomImages extends Component{
         const id = this.props.match.params.id
         const data = {room_id_img: id}
             
-            axios.post('/rooms/getImages/', JSON.stringify(data), {headers: { 
-                'Content-Type': 'application/json'
-              }})
-              .then(res => {
-                
+        axios.post('/rooms/getImages/', JSON.stringify(data), {headers: { 
+            'Content-Type': 'application/json'
+            }})
+            .then(res => {
+            
                 if (res.data==='not found'){
                     this.setState({
                         not_found: true
                     })
                 }else{
 
-                const data = res.data;
-                const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
-                console.log(slice)
-                const postData = slice.map(pd =>
-                //add a message if it's him!
-                //this url shit will change hopefully
-                <React.Fragment>
-                    <Link to={`/roomImageDetail/${pd.pk}`}><img src={"http://localhost:8000"+pd.picture} style={{width:250,height: 250}} alt=""/> </Link>
-                    <hr/>
-                </React.Fragment>)
+                    const data = res.data;
+                    const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
+                    console.log(slice)
+                    const postData = slice.map(pd =>
+                 
+                    //this url shit will change hopefully
+                    <React.Fragment>
+                        <Link to={`/roomImageDetail/${pd.pk}`}><img src={"http://localhost:8000"+pd.picture} style={{width:250,height: 250}} alt=""/> </Link>
+                        <hr/>
+                    </React.Fragment>)
 
-                this.setState({
-                    pageCount: Math.ceil(data.length / this.state.perPage),
-                    postData
-                })
+                    this.setState({
+                        pageCount: Math.ceil(data.length / this.state.perPage),
+                        postData
+                    })
                 
-            }
+                }
         })
         
 
     }
 
-    handlePageClick = (e) => {
-        const selectedPage = e.selected;
+    handlePageClick = (event) => {
+        const selectedPage = event.selected;
         const offset = selectedPage * this.state.perPage;
 
         this.setState({
@@ -139,6 +118,27 @@ class RoomImages extends Component{
         });
 
     };
+
+    handleMultipleImageChange = event =>{
+        event.preventDefault();
+
+        // FileList to Array
+        let files = Array.from(event.target.files);
+
+        // File Reader for Each file and and update state arrays
+        files.forEach((file, i) => {
+            let f_reader = new FileReader();
+
+            f_reader.onloadend = () => {
+                this.setState(prevState => ({
+                    files: [...prevState.files, file],
+                    imagesPreviewUrls: [...prevState.imagesPreviewUrls, f_reader.result]
+                }));
+            }
+
+            f_reader.readAsDataURL(file);
+        });
+    }
 
     handleNewImages = event => {
         let room_id = this.state.room_id
@@ -154,7 +154,7 @@ class RoomImages extends Component{
                 }}).then(response => {console.log('ok');
                 }).catch(error => {console.log(error.response);})  
               })
-            alert('Your new images have been added successfully. Reload the page to see them on the list')      
+            alert('Your new images have been added successfully. Refresh the page to see them on the list')      
           }
     }
 
@@ -172,7 +172,7 @@ class RoomImages extends Component{
                 if(this.state.approved){
 
                     let add_photos = <div><h5 className="message" >Add more images: </h5>
-                    <input className="message" type="file" onChange={this._handleMultipleImageChange} multiple/>
+                    <input className="message" type="file" accept='image/*' onChange={this.handleMultipleImageChange} multiple/>
                     {imagesPreviewUrls.map(function(imagePreviewUrl, i){
                         return <div> <img key={i} src={imagePreviewUrl} style={{width:100,height: 100}} /> <br/> </div>
                         })}
@@ -184,18 +184,18 @@ class RoomImages extends Component{
                     let paginate = 
                 
                     <ReactPaginate
-                                previousLabel={"Previous"}
-                                nextLabel={"Next"}
-                                breakLabel={"..."}
-                                breakClassName={"break-me"}
-                                pageCount={this.state.pageCount}
-                                marginPagesDisplayed={2}
-                                pageRangeDisplayed={5}
-                                onPageChange={this.handlePageClick}
-                                containerClassName={"pagination"}
-                                subContainerClassName={"pages pagination"}
-                                activeClassName={"active"}
-                                forcePage={this.state.currentPage}
+                        previousLabel={"Previous"}
+                        nextLabel={"Next"}
+                        breakLabel={"..."}
+                        breakClassName={"break-me"}
+                        pageCount={this.state.pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        containerClassName={"pagination"}
+                        subContainerClassName={"pages pagination"}
+                        activeClassName={"active"}
+                        forcePage={this.state.currentPage}
                     />
 
                     return(
@@ -226,8 +226,6 @@ class RoomImages extends Component{
         }
 
     }
-
-    
 
 }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 
 import {Component} from 'react';
-import {BrowserRouter, Switch, Route, withRouter } from 'react-router-dom';
+import {Switch, Route, withRouter } from 'react-router-dom';
 
 import NavbarClass from '../Navbar/Navbar'
 import Register from '../Register/Register'
@@ -18,7 +18,7 @@ import RoomImages from '../RoomImages/RoomImages';
 import RoomImageDetail from '../RoomImages/RoomImageDetail';
 import AdminPage from '../AdminPage/AdminPage';
 import UserList from '../UserList/UserList';
-import UserDetail from '../UserDetail/UserDetail';
+import UserDetail from '../UserList/UserDetail';
 import Search from '../Search/Search';
 
 import axios from '../AXIOS_conf'
@@ -34,15 +34,13 @@ class App extends Component {
       login_check = true
     }
 
-
-    let pk_check = null
     let user_id = -1
     if (localStorage.getItem('storage_pk')){
       user_id = localStorage.getItem('storage_pk') 
     }
     
     this.state = {
-      username: '',
+      //username: '',
       user_primary_key: user_id,
       isLoggedIn: login_check,
       isAdmin: false,
@@ -54,6 +52,7 @@ class App extends Component {
 
     this.handleLoginSubmission = this.handleLoginSubmission.bind(this)
     this.handleLogoutClick = this.handleLogoutClick.bind(this)
+    this.setDefaultState = this.setDefaultState.bind(this)
 
   }
 
@@ -65,10 +64,10 @@ class App extends Component {
         headers: {
           Authorization: `JWT ${localStorage.getItem('storage_token')}`
         }}*/).then(
-        response => { const user = response.data;
-          this.setState({
-            username: user.username
-          })
+          response => { const user = response.data;
+          // this.setState({
+          //   username: user.username
+          // })
           if (user.is_staff === true){ 
             this.setState({
               isAdmin: true,
@@ -102,20 +101,23 @@ class App extends Component {
     }
   }
 
-  handleLoginSubmission = (event, credentials) =>{
+  handleLoginSubmission = (credentials) =>{
     axios.post('users/authentication/login/', JSON.stringify(credentials), {headers: {
       'Content-Type': 'application/json'
     }}
     ).then(response => { 
+      
       const res_token = response.data.token;
-      const res_user = response.data.user;
       localStorage.setItem('storage_token',res_token);
+      
+      const res_user = response.data.user;
       localStorage.setItem('storage_pk',res_user.pk);
+
       this.setState({
-        username: res_user.username,
-        user_primary_key: res_user.pk,
         isLoggedIn: true,
+        user_primary_key: res_user.pk,
       });
+
       axios.get(`users/userList/${this.state.user_primary_key}`/*,
       {
         headers: {
@@ -154,7 +156,7 @@ class App extends Component {
       )
     } 
       ).catch(error => {console.log(error.response);  
-        console.log("Yes, we have an error.");
+        console.log("Yes, we have a login error.");
         alert('Some kind of error occured, please try again.')
        }
         ).finally( () => { 
@@ -162,9 +164,7 @@ class App extends Component {
         } )
   }
 
-  handleLogoutClick = () => {
-    console.log('logout check')
-    
+  setDefaultState = () =>{
     this.setState({
       username:'',
       user_primary_key: -1,
@@ -173,7 +173,13 @@ class App extends Component {
       isHost: false,
       isRenter: false
     })
+  }
+
+  handleLogoutClick = () => {
+    console.log('logout check')
     
+    this.setDefaultState()
+
     localStorage.clear();
     
     this.props.history.push("/");

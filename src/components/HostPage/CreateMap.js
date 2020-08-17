@@ -11,7 +11,7 @@ import styled from 'styled-components'
 
 const Wrapper = styled.div`width: ${props => props.width}; height: ${props => props.height}`
 
-class Map extends Component{
+class CreateMap extends Component{
 
     constructor(props){
         super(props)
@@ -27,7 +27,7 @@ class Map extends Component{
 
           popup
          .setLatLng(e.latlng)
-         .setContent("You clicked the map at " + e.latlng.toString())
+         .setContent("You have specified the coordinates of this room at " + e.latlng.toString())
          .openOn(this.map);
          
          this.props.form_state.handleGeoChange(e.latlng) 
@@ -36,7 +36,7 @@ class Map extends Component{
 
     componentDidMount(){
 
-        this.map = L.map('map',{center:[58,16],zoom:6,zoomControl:false})
+        this.map = L.map('map',{center:[37.98,23.72],zoom:6,zoomControl:false})
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -53,4 +53,4 @@ class Map extends Component{
 
 }
 
-export default Map
+export default CreateMap

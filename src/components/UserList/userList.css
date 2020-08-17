@@ -1,6 +1,6 @@
 .pagination {
     position: relative;
-    left: 550px;
+    left: 550px; 
     margin: 15px auto;
     display: flex;
     list-style: none;

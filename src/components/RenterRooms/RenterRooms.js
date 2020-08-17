@@ -65,16 +65,15 @@ class RenterRooms extends Component{
 
                 //check results if picture is null
                 const data = res.data;
-                let count = 0
-                const price_data = data.map(d =>
-                    ({ ...d,
-                    total_price: d.price + ((this.state.people-1) * d.price_per_person)})
-                    )
+                // const price_data = data.map(d =>
+                //     ({ ...d,
+                //     total_price: d.price + ((this.state.people-1) * d.price_per_person)})
+                //     )
                 
                 
-                price_data.sort( (a, b) => parseFloat(a.total_price) - parseFloat(b.total_price) )
-                console.log(price_data)
-                const slice = price_data.slice(this.state.offset, this.state.offset + this.state.perPage)
+                data.sort( (a, b) => parseFloat(a.total_price) - parseFloat(b.total_price) )
+                //console.log(price_data)
+                const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
                 console.log(slice)
                 const postData = slice.map(pd =>
                 //add a message if it's him!
@@ -99,8 +98,8 @@ class RenterRooms extends Component{
     }
 
 
-    handlePageClick = (e) => {
-        const selectedPage = e.selected;
+    handlePageClick = (event) => {
+        const selectedPage = event.selected;
         const offset = selectedPage * this.state.perPage;
 
         this.setState({

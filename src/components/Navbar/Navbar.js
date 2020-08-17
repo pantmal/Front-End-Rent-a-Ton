@@ -52,7 +52,6 @@ class NavbarClass extends Component{
 
             <nav className="nav">
                 <Link to="/"><h3><span className="logo">Rent-a-Ton</span></h3></Link> 
-                
                 <Link to="/register"><button className="register"><span >Register</span></button></Link>
                 <Link to="/login"><button className="login" ><span >Login</span></button></Link>
                 

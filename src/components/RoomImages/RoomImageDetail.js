@@ -22,26 +22,8 @@ class RoomImageDetail extends Component{
 
         this.handleUpdate = this.handleUpdate.bind(this)
         this.handleDelete = this.handleDelete.bind(this)
-        this._handleImageChange = this._handleImageChange.bind(this)
+        this.handleImageChange = this.handleImageChange.bind(this)
     }
-
-    _handleImageChange(e) {
-        e.preventDefault();
-    
-        let reader = new FileReader();
-        let file = e.target.files[0];
-    
-        reader.onloadend = () => {
-          this.setState({
-            picture: file,
-            imagePreviewUrl: reader.result
-          });
-        }
-        
-        console.log(reader.result)
-        reader.readAsDataURL(file)
-      }
-
 
     componentDidMount(){
     
@@ -94,6 +76,22 @@ class RoomImageDetail extends Component{
         
     }
 
+    handleImageChange = (event) => {
+        event.preventDefault();
+    
+        let f_reader = new FileReader();
+        let file = event.target.files[0];
+    
+        f_reader.onloadend = () => {
+          this.setState({
+            picture: file,
+            imagePreviewUrl: f_reader.result
+          });
+        }
+        
+        f_reader.readAsDataURL(file)
+      }
+
     handleUpdate = event =>{
 
         const data = {
@@ -132,10 +130,6 @@ class RoomImageDetail extends Component{
             })
 
     }
-
-
-
-    
     
     render(){
 
@@ -153,7 +147,6 @@ class RoomImageDetail extends Component{
              permission = true
             }
         }
-
         
         if (!permission){
             return(
@@ -163,7 +156,7 @@ class RoomImageDetail extends Component{
             return(
                 <div>
                     {$imagePreview} <br/>
-                    <h5 className="message" >Choose a new picture: <input type="file" onChange={this._handleImageChange} /> </h5> <br/>
+                    <h5 className="message" >Choose a new picture: <input type="file" accept='image/*' onChange={this.handleImageChange} /> </h5> <br/>
                     <button className="apply" onClick={this.handleUpdate}>Update this image</button>
                     <button className="apply" onClick={this.handleDelete}>Delete this image</button>
                 </div>

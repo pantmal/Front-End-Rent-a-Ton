@@ -1,6 +1,5 @@
 import React from 'react';
 import {Component} from 'react';
-import ImageUploader from 'react-images-upload';
 
 import axios from '../AXIOS_conf'
 
@@ -31,35 +30,14 @@ class EditProfile extends Component{
         this.handleLastnameChange = this.handleLastnameChange.bind(this)
         this.handleEmailChange = this.handleEmailChange.bind(this)
         this.handlePhoneChange = this.handlePhoneChange.bind(this)
+        this.handleImageChange = this.handleImageChange.bind(this)
         this.handleFormSubmit = this.handleFormSubmit.bind(this)
-        this._handleImageChange = this._handleImageChange.bind(this);
     }
 
     pic_change = false;
 
-    _handleImageChange(e) {
-        e.preventDefault();
-
-        this.pic_change = true;
-    
-        let reader = new FileReader();
-        let file = e.target.files[0];
-    
-        reader.onloadend = () => {
-          this.setState({
-            picture: file,
-            imagePreviewUrl: reader.result
-          });
-        }
-        
-        console.log(reader.result)
-        reader.readAsDataURL(file)
-      }
-    
-
     componentDidMount(){
 
-        this._isMounted = true;
 
         const {id} = this.props.match.params
         if (id != this.props.app_state.user_primary_key){
@@ -133,71 +111,25 @@ class EditProfile extends Component{
             phone: form_phone
         })
     }
+
+    handleImageChange = event => {
+        event.preventDefault();
+
+        this.pic_change = true;
     
-    proceedSubmission(){
-
-        const formData = new FormData();
-
-        if (this.pic_change){
-            const data = {
-                username: this.state.username,
-                password: this.state.password,
-                first_name: this.state.first_name,
-                last_name: this.state.last_name,
-                email: this.state.email,
-                telephone: this.state.phone,
-                picture: this.state.picture
-            }
-
-            formData.append("username", data.username);
-            formData.append("password", data.password);
-            formData.append("first_name", data.first_name);
-            formData.append("last_name", data.last_name);
-            formData.append("email", data.email);
-            formData.append("telephone", data.telephone);
-            formData.append("picture", data.picture);
-
-
-        }else{
-            const data = {
-                username: this.state.username,
-                password: this.state.password,
-                first_name: this.state.first_name,
-                last_name: this.state.last_name,
-                email: this.state.email,
-                telephone: this.state.phone
-            }
-
-            formData.append("username", data.username);
-            formData.append("password", data.password);
-            formData.append("first_name", data.first_name);
-            formData.append("last_name", data.last_name);
-            formData.append("email", data.email);
-            formData.append("telephone", data.telephone);
-
+        let f_reader = new FileReader();
+        let file = event.target.files[0];
+    
+        f_reader.onloadend = () => {
+          this.setState({
+            picture: file,
+            imagePreviewUrl: f_reader.result
+          });
         }
-
-        /*axios.patch(`users/userList/${id_match}/`, JSON.stringify(data), {headers: {
-            'Content-Type': 'application/json',
-             Authorization: `JWT ${localStorage.getItem('storage_token')}`
-                
-          }}*/
-        console.log(formData)
-        axios.patch(`users/userList/${this.props.app_state.user_primary_key}/`, formData, {headers: {
-            'Content-Type': 'application/json',
-            Authorization: `JWT ${localStorage.getItem('storage_token')}`
-                
-          }}).then(response => {alert('Your changes have been saved. ');  
-            }).catch(error => {
-                console.log(error.response);   
-                if(error.response.request.response.includes("A user with that username already exists")){
-                    alert('A user with that username already exists. Please fill in the edit form again with another username.')
-                }else{
-                    alert('Some kind of error occured, please try again.')
-                }
-            })
-    }
-
+        
+        f_reader.readAsDataURL(file)
+      }
+    
     handleValidation(){
         let errors = {};
         let formIsValid = true;
@@ -215,7 +147,7 @@ class EditProfile extends Component{
             }
         }
 
-        console.log(this.state.first_name)
+        
         if(this.state.first_name == ''){
             formIsValid = false;
             errors["f_name"] = "\u2757Cannot be empty";
@@ -245,10 +177,16 @@ class EditProfile extends Component{
             errors["email"] = "\u2757Cannot be empty";
         }
 
-       
-        if(!this.state.phone.match(/^[0-9]+$/)){
+        if(this.state.phone == ''){
             formIsValid = false;
-            errors["phone"] = "\u2757Only numbers";
+            errors["name"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.phone != ''){
+            if(!this.state.phone.match(/^[0-9]+$/)){
+                formIsValid = false;
+                errors["phone"] = "\u2757Only numbers";
+            }
         }
 
 
@@ -265,6 +203,54 @@ class EditProfile extends Component{
             this.proceedSubmission()
         }
 
+    }
+
+    proceedSubmission(){
+
+        const data = {
+            username: this.state.username,
+            password: this.state.password,
+            first_name: this.state.first_name,
+            last_name: this.state.last_name,
+            email: this.state.email,
+            telephone: this.state.phone,
+            picture: this.state.picture
+        }
+
+        const formData = new FormData();
+
+        formData.append("username", data.username);
+        formData.append("password", data.password);
+        formData.append("first_name", data.first_name);
+        formData.append("last_name", data.last_name);
+        formData.append("email", data.email);
+        formData.append("telephone", data.telephone);
+
+
+        if (this.pic_change){
+            
+            formData.append("picture", data.picture);            
+        }
+
+        /*axios.patch(`users/userList/${id_match}/`, JSON.stringify(data), {headers: {
+            'Content-Type': 'application/json',
+             Authorization: `JWT ${localStorage.getItem('storage_token')}`
+                
+          }}*/
+        console.log(formData)
+        axios.patch(`users/userList/${this.props.app_state.user_primary_key}/`, formData, {headers: {
+            'Content-Type': 'application/json',
+            Authorization: `JWT ${localStorage.getItem('storage_token')}`
+                
+          }}).then(response => {alert('Your changes have been saved. ');  
+            }).catch(error => {
+                console.log(error.response);   
+                if(error.response.request.response.includes("A user with that username already exists")){
+                    alert('A user with that username already exists. Please fill in the edit form again with another username.')
+                }else{
+                    alert('Some kind of error occured, please try again.')
+                }
+            })
     }
 
     render(){
@@ -296,7 +282,7 @@ class EditProfile extends Component{
                         <h5 className="message-edit"> Update your phone here:<input type="tel" name="phone" size="30" defaultValue={this.state.phone} onChange={this.handlePhoneChange}/></h5> 
                         <span style={{color: "red"}}>{this.state.errors["phone"]}</span>
                         {$imagePreview} <br/>
-                        <h5 className="message-edit">Update your picture here: <input type="file" onChange={this._handleImageChange} /> </h5> <br/> <br/>
+                        <h5 className="message-edit">Update your picture here: <input type="file" accept='image/*' onChange={this.handleImageChange} /> </h5> <br/> <br/>
                         <button className="apply"><span>Apply changes!</span></button>
                         <br/>
                     </form>

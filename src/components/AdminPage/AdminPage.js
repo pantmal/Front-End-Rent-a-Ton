@@ -27,7 +27,7 @@ class AdminPage extends Component{
         }else{
             return(
                 <div>
-                <h1 className="message">Welcome admin. You make click <Link to={'/userList/'}><span>here</span> </Link>  to manage users. If you want to export data choose between XML or JSON format.</h1>   
+                <h1 className="message">Welcome dear admin. You make click <Link to={'/userList/'}><span>here</span> </Link> to manage users. If you want to export data choose between XML or JSON format.</h1>   
                 </div>
             )
         }

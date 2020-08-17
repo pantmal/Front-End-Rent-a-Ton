@@ -207,17 +207,16 @@ class Home extends Component{
                 role = 'host'
             }else if(this.props.app_state.isRenter && !this.props.app_state.isHost){
                 role = 'renter'
-                
             }else if(this.props.app_state.isRenter && this.props.app_state.isHost){
                 role = 'host and renter'
             }else{
                 role = 'um...'
             } 
 
-            user_message = <h1 className="message"> <span> Congrats you are loggin in as {role} </span> </h1>       
+            user_message = <h1 className="message"> <span> Welcome dear user. You are logged in as {role} </span> </h1>       
 
         }else{
-            anon_message = <h1 className="message"> Welcome anon user </h1>
+            anon_message = <h1 className="message"> Welcome dear visitor </h1>
         }
 
         if(login_check === false || this.props.app_state.isRenter){

@@ -56,7 +56,7 @@ class Login extends Component{
         event.preventDefault()
 
         if(this.handleValidation()){
-            this.props.app_state.handleLoginSubmission(event, this.state)
+            this.props.app_state.handleLoginSubmission(this.state)
         }
 
     }
@@ -66,7 +66,7 @@ class Login extends Component{
         let login_check = this.props.app_state.isLoggedIn;
         if (login_check === true){
             return(
-                <h1>You are already logged in!</h1>
+                <h1 className="message">You are already logged in!</h1>
             )
         }else{
             return(

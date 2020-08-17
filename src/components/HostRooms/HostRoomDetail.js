@@ -48,8 +48,6 @@ class HostRoomDetail extends Component{
             lat: '',
             lng: '',
             handleGeoChange: this.handleGeoChange,
-            files: [],
-            imagesPreviewUrls: [],
             errors: {}
         }
 
@@ -65,7 +63,7 @@ class HostRoomDetail extends Component{
         this.handlePriceChange = this.handlePriceChange.bind(this)
         this.handleExtraPriceChange = this.handleExtraPriceChange.bind(this)
         this.handleRadioChange = this.handleRadioChange.bind(this)
-        this._handleImageChange = this._handleImageChange.bind(this)
+        this.handleImageChange = this.handleImageChange.bind(this)
         this.handleBedsChange = this.handleBedsChange.bind(this)
         this.handleBedroomsChange = this.handleBedroomsChange.bind(this)
         this.handleBathroomsChange = this.handleBathroomsChange.bind(this)
@@ -83,46 +81,15 @@ class HostRoomDetail extends Component{
         this.handlePetsChange = this.handlePetsChange.bind(this)
         this.handleEventsChange = this.handleEventsChange.bind(this)
         this.handleMinNightsChange = this.handleMinNightsChange.bind(this)
-        this.handleFormSubmit = this.handleFormSubmit.bind(this)
         this.handleGeoChange = this.handleGeoChange.bind(this)
-        this._handleMultipleImageChange = this._handleMultipleImageChange.bind(this)
+        this.handleFormSubmit = this.handleFormSubmit.bind(this)
+        
     }
 
-    _handleMultipleImageChange = e =>{
-        e.preventDefault();
-
-        // FileList to Array
-        let files = Array.from(e.target.files);
-
-        // File Reader for Each file and and update state arrays
-        files.forEach((file, i) => {
-            let reader = new FileReader();
-
-            reader.onloadend = () => {
-                this.setState(prevState => ({
-                    files: [...prevState.files, file],
-                    imagesPreviewUrls: [...prevState.imagesPreviewUrls, reader.result]
-                }));
-            }
-
-            reader.readAsDataURL(file);
-        });
-    }
-
-
-    handleGeoChange = (landscape) => {
-        this.setState({
-                     lat: landscape.lat,
-                     lng: landscape.lng
-                 })
-        console.log(this.state)
-    }
+    pic_change = false
     
-    //!!!
     componentDidMount(){
-
-        
-        
+         
         const id = this.props.app_state.user_primary_key
         axios.get(`users/userList/${id}`/*,
       {
@@ -139,6 +106,7 @@ class HostRoomDetail extends Component{
                   Authorization: `JWT ${localStorage.getItem('storage_token')}`
                 }}*/).then( 
                     response => {
+                    console.log('comp')
                     const res_room = response.data
                     this.setState({
                         room_id: res_room.pk,
@@ -150,12 +118,12 @@ class HostRoomDetail extends Component{
                         transit: res_room.transit,
                         s_date: res_room.start_date,
                         e_date: res_room.end_date,
-                        price: res_room.price,
-                        extra_price: res_room.price_per_person,
-                        max_people: res_room.max_people,
-                        beds: res_room.beds,
-                        bedrooms: res_room.bedrooms,
-                        bathrooms: res_room.bathrooms,
+                        price: JSON.stringify(res_room.price),
+                        extra_price: JSON.stringify(res_room.price_per_person),
+                        max_people: JSON.stringify(res_room.max_people),
+                        beds: JSON.stringify(res_room.beds),
+                        bedrooms: JSON.stringify(res_room.bedrooms),
+                        bathrooms: JSON.stringify(res_room.bathrooms),
                         picture: res_room.rep_photo,
                         imagePreviewUrl: res_room.rep_photo,
                         room_type: res_room.room_type,
@@ -167,15 +135,16 @@ class HostRoomDetail extends Component{
                         parking: res_room.has_parking,
                         elevator: res_room.has_elevator,
                         living_room: res_room.has_living_room,
-                        feet: res_room.square_feet,
+                        feet: JSON.stringify(res_room.square_feet),
                         desc: res_room.description,
                         smoking: res_room.smoking,
                         pets: res_room.pets,
                         events: res_room.events,
-                        min_nights: res_room.minimum_nights,
+                        min_nights: JSON.stringify(res_room.minimum_nights),
                         host_id: res_room.host_id
                     })
 
+                
                     let location = res_room.geolocation.split(' ')
                     let lng = location[1].replace('(','')
                     let lat = location[2].replace(')','')
@@ -184,7 +153,7 @@ class HostRoomDetail extends Component{
                         lng: lng
                     })
 
-                    console.log(lat)
+                    
                     if(this.state.host_id != this.props.app_state.user_primary_key){
                         alert('You can only edit your own rooms')
                         this.props.history.push("/")
@@ -280,21 +249,23 @@ class HostRoomDetail extends Component{
         });
     }
 
-    _handleImageChange(e) {
-        e.preventDefault();
+    handleImageChange = (event) => {
+        event.preventDefault();
+
+        this.pic_change = true
     
-        let reader = new FileReader();
-        let file = e.target.files[0];
+        let f_reader = new FileReader();
+        let file = event.target.files[0];
     
-        reader.onloadend = () => {
+        f_reader.onloadend = () => {
           this.setState({
             picture: file,
-            imagePreviewUrl: reader.result
+            imagePreviewUrl: f_reader.result
           });
         }
         
-        console.log(reader.result)
-        reader.readAsDataURL(file)
+        
+        f_reader.readAsDataURL(file)
       }
 
     handleBedsChange = event => {
@@ -405,12 +376,19 @@ class HostRoomDetail extends Component{
         })
     }
 
-    handleValidation(){ // validation  remaining
+    handleGeoChange = (landscape) => {
+        this.setState({
+            lat: landscape.lat,
+            lng: landscape.lng
+        })
+    }
+
+    handleValidation(){ 
         
         let errors = {};
         let formIsValid = true;
 
-        
+    
         if(this.state.name == ''){
            formIsValid = false;
            errors["name"] = "\u2757Cannot be empty";
@@ -512,14 +490,28 @@ class HostRoomDetail extends Component{
 
         }
         
-        if(!this.state.price.match(/^[0-9.]+$/)){ //forgot some stuff here lol
+        if(this.state.price == ''){
             formIsValid = false;
-            errors["price"] = "\u2757Only numbers";
+            errors["price"] = "\u2757Cannot be empty";
         }
 
-        if(!this.state.extra_price.match(/^[0-9.]+$/)){ //forgot some stuff here lol
+        if(this.state.price != ''){
+            if(!this.state.price.match(/^[0-9.]+$/)){ 
+                formIsValid = false;
+                errors["price"] = "\u2757Only numbers";
+            }
+        }
+
+        if(this.state.extra_price == ''){
             formIsValid = false;
-            errors["ext_price"] = "\u2757Only numbers";
+            errors["ext_price"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.extra_price != ''){
+            if(!this.state.extra_price.match(/^[0-9.]+$/)){ 
+                formIsValid = false;
+                errors["ext_price"] = "\u2757Only numbers";
+            }
         }
         
 
@@ -528,26 +520,47 @@ class HostRoomDetail extends Component{
             errors["max_people"] = "\u2757Cannot be empty";
         }
 
+        if(this.state.max_people != ''){
+            if(!this.state.max_people.match(/^[0-9]+$/)){ 
+                formIsValid = false;
+                errors["max_people"] = "\u2757Only numbers";
+            }
+        }
        
-        if(!this.state.beds.match(/^[0-9]+$/)){ //forgot some stuff here lol
+        if(this.state.beds == ''){
             formIsValid = false;
-            errors["beds"] = "\u2757Only numbers";
+            errors["beds"] = "\u2757Cannot be empty";
         }
-
-        if(!this.state.bedrooms.match(/^[0-9]+$/)){ //forgot some stuff here lol
-            formIsValid = false;
-            errors["bedrooms"] = "\u2757Only numbers";
-        }
-
-        if(!this.state.bathrooms.match(/^[0-9]+$/)){ //forgot some stuff here lol
-            formIsValid = false;
-            errors["bathrooms"] = "\u2757Only numbers";
-        }
-
        
-        if(this.state.picture == ''){
+        if(this.state.beds != ''){
+            if(!this.state.beds.match(/^[0-9]+$/)){ 
+                formIsValid = false;
+                errors["beds"] = "\u2757Only numbers";
+            }
+        }   
+
+        if(this.state.bedrooms == ''){
             formIsValid = false;
-            errors["picture"] = "\u2757Cannot be empty";
+            errors["bedrooms"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.bedrooms != ''){
+            if(!this.state.bedrooms.match(/^[0-9]+$/)){ 
+                formIsValid = false;
+                errors["bedrooms"] = "\u2757Only numbers";
+            }
+        }
+
+        if(this.state.bathrooms == ''){
+            formIsValid = false;
+            errors["bathrooms"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.bathrooms != ''){
+            if(!this.state.bathrooms.match(/^[0-9]+$/)){ 
+                formIsValid = false;
+                errors["bathrooms"] = "\u2757Only numbers";
+            }
         }
 
 
@@ -561,6 +574,13 @@ class HostRoomDetail extends Component{
             errors["feet"] = "\u2757Cannot be empty";
         }
 
+        if(this.state.feet != ''){
+            if(!this.state.feet.match(/^[0-9.]+$/)){ 
+                formIsValid = false;
+                errors["feet"] = "\u2757Only numbers";
+            }
+        }
+
         if(this.state.desc == ''){
             formIsValid = false;
             errors["desc"] = "\u2757Cannot be empty";
@@ -570,6 +590,13 @@ class HostRoomDetail extends Component{
         if(this.state.min_nights == ''){
             formIsValid = false;
             errors["min_nights"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.min_nights != ''){
+            if(!this.state.min_nights.match(/^[0-9]+$/)){ 
+                formIsValid = false;
+                errors["min_nights"] = "\u2757Only numbers";
+            }
         }
 
         this.setState({errors: errors});
@@ -587,7 +614,7 @@ class HostRoomDetail extends Component{
 
     }
 
-    //!!!
+    
     proceedSubmission(){
         console.log(this.state)
 
@@ -647,7 +674,6 @@ class HostRoomDetail extends Component{
         formData.append("beds", data.beds);
         formData.append("bedrooms", data.bedrooms);
         formData.append("bathrooms", data.bathrooms);
-        formData.append("rep_photo", data.rep_photo);
         formData.append("room_type", data.room_type);
         formData.append("has_wifi", data.has_wifi);
         formData.append("has_heating", data.has_heating);
@@ -666,26 +692,18 @@ class HostRoomDetail extends Component{
         formData.append("host_id", data.host_id);
         formData.append("reserved", data.reserved);
 
-        axios.post('rooms/roomList/', formData, {headers: {
+        if (this.pic_change){
+            formData.append("rep_photo", data.rep_photo);
+        }
+
+        axios.patch(`rooms/roomList/${this.state.room_id}/`, formData, {headers: {
             'Content-Type': 'application/json'
           }}).then(response => {
-              alert('Your new room has been added! You may see it in the room list');
-              if(this.state.files.length > 0){
-              this.state.files.forEach(function(value, index, array) {
-                const formData = new FormData();
-   
-                formData.append("room_id_img", response.data.pk);
-                formData.append("picture", value);
-                axios.post('rooms/roomImages/',formData, {headers: {
-                    'Content-Type': 'application/json'
-                  }}).then(response => {console.log('ok')}).catch(error => {console.log(error.response);})  
-                })    
-            }
+              alert('Your room has been updated!');
             }).catch(error => {console.log(error.response);  
                                alert('Some kind of error occured, please try again.')                
             })
 
-            
         
     }
 
@@ -696,17 +714,10 @@ class HostRoomDetail extends Component{
         if (imagePreviewUrl) {
             $imagePreview = (<img src={imagePreviewUrl} style={{width:500,height: 500}} />);
         }
-        //CAN'T BE NULL
-        //ALSO HE CAN ADD EXTRA PHOTOS
-        //PLUS: CHANGE DESC TO TEXT AREA
 
-        let disapproved_msg
-        let approved_msg
-        let denial
-    
+        
         let login_check = this.props.app_state.isLoggedIn;
         if (login_check){
-
             if(this.props.app_state.isHost){
                 if(this.state.approved){
                     return(
@@ -735,9 +746,9 @@ class HostRoomDetail extends Component{
                         <span style={{color: "red"}}>{this.state.errors["e_date"]}</span>
                         <h5 className="message" > Max number of people:<input name="max_people" defaultValue={this.state.max_people} onChange={this.handlePeopleChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["max_people"]}</span>
-                        <h5 className="message" > Starting price:<input name="price" defaultValue={this.state.price} onChange={this.handlePriceChange} /></h5> 
+                        <h5 className="message" > Starting price:<input name="price" type="number" step="0.1" defaultValue={this.state.price} onChange={this.handlePriceChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["price"]}</span>
-                        <h5 className="message" > Price per extra people:<input name="ext_price" defaultValue={this.state.extra_price} onChange={this.handleExtraPriceChange} /></h5> 
+                        <h5 className="message" > Price per extra people:<input name="ext_price" type="number" step="0.1" defaultValue={this.state.extra_price} onChange={this.handleExtraPriceChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["ext_price"]}</span>
                         <h5 className="message">Choose room type here:</h5> 
                         <h5 className="message">Private Room<input type="radio" value="Private room" name="room_type" checked={this.state.room_type === "Private room"} onChange={this.handleRadioChange}/>  </h5>
@@ -745,7 +756,7 @@ class HostRoomDetail extends Component{
                         <h5 className="message">Entire home/apt<input type="radio" value="Entire home/apt" name="room_type" checked={this.state.room_type === "Entire home/apt"} onChange={this.handleRadioChange} /> </h5>
                         <span style={{color: "red"}}>{this.state.errors["room_type"]}</span>
                         {$imagePreview} <br/>
-                        <h5 className="message" >Choose at least one picture that represents your property: <input type="file" onChange={this._handleImageChange} /> </h5> <br/>
+                        <h5 className="message" >Choose at least one picture that represents your property: <input type="file" accept='image/*' onChange={this.handleImageChange} /> </h5> <br/>
                         <div>
                         <span style={{color: "red"}}>{this.state.errors["picture"]}</span>
                         <h5 className="message" > Click <Link to={`/roomImages/${this.state.room_id}`}>here</Link> to manage the other images related to this room </h5>
@@ -756,7 +767,7 @@ class HostRoomDetail extends Component{
                         <span style={{color: "red"}}>{this.state.errors["bedrooms"]}</span>
                         <h5 className="message" > Number of bathrooms:<input name="bathrooms" defaultValue={this.state.bathrooms} onChange={this.handleBathroomsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["bathrooms"]}</span>
-                        <h5 className="message" > Square feet:<input name="feet" defaultValue={this.state.feet} onChange={this.handleFeetChange} /></h5> 
+                        <h5 className="message" > Square feet:<input name="feet" type="number" step="0.1" defaultValue={this.state.feet} onChange={this.handleFeetChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["feet"]}</span>
                         <h5 className="message" > Description:<textarea defaultValue={this.state.desc} onChange={this.handleDescChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["desc"]}</span>
@@ -792,21 +803,8 @@ class HostRoomDetail extends Component{
             return( <h1 className="message">You can't access this page!</h1>)
         }
 
-        // return(
-        //     <div>
-                
-        //         {approved_msg}
-        //         {wrap}
-        //         {disapproved_msg}
-        //         {denial}
-                
-        //     </div>
-        // )
     }
 
 }
-
-
-
 
 export default HostRoomDetail

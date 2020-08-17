@@ -23,6 +23,7 @@ class UserList extends Component{
             receivedData: this.receivedData
         };
 
+        
         this.handlePageClick = this.handlePageClick.bind(this);
     }
 
@@ -53,7 +54,7 @@ class UserList extends Component{
                     <p className="message"> Host: {pd.is_host ? '\u2705':'\u274c'}</p>
                     <p className="message"> Renter: {pd.is_renter ? '\u2705':'\u274c'}</p>
                     <p className="message"> Approved: {pd.approved ? '\u2705':'\u274c'}</p>
-                    <hr/>
+                    <hr/> 
                 </React.Fragment>)
 
                 this.setState({
@@ -64,8 +65,8 @@ class UserList extends Component{
     }
 
 
-    handlePageClick = (e) => {
-        const selectedPage = e.selected;
+    handlePageClick = (event) => {
+        const selectedPage = event.selected;
         const offset = selectedPage * this.state.perPage;
 
         this.setState({

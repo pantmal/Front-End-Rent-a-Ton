@@ -3,13 +3,15 @@ import React from 'react';
 import {Component} from 'react';
 import {Link} from 'react-router-dom';
 
+import AwesomeSlider from "react-awesome-slider";
+
 import axios from '../AXIOS_conf'
 //import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import styled from 'styled-components'
 
-import Map from './Map.js'
+import CreateMap from './CreateMap.js'
 
 
 class HostPage extends Component{
@@ -70,7 +72,7 @@ class HostPage extends Component{
         this.handlePriceChange = this.handlePriceChange.bind(this)
         this.handleExtraPriceChange = this.handleExtraPriceChange.bind(this)
         this.handleRadioChange = this.handleRadioChange.bind(this)
-        this._handleImageChange = this._handleImageChange.bind(this)
+        this.handleImageChange = this.handleImageChange.bind(this)
         this.handleBedsChange = this.handleBedsChange.bind(this)
         this.handleBedroomsChange = this.handleBedroomsChange.bind(this)
         this.handleBathroomsChange = this.handleBathroomsChange.bind(this)
@@ -90,45 +92,12 @@ class HostPage extends Component{
         this.handleMinNightsChange = this.handleMinNightsChange.bind(this)
         this.handleFormSubmit = this.handleFormSubmit.bind(this)
         this.handleGeoChange = this.handleGeoChange.bind(this)
-        this._handleMultipleImageChange = this._handleMultipleImageChange.bind(this)
+        this.handleMultipleImageChange = this.handleMultipleImageChange.bind(this)
 
     }
-
-    _handleMultipleImageChange = e =>{
-        e.preventDefault();
-
-        // FileList to Array
-        let files = Array.from(e.target.files);
-
-        // File Reader for Each file and and update state arrays
-        files.forEach((file, i) => {
-            let reader = new FileReader();
-
-            reader.onloadend = () => {
-                this.setState(prevState => ({
-                    files: [...prevState.files, file],
-                    imagesPreviewUrls: [...prevState.imagesPreviewUrls, reader.result]
-                }));
-            }
-
-            reader.readAsDataURL(file);
-        });
-    }
-
-
-    handleGeoChange = (landscape) => {
-        this.setState({
-                     lat: landscape.lat,
-                     lng: landscape.lng
-                 })
-        console.log(this.state)
-    }
-    
 
     componentDidMount(){
 
-        
-        
         const id = this.props.app_state.user_primary_key
         axios.get(`users/userList/${id}`/*,
       {
@@ -140,6 +109,7 @@ class HostPage extends Component{
           })}).catch(error => {console.log(error.response);})
     }
 
+    
     handleNameChange = event => {
         const form_name = event.target.value
         this.setState({
@@ -223,22 +193,42 @@ class HostPage extends Component{
         });
     }
 
-    _handleImageChange(e) {
-        e.preventDefault();
+    handleImageChange = event => {
+        event.preventDefault();
     
-        let reader = new FileReader();
-        let file = e.target.files[0];
+        let f_reader = new FileReader();
+        let file = event.target.files[0];
     
-        reader.onloadend = () => {
+        f_reader.onloadend = () => {
           this.setState({
             picture: file,
-            imagePreviewUrl: reader.result
+            imagePreviewUrl: f_reader.result
           });
         }
         
-        console.log(reader.result)
-        reader.readAsDataURL(file)
-      }
+        f_reader.readAsDataURL(file)
+    }
+
+    handleMultipleImageChange = event =>{
+        event.preventDefault();
+
+        // FileList to Array
+        let files = Array.from(event.target.files);
+
+        // File Reader for Each file and and update state arrays
+        files.forEach((file, i) => {
+            let f_reader = new FileReader();
+
+            f_reader.onloadend = () => {
+                this.setState(prevState => ({
+                    files: [...prevState.files, file],
+                    imagesPreviewUrls: [...prevState.imagesPreviewUrls, f_reader.result]
+                }));
+            }
+
+            f_reader.readAsDataURL(file);
+        });
+    }
 
     handleBedsChange = event => {
         const form_beds = event.target.value
@@ -348,7 +338,15 @@ class HostPage extends Component{
         })
     }
 
-    handleValidation(){ // validation  remaining
+    handleGeoChange = (landscape) => {
+        this.setState({
+            lat: landscape.lat,
+            lng: landscape.lng
+        })
+        console.log(this.state)
+    }
+
+    handleValidation(){ 
         
         let errors = {};
         let formIsValid = true;
@@ -372,7 +370,7 @@ class HostPage extends Component{
         if(this.state.hood == ''){
             formIsValid = false;
             errors["hood"] = "\u2757Cannot be empty";
-         }
+        }
  
          if(this.state.hood != ''){
              if(!this.state.hood.match(/^[a-zA-Z]+$/)){
@@ -454,15 +452,29 @@ class HostPage extends Component{
             }
 
         }
-        
-        if(!this.state.price.match(/^[0-9.]+$/)){ //forgot some stuff here lol
+
+        if(this.state.price == ''){
             formIsValid = false;
-            errors["price"] = "\u2757Only numbers";
+            errors["price"] = "\u2757Cannot be empty";
         }
 
-        if(!this.state.extra_price.match(/^[0-9.]+$/)){ //forgot some stuff here lol
+        if(this.state.price != ''){
+            if(!this.state.price.match(/^[0-9.]+$/)){ 
+                formIsValid = false;
+                errors["price"] = "\u2757Only numbers";
+            }
+        }
+
+        if(this.state.extra_price == ''){
             formIsValid = false;
-            errors["ext_price"] = "\u2757Only numbers";
+            errors["ext_price"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.extra_price != ''){
+            if(!this.state.extra_price.match(/^[0-9.]+$/)){ 
+                formIsValid = false;
+                errors["ext_price"] = "\u2757Only numbers";
+            }
         }
         
 
@@ -471,20 +483,47 @@ class HostPage extends Component{
             errors["max_people"] = "\u2757Cannot be empty";
         }
 
+        if(this.state.max_people != ''){
+            if(!this.state.max_people.match(/^[0-9]+$/)){ 
+                formIsValid = false;
+                errors["max_people"] = "\u2757Only numbers";
+            }
+        }
+
+        if(this.state.beds == ''){
+            formIsValid = false;
+            errors["beds"] = "\u2757Cannot be empty";
+        }
        
-        if(!this.state.beds.match(/^[0-9]+$/)){ //forgot some stuff here lol
+        if(this.state.beds != ''){
+            if(!this.state.beds.match(/^[0-9]+$/)){ 
+                formIsValid = false;
+                errors["beds"] = "\u2757Only numbers";
+            }
+        }   
+
+        if(this.state.bedrooms == ''){
             formIsValid = false;
-            errors["beds"] = "\u2757Only numbers";
+            errors["bedrooms"] = "\u2757Cannot be empty";
         }
 
-        if(!this.state.bedrooms.match(/^[0-9]+$/)){ //forgot some stuff here lol
-            formIsValid = false;
-            errors["bedrooms"] = "\u2757Only numbers";
+        if(this.state.bedrooms != ''){
+            if(!this.state.bedrooms.match(/^[0-9]+$/)){ 
+                formIsValid = false;
+                errors["bedrooms"] = "\u2757Only numbers";
+            }
         }
 
-        if(!this.state.bathrooms.match(/^[0-9]+$/)){ //forgot some stuff here lol
+        if(this.state.bathrooms == ''){
             formIsValid = false;
-            errors["bathrooms"] = "\u2757Only numbers";
+            errors["bathrooms"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.bathrooms != ''){
+            if(!this.state.bathrooms.match(/^[0-9]+$/)){ 
+                formIsValid = false;
+                errors["bathrooms"] = "\u2757Only numbers";
+            }
         }
 
        
@@ -504,6 +543,13 @@ class HostPage extends Component{
             errors["feet"] = "\u2757Cannot be empty";
         }
 
+        if(this.state.feet != ''){
+            if(!this.state.feet.match(/^[0-9.]+$/)){ 
+                formIsValid = false;
+                errors["feet"] = "\u2757Only numbers";
+            }
+        }
+
         if(this.state.desc == ''){
             formIsValid = false;
             errors["desc"] = "\u2757Cannot be empty";
@@ -513,6 +559,13 @@ class HostPage extends Component{
         if(this.state.min_nights == ''){
             formIsValid = false;
             errors["min_nights"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.min_nights != ''){
+            if(!this.state.min_nights.match(/^[0-9]+$/)){ 
+                formIsValid = false;
+                errors["min_nights"] = "\u2757Only numbers";
+            }
         }
 
         this.setState({errors: errors});
@@ -626,9 +679,7 @@ class HostPage extends Component{
             }).catch(error => {console.log(error.response);  
                                alert('Some kind of error occured, please try again.')                
             })
-
-            
-        
+                    
     }
 
     
@@ -639,16 +690,9 @@ class HostPage extends Component{
         if (imagePreviewUrl) {
             $imagePreview = (<img src={imagePreviewUrl} style={{width:500,height: 500}} />);
         }
-        //CAN'T BE NULL
-        //ALSO HE CAN ADD EXTRA PHOTOS
-        //PLUS: CHANGE DESC TO TEXT AREA
 
         let {imagesPreviewUrls} = this.state;        
 
-        let disapproved_msg
-        let approved_msg
-        let denial
-    
         let login_check = this.props.app_state.isLoggedIn;
         if (login_check){
 
@@ -662,7 +706,7 @@ class HostPage extends Component{
                         <h5 className="message" > Name:<input name="name" onChange={this.handleNameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["name"]}</span>
                         <h5 className="message">Specify the geographic location of the room using the map:</h5> 
-                        <Map form_state={{...this.state}}/>
+                        <CreateMap form_state={{...this.state}}/>
                         <span style={{color: "red"}}>{this.state.errors["geolocation"]}</span>
                         <h5 className="message" > Address:<input name="address" onChange={this.handleAddressChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["street"]}</span>
@@ -680,9 +724,9 @@ class HostPage extends Component{
                         <span style={{color: "red"}}>{this.state.errors["e_date"]}</span>
                         <h5 className="message" > Max number of people:<input name="max_people" onChange={this.handlePeopleChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["max_people"]}</span>
-                        <h5 className="message" > Starting price:<input name="price" onChange={this.handlePriceChange} /></h5> 
+                        <h5 className="message" > Starting price:<input name="price" type="number" step="0.1" onChange={this.handlePriceChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["price"]}</span>
-                        <h5 className="message" > Price per extra people:<input name="ext_price" onChange={this.handleExtraPriceChange} /></h5> 
+                        <h5 className="message" > Price per extra people:<input name="ext_price" type="number" step="0.1" onChange={this.handleExtraPriceChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["ext_price"]}</span>
                         <h5 className="message">Choose room type here:</h5> 
                         <h5 className="message">Private Room<input type="radio" value="Private room" name="room_type" checked={this.state.room_type === "Private room"} onChange={this.handleRadioChange}/>  </h5>
@@ -690,14 +734,14 @@ class HostPage extends Component{
                         <h5 className="message">Entire home/apt<input type="radio" value="Entire home/apt" name="room_type" checked={this.state.room_type === "Entire home/apt"} onChange={this.handleRadioChange} /> </h5>
                         <span style={{color: "red"}}>{this.state.errors["room_type"]}</span>
                         {$imagePreview} <br/>
-                        <h5 className="message" >Choose at least one picture that represents your property: <input type="file" onChange={this._handleImageChange} /> </h5> <br/>
+                        <h5 className="message" >Choose at least one picture that represents your property: <input type="file" accept='image/*' onChange={this.handleImageChange} /> </h5> <br/>
                         <div>
                         <span style={{color: "red"}}>{this.state.errors["picture"]}</span>
                         <h5 className="message" >Add more images: </h5>
-                        <input className="message" type="file" onChange={this._handleMultipleImageChange} multiple/>
+                        <input className="message" type="file" accept='image/*' onChange={this.handleMultipleImageChange} multiple/>
                         {imagesPreviewUrls.map(function(imagePreviewUrl, i){
                         return <div> <img key={i} src={imagePreviewUrl} style={{width:100,height: 100}} /> <br/> </div>
-                        })}
+                        })} 
                         </div>
                         <h5 className="message" > Number of beds:<input name="beds" onChange={this.handleBedsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["beds"]}</span>
@@ -705,7 +749,7 @@ class HostPage extends Component{
                         <span style={{color: "red"}}>{this.state.errors["bedrooms"]}</span>
                         <h5 className="message" > Number of bathrooms:<input name="bathrooms" onChange={this.handleBathroomsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["bathrooms"]}</span>
-                        <h5 className="message" > Square feet:<input name="feet" onChange={this.handleFeetChange} /></h5> 
+                        <h5 className="message" > Square feet:<input name="feet" type="number" step="0.1" onChange={this.handleFeetChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["feet"]}</span>
                         <h5 className="message" > Description:<textarea onChange={this.handleDescChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["desc"]}</span>
@@ -741,16 +785,6 @@ class HostPage extends Component{
             return( <h1 className="message">You can't access this page!</h1>)
         }
 
-        // return(
-        //     <div>
-                
-        //         {approved_msg}
-        //         {wrap}
-        //         {disapproved_msg}
-        //         {denial}
-                
-        //     </div>
-        // )
     }
 
 }
