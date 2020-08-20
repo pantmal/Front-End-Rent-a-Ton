@@ -20,7 +20,7 @@ class RenterRoomDetail extends Component{
         let end_date = '';
         if (query.parameters!=null){
             date_mode = true
-
+        
             let split_params = query.parameters.split('&')
             let s_date_param = split_params[0]
             let e_date_param = split_params[1]
@@ -203,8 +203,8 @@ class RenterRoomDetail extends Component{
                         }
                     }
 
-                    if(this.props.app_state.isRenter){
-
+                    if(this.props.app_state.isRenter && this.state.date_mode===true){
+                        
                         const formData = new FormData();
                         formData.append("click", 'click');
                         formData.append("room_id_click", this.state.room_id);

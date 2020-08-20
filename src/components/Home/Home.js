@@ -26,6 +26,7 @@ class Home extends Component{
         this.handleEndDateChange = this.handleEndDateChange.bind(this)
         this.handlePeopleChange = this.handlePeopleChange.bind(this)
         this.handleSearchFormSubmit = this.handleSearchFormSubmit.bind(this)
+        this.handleRecomClick = this.handleRecomClick.bind(this)
     }
 
     handleHoodChange = event => {
@@ -191,6 +192,14 @@ class Home extends Component{
 
         this.props.history.push({pathname:'/search/', search: search_values})
     }
+
+    handleRecomClick = () =>{
+
+        let search_values
+        search_values = 'recom=on'
+
+        this.props.history.push({pathname:'/search/', search: search_values})
+    }
     
     render(){
 
@@ -249,7 +258,7 @@ class Home extends Component{
             </div>
 
             recommend = <div><h4 className="message">or</h4>
-            <button className="apply">Recommend me something</button>
+            <button className="apply" onClick={this.handleRecomClick}>Recommend me something</button>
             </div>
         }
 
