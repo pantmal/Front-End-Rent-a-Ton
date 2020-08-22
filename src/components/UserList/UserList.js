@@ -18,7 +18,7 @@ class UserList extends Component{
         this.state = {
             offset: 0,
             users: [],
-            perPage: 2,
+            perPage: 10,
             currentPage: 0,
             receivedData: this.receivedData
         };
