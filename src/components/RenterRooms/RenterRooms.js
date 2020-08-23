@@ -112,6 +112,9 @@ class RenterRooms extends Component{
 
 
     render(){
+
+        let msg_link = <h1 className="message">Click <Link to={'/userMessages/type=rec'}>here</Link> to check your messages</h1> 
+
         let not_found_msg = <h1 className="message">Sorry, nothing found</h1>
 
         let login_check = this.props.app_state.isLoggedIn;
@@ -137,6 +140,7 @@ class RenterRooms extends Component{
 
                     return(
                         <div>
+                            {msg_link}
                             {paginate}
                             {this.state.postData}
                             {paginate}
@@ -145,6 +149,7 @@ class RenterRooms extends Component{
                 }else{
                     return(
                         <div>
+                        {msg_link}
                         {not_found_msg}
                         </div>
                     )

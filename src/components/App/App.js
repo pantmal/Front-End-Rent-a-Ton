@@ -20,6 +20,9 @@ import AdminPage from '../AdminPage/AdminPage';
 import UserList from '../UserList/UserList';
 import UserDetail from '../UserList/UserDetail';
 import Search from '../Search/Search';
+import MessageList from '../Messages/MessageList';
+import MessageDetail from '../Messages/MessageDetail';
+import CreateMessage from '../Messages/CreateMessage';
 
 import axios from '../AXIOS_conf'
 
@@ -40,7 +43,7 @@ class App extends Component {
     }
     
     this.state = {
-      //username: '',
+      username: '',
       user_primary_key: user_id,
       isLoggedIn: login_check,
       isAdmin: false,
@@ -65,9 +68,9 @@ class App extends Component {
           Authorization: `JWT ${localStorage.getItem('storage_token')}`
         }}*/).then(
           response => { const user = response.data;
-          // this.setState({
-          //   username: user.username
-          // })
+           this.setState({
+             username: user.username
+           })
           if (user.is_staff === true){ 
             this.setState({
               isAdmin: true,
@@ -116,6 +119,7 @@ class App extends Component {
       this.setState({
         isLoggedIn: true,
         user_primary_key: res_user.pk,
+        username: res_user.username
       });
 
       axios.get(`users/userList/${this.state.user_primary_key}`/*,
@@ -208,6 +212,9 @@ class App extends Component {
           <Route path='/renterRooms/:id/:parameters?' render = {props => <RenterRoomDetail {...props} app_state={{...this.state}}/>} />
           <Route path='/roomImages/:id' render = {props => <RoomImages {...props} app_state={{...this.state}}/>} /> 
           <Route path='/roomImageDetail/:id' render = {props => <RoomImageDetail {...props} app_state={{...this.state}}/>} /> 
+          <Route path='/userMessages/:parameters?' render = {props => <MessageList {...props} app_state ={{...this.state}}/>} />          
+          <Route path='/userMessageDetail/:id' render = {props => <MessageDetail {...props} app_state ={{...this.state}}/>} />          
+          <Route path='/createMessage/:parameters?' render = {props => <CreateMessage {...props} app_state ={{...this.state}}/>} />          
           </Switch>
 
         </div>

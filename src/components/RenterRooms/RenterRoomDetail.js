@@ -464,8 +464,8 @@ class RenterRoomDetail extends Component{
                 <h5 className="message">Average number of rating (out of 5 stars):{this.state.avg} </h5>
                 <br/>
                 <h5 className="message">Host information (click on the host to get to contact him!):</h5> 
-                <h5 className="message" > Host name: {this.state.host_username} </h5> 
-                <h5 className="message" > Host picture: <img src={this.state.host_picture} style={{width:100,height: 100}}/> </h5> 
+                <Link to={`/createMessage/${this.state.host_id}`}> <h5 className="message" > Host name: {this.state.host_username} </h5> </Link>
+                <Link to={`/createMessage/${this.state.host_id}`}>  <h5 className="message" > Host picture: <img src={this.state.host_picture} style={{width:100,height: 100}}/> </h5> </Link>
                 <h5 className="message">Number of ratings: {this.state.h_count} </h5>
                 <h5 className="message">Average number of rating (out of 5 stars):{this.state.h_avg} </h5>
 
