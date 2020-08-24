@@ -210,7 +210,8 @@ class RenterRoomDetail extends Component{
                         formData.append("room_id_click", this.state.room_id);
                         formData.append("renter_id_click", this.props.app_state.user_primary_key);//fix for anon
                         axios.post('rooms/addSearchesClicks/',formData, {headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        Authorization: `JWT ${localStorage.getItem('storage_token')}`
                         }}).then(response => {console.log('click ok')}).catch(error => {console.log(error.response);})
 
                     }
@@ -311,7 +312,8 @@ class RenterRoomDetail extends Component{
         resData.append("start_date", this.state.start_date);
         resData.append("end_date", this.state.end_date);
         axios.post('rooms/reservations/',resData, {headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `JWT ${localStorage.getItem('storage_token')}`
         }}).then(response => {console.log(response.data)
             this.setState({
                 date_free: false
@@ -336,9 +338,11 @@ class RenterRoomDetail extends Component{
         rateData.append("renter_id_rate", this.props.app_state.user_primary_key);
         rateData.append("date", date_now);
         rateData.append("rating", newRating);
+        rateData.append("secondary_id", '1');
         
         axios.post('rooms/roomRatings/',rateData, {headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `JWT ${localStorage.getItem('storage_token')}`
             }}).then(response => {console.log(response.data)
                 alert('Your rating for this room has been recorded.')
             }).catch(error => {console.log(error.response);})
@@ -361,7 +365,8 @@ class RenterRoomDetail extends Component{
         rateData.append("rating", newRating);
         
         axios.post('rooms/hostRatings/',rateData, {headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `JWT ${localStorage.getItem('storage_token')}`
             }}).then(response => {console.log(response.data)
                 alert('Your rating for this host has been recorded.')
             }).catch(error => {console.log(error.response);})

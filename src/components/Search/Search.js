@@ -199,7 +199,8 @@ class Search extends Component{
                             formData.append("room_id_search", value.pk);
                             formData.append("renter_id_search", user_id);
                             axios.post('rooms/addSearchesClicks/',formData, {headers: {
-                                'Content-Type': 'application/json'
+                                'Content-Type': 'application/json',
+                                Authorization: `JWT ${localStorage.getItem('storage_token')}`
                               }}).then(response => {console.log('ok')}).catch(error => {console.log(error.response);})  
                             })
                     }

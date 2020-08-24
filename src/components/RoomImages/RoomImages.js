@@ -150,7 +150,8 @@ class RoomImages extends Component{
               formData.append("room_id_img", room_id);
               formData.append("picture", value);
               axios.post('rooms/roomImages/',formData, {headers: {
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                  Authorization: `JWT ${localStorage.getItem('storage_token')}`
                 }}).then(response => {console.log('ok');
                 }).catch(error => {console.log(error.response);})  
               })

@@ -659,10 +659,11 @@ class HostPage extends Component{
         formData.append("events", data.events);
         formData.append("minimum_nights", data.min_nights);
         formData.append("host_id", data.host_id);
-        formData.append("reserved", data.reserved);
+        formData.append("secondary_id", 1);
 
         axios.post('rooms/roomList/', formData, {headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `JWT ${localStorage.getItem('storage_token')}`
           }}).then(response => {
               alert('Your new room has been added! You may see it in the room list');
               if(this.state.files.length > 0){
@@ -672,7 +673,8 @@ class HostPage extends Component{
                 formData.append("room_id_img", response.data.pk);
                 formData.append("picture", value);
                 axios.post('rooms/roomImages/',formData, {headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    Authorization: `JWT ${localStorage.getItem('storage_token')}`
                   }}).then(response => {console.log('ok')}).catch(error => {console.log(error.response);})  
                 })    
             }

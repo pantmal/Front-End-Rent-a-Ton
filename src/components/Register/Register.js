@@ -233,6 +233,7 @@ class Register extends Component{
         formData.append("is_host", data.is_host);
         formData.append("is_renter", data.is_renter);
         formData.append("picture", data.picture);
+        formData.append("secondary_id", 1);
 
         //"{\"username\":[\"A user with that username already exists.\"]}"
         console.log(data)

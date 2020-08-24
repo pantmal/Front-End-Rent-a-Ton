@@ -690,14 +690,15 @@ class HostRoomDetail extends Component{
         formData.append("events", data.events);
         formData.append("minimum_nights", data.min_nights);
         formData.append("host_id", data.host_id);
-        formData.append("reserved", data.reserved);
+        formData.append("secondary_id", 1);
 
         if (this.pic_change){
             formData.append("rep_photo", data.rep_photo);
         }
 
         axios.patch(`rooms/roomList/${this.state.room_id}/`, formData, {headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `JWT ${localStorage.getItem('storage_token')}`
           }}).then(response => {
               alert('Your room has been updated!');
             }).catch(error => {console.log(error.response);  

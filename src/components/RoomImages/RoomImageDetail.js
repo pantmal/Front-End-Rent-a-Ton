@@ -105,9 +105,8 @@ class RoomImageDetail extends Component{
         formData.append("picture", data.picture);
 
         axios.patch(`rooms/roomImages/${this.state.pk}/`, formData, {headers: {
-            'Content-Type': 'application/json'/*,
-            Authorization: `JWT ${localStorage.getItem('storage_token')}`*/
-                
+            'Content-Type': 'application/json',
+            Authorization: `JWT ${localStorage.getItem('storage_token')}`
           }}).then(response => {alert('Your image has been updated. ');  
             }).catch(error => {
                 console.log(error.response);   
@@ -119,9 +118,8 @@ class RoomImageDetail extends Component{
     handleDelete = event =>{
 
         axios.delete(`rooms/roomImages/${this.state.pk}/`, {headers: {
-            'Content-Type': 'application/json'/*,
-            Authorization: `JWT ${localStorage.getItem('storage_token')}`*/
-                
+            'Content-Type': 'application/json',
+            Authorization: `JWT ${localStorage.getItem('storage_token')}`
           }}).then(response => {alert('Your image has been deleted. ');  
             this.props.history.push(`/roomImages/${this.state.room_id}`)
             }).catch(error => {

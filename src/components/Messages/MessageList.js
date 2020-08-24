@@ -57,8 +57,8 @@ class MessageList extends Component{
             }
             axios.post(
                 'users/getMessages/', JSON.stringify(data), {headers: {
-                    'Content-Type': 'application/json'/*,
-                    Authorization: `JWT ${localStorage.getItem('storage_token')}`*/
+                    'Content-Type': 'application/json',
+                    Authorization: `JWT ${localStorage.getItem('storage_token')}`
                 }}
             ).then( response => {
                 if (response.data==='not found'){
@@ -93,8 +93,8 @@ class MessageList extends Component{
             }
             axios.post(
                 'users/getMessages/', JSON.stringify(data), {headers: {
-                    'Content-Type': 'application/json'/*,
-                    Authorization: `JWT ${localStorage.getItem('storage_token')}`*/
+                    'Content-Type': 'application/json',
+                    Authorization: `JWT ${localStorage.getItem('storage_token')}`
                 }}
             ).then( response => {
                 if (response.data==='not found'){

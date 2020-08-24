@@ -45,8 +45,8 @@ class MessageDetail extends Component{
         let id = this.props.match.params.id
         axios.get(
             `users/messageList/${id}`, {headers: {
-                'Content-Type': 'application/json'/*,
-                Authorization: `JWT ${localStorage.getItem('storage_token')}`*/
+                'Content-Type': 'application/json',
+                Authorization: `JWT ${localStorage.getItem('storage_token')}`
             }}
         ).then( response => {
             console.log(response)
@@ -187,8 +187,8 @@ class MessageDetail extends Component{
             }
     
             axios.patch(`users/messageList/${this.state.pk}/`, JSON.stringify(msg_data), {headers: {
-                'Content-Type': 'application/json'/*,
-                Authorization: `JWT ${localStorage.getItem('storage_token')}`*/
+                'Content-Type': 'application/json',
+                Authorization: `JWT ${localStorage.getItem('storage_token')}`
                     
               }}).then(response => {alert('Your message has been updated. ');  
                 }).catch(error => {
@@ -206,8 +206,8 @@ class MessageDetail extends Component{
     handleDelete = event =>{
 
         axios.delete(`users/messageList/${this.state.pk}/`, {headers: {
-            'Content-Type': 'application/json'/*,
-            Authorization: `JWT ${localStorage.getItem('storage_token')}`*/
+            'Content-Type': 'application/json',
+            Authorization: `JWT ${localStorage.getItem('storage_token')}`
                 
           }}).then(response => {alert('Your message has been deleted. ');  
             this.props.history.push({pathname:'/userMessages/type=rec'})
