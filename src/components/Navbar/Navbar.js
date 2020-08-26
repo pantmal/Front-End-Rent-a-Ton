@@ -4,13 +4,15 @@ import {Link} from 'react-router-dom';
 
 import './navbar.css'
 
+//NavbarClass used for the navigation bar.
 class NavbarClass extends Component{
 
-
+    //Calling handleLogoutClick from the App state.
     handleNavLogOffClick = () => {
         this.props.app_state.handleLogoutClick();
     }
 
+    //Render function displays all the necessary links and buttons.
     render(){
         let login_check = this.props.app_state.isLoggedIn;
         if (login_check === true){
@@ -18,6 +20,9 @@ class NavbarClass extends Component{
             let admin_link
             let host_link
             let edit_link
+
+            //Defining links for the Admin and Host pages.
+            //NEEDS UPDATING.
             if (this.props.app_state.isAdmin){
                 role = 'admin'
                 admin_link = <Link to={'/adminPage/'}><button className="admin-host"><span>Admin Page</span></button> </Link>
@@ -33,8 +38,10 @@ class NavbarClass extends Component{
                 role = 'um...'
             }
 
+            //Link for the Edit Profile page.
             edit_link = <Link to={`/editProfile/${this.props.app_state.user_primary_key}`}> <button className="edit" ><span>Edit Profile</span></button> </Link>
 
+            //Returning a link to the home page, the other pages if needed, and a Logout button.
             return(
         
                 <nav className="nav">
@@ -48,6 +55,8 @@ class NavbarClass extends Component{
     
             )
         }
+
+        //Used for visitor users.
         return(
 
             <nav className="nav">

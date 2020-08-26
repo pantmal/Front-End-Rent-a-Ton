@@ -7,17 +7,18 @@ import './adminPage.css'
 
 import axios from '../AXIOS_conf'
 
+//AdminPage is used by the admin so he may access the user list, or export data.
 class AdminPage extends Component{
 
 
     constructor(props){
         super(props)
 
-
         this.handleXMLClick = this.handleXMLClick.bind(this)
         this.handleJSONClick = this.handleJSONClick.bind(this)
     }
 
+    //Exporting data to XML
     handleXMLClick = event =>{
 
         alert('You have chosen to export data to XML format. You will be notified upon completion.')
@@ -35,6 +36,7 @@ class AdminPage extends Component{
 
     }
 
+    //Exporting data to JSON.
     handleJSONClick = event =>{
 
         alert('You have chosen to export data to JSON format. You will be notified upon completion.')
@@ -53,8 +55,7 @@ class AdminPage extends Component{
     }
 
 
-
-    
+    //Render function includes a text with a link to the user list and two buttons for the export formats.
     render(){
 
         let permission = false
@@ -67,11 +68,11 @@ class AdminPage extends Component{
         }
 
         
-        if (!permission){
+        if (!permission){ //Denying access to non-admins.
             return(
                 <h1 className="message">You can't access this page!</h1>
             )
-        }else{
+        }else{ //Rendering the page.
             return(
                 <div>
                 <h1 className="message">Welcome dear admin. You make click <Link to={'/userList/'}><span>here</span> </Link> to manage users. </h1>

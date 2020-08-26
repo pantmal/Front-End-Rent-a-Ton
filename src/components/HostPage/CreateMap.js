@@ -2,14 +2,14 @@
 import React from 'react';
 import {Component} from 'react';
 
-//import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import styled from 'styled-components'
 
-
+//Setting the width and height of the map.
 const Wrapper = styled.div`width: ${props => props.width}; height: ${props => props.height}`
 
+//Defining the Map used for the hosts who want to specify the coordinates of the room.
 class CreateMap extends Component{
 
     constructor(props){
@@ -18,6 +18,7 @@ class CreateMap extends Component{
         this.onMapClick = this.onMapClick.bind(this)
     }
 
+    //Whenever a host clicks on the map a popup is created showing the coordinates he specified.
     onMapClick(e) {
          console.log(e.latlng.lat)
          console.log(e.latlng.lng) 
@@ -33,6 +34,7 @@ class CreateMap extends Component{
     }
     
 
+    //Defining the map's information.
     componentDidMount(){
 
         this.map = L.map('map',{center:[37.98,23.72],zoom:6,zoomControl:false})
@@ -45,6 +47,7 @@ class CreateMap extends Component{
         
     }
 
+    //Rendering the map.
     render(){
         return(<Wrapper width="600px" height="400px" id="map" />  )
     }

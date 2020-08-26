@@ -2,20 +2,21 @@ import React from 'react';
 import {Component} from 'react';
 import ReactPaginate from 'react-paginate';
 import {Link} from 'react-router-dom';
-
 import queryString from 'query-string'
 
 import axios from '../AXIOS_conf'
 
 import './search.css'
 
+//Search component used whenever we get search results for rooms.
 class Search extends Component{
 
-    constructor(props){
+    constructor(props){ //Constructor function queries the URL string and updates the starting state accordingly.
         super(props)
 
         const search_values = queryString.parse(this.props.location.search)
 
+        //Setting the default value of 'people'.
         let people = 0
         if(search_values.people!=null){
             people = search_values.people
@@ -24,10 +25,11 @@ class Search extends Component{
         let ext_search = false
 
         let recom_mode = false
-        if(search_values.recom!=null){
+        if(search_values.recom!=null){ //Mode for recommendations.
             recom_mode = true
         }
 
+        //Values used from the additional search filters.
         let room_type = ''
         if (search_values.type!=null){
             room_type = search_values.type
@@ -84,7 +86,6 @@ class Search extends Component{
         
 
         this.state = {
-            rats: '',
             recom_mode: recom_mode,
             hood: search_values.hood,
             city: search_values.city,
@@ -123,20 +124,21 @@ class Search extends Component{
     
     }
 
-    
+    //componentDidMount calls the receivedData() function.
     componentDidMount(){
         this.receivedData()
     }
 
     count = -1
 
+    //Getting the data from the server and assigning them to the current page.
     receivedData() {
 
         let user_id = parseInt(this.props.app_state.user_primary_key)
         let data 
 
     
-        if (this.state.ext_search === false){ 
+        if (this.state.ext_search === false){ //If ext_search is false use only the 'basic' search values.
             data = {
                 user_id: user_id,
                 hood: this.state.hood,
@@ -146,7 +148,7 @@ class Search extends Component{
                 e_date: this.state.e_date,
                 people: this.state.people
             }
-        }else{
+        }else{ //Otherwise include the values from the additional search filters.
             data = {
                 user_id: user_id,
                 hood: this.state.hood,
@@ -167,7 +169,7 @@ class Search extends Component{
             }
         }
 
-        if(this.state.recom_mode === true){
+        if(this.state.recom_mode === true){ //Used if we want to get recommendations.
             data = {recom:'recom',user_id: user_id}
         }
 
@@ -176,7 +178,7 @@ class Search extends Component{
           }})
             .then(res => {
 
-                if (res.data==='not found'){
+                if (res.data==='not found'){ //Updating the state if there weren't any results.
                     this.setState({
                         not_found: true
                     })
@@ -188,7 +190,9 @@ class Search extends Component{
                             
                 
                 this.count++
-                if(this.count === 0 && this.state.recom_mode === false){
+
+                //If we're searching these rooms for the first time, add their ids in the server for future recommendations.
+                if(this.count === 0 && this.state.recom_mode === false){ 
                     if(this.props.app_state.isRenter){
                         user_id = this.props.app_state.user_primary_key
                                 
@@ -208,6 +212,7 @@ class Search extends Component{
                 }
 
 
+                //Adding an extra total_price field according to the people that were specified in the search form.
                 let price_data
                 if(this.state.recom_mode === false ){
 
@@ -223,30 +228,17 @@ class Search extends Component{
                         )
                 }
 
-                /*
-                price_data.forEach(function(element) {
-                    const formData = new FormData();    
-                    formData.append("room", 'room');
-                    formData.append("room_id", element.pk);
-                
-                    axios.post('rooms/ratCount/',formData, {headers: {
-                        'Content-Type': 'application/json'
-                    }}).then(response => {
-                    rats.push(response.data)  
-                    this.setState({
-                        rats: response.data
-                    })  
-                    }).catch(error => {console.log(error.response);})
-                })*/
-
-            
+                //Sorting the items according to their price.
                 price_data.sort( (a, b) => parseFloat(a.total_price) - parseFloat(b.total_price) )
-                console.log(price_data)
+                //console.log(price_data)
+                
+                //Getting a slice of the data according to the offset of the page we're on.
                 let slice = price_data.slice(this.state.offset, this.state.offset + this.state.perPage)
-                console.log(slice)
+                //console.log(slice)
 
+                //Now we map each room to a React Fragment so it can be rendered.
                 let postData
-                if(this.state.recom_mode === false){
+                if(this.state.recom_mode === false){ //If we're not on recommendation mode, include a link along with the dates specified on the search form.
 
                     postData = slice.map(pd =>
                 //add a message if it's him!
@@ -260,7 +252,7 @@ class Search extends Component{
                         <hr/>
                     </React.Fragment>)
 
-                }else{
+                }else{ //Otherwise the RoomDetail link will not include any dates, since none were specified.
                     postData = slice.map(pd =>
                     //add a message if it's him!
                     //this url shit will change hopefully
@@ -274,7 +266,7 @@ class Search extends Component{
                     </React.Fragment>)
                 }
 
-                this.setState({
+                this.setState({ //Updating the state with our room data to be displayed.
                     pageCount: Math.ceil(data.length / this.state.perPage),
                     postData
                 })
@@ -283,7 +275,7 @@ class Search extends Component{
         })
     }
 
-    
+    //Handling a new page change by updating the current page, the offset and calling the receivedData() function to get data for the new page.
     handlePageClick = (event) => {
         const selectedPage = event.selected;
         const offset = selectedPage * this.state.perPage;
@@ -296,8 +288,8 @@ class Search extends Component{
 
     };
     
-
-    handleRadioChange = (event) => {
+    //This event handle and the following ones, are used to updated the values from the additional search filters at the start of the page.
+    handleRadioChange = event => {
         this.setState({
           room_type: event.target.value
         });
@@ -353,7 +345,7 @@ class Search extends Component{
         }})
     }
 
-    
+    //After specifying additional search filters we update the URL of the page with the new values. (The values from the original search form remain the same.)
     handleExtraFormSubmit = event => { //validation needed?
         event.preventDefault()
 
@@ -397,14 +389,17 @@ class Search extends Component{
         }
 
         console.log(search_values)
-     
+    
+        //Updating the URL and reloading the component.
         this.props.history.push({pathname:'/search/', search: search_values})
         window.location.reload();
 
     }
 
-
+    //Render function displays the additional search filters at the top and then the search results.
     render(){
+
+        //Defining the pagination component.
         let paginate = 
                 
                 <ReactPaginate
@@ -430,15 +425,16 @@ class Search extends Component{
             permission = true
         }
 
-        if(!permission){
+        if(!permission){//Denying access to users who can't search for rooms.
             return(
                 <h1 className="message">You can't access this page!</h1>
             )
-        }else{
+        }else{ 
 
             if (this.state.not_found === false){
 
-                let extra_filters = false
+                //Defining the additional search filters.
+                let extra_filters 
                 if(this.state.recom_mode === false){
                     extra_filters = <div> <h1 className="message"> You may include additional filters here: </h1>
                             
@@ -492,7 +488,7 @@ class Search extends Component{
                 )
 
             
-            }else{
+            }else{ //If we didn't get any search results.
                 
                 return(
                     <div>

@@ -3,6 +3,7 @@ import {Component} from 'react';
 
 import axios from '../AXIOS_conf'
 
+//CreateMessage component so a user can post a new message
 class CreateMessage extends Component{
     
     constructor(props){
@@ -10,6 +11,8 @@ class CreateMessage extends Component{
 
         let default_mode = false
 
+        //In CreateMessage we may specify a default receiver username through the URL link. 
+        //If so, we are in 'default_mode', otherwise the sender will specify the receiver's username.
         let query = this.props.match.params
         let rec_id = '';
         if (query.parameters!=null){
@@ -35,7 +38,7 @@ class CreateMessage extends Component{
 
     componentDidMount(){
 
-        
+        //Getting the receiver's username if we're on default mode.
         if(this.state.rec_id !== ''){
             axios.get(`users/userList/${this.state.rec_id}`/*, {
                 headers: {
@@ -52,6 +55,8 @@ class CreateMessage extends Component{
         }
         
     }
+
+    //Handling the create message fields.
 
     handleUsernameChange = event => {
         const form_name = event.target.value
@@ -74,16 +79,12 @@ class CreateMessage extends Component{
         })
     }
 
+    //Validating the form data and setting the errors object accordingly.
     handleValidation(){
         
         let errors = {};
         let formIsValid = true;
 
-        // if(this.state.default_mode){
-        //     this.setState({
-        //         username: this.state.host_username
-        //     })
-        // }
         if(this.state.username == ''){
             formIsValid = false;
             errors["name"] = "\u2757Cannot be empty";
@@ -110,10 +111,13 @@ class CreateMessage extends Component{
         return formIsValid;
     }
 
+    //If handleValidation() returns true, which means the data is ok, we add the message to the database.
     handleFormSubmit = event => {
         event.preventDefault()
 
         if(this.handleValidation()){
+
+            //Getting the receiver user item using his username.
             const data = {username: this.state.username}
             axios.post(
                 'users/getUserByName/', JSON.stringify(data), {headers: {
@@ -130,6 +134,7 @@ class CreateMessage extends Component{
                 alert('Some kind of error occured...')
             })
 
+            //Getting the current date
             let date = new Date();
             let year = date.getFullYear()
             let month = date.getMonth()+1
@@ -147,6 +152,7 @@ class CreateMessage extends Component{
                 date: date_now
             }
 
+            //Adding the message in the database.
             axios.post(
                 'users/messageList/', JSON.stringify(msg_data), {headers: {
                     'Content-Type': 'application/json'/*,
@@ -160,16 +166,16 @@ class CreateMessage extends Component{
                 alert('Some kind of error occured...')
             })
             
-
         }
 
     }
 
+    //Render function displayes the fields so a user may post his message.
     render(){
 
         if(this.props.app_state.isRenter || this.props.app_state.isHost){
             let rec_field 
-            if(this.state.default_mode){
+            if(this.state.default_mode){ //If default mode is on, set the receiver's username.
                 rec_field =<div> <h2 className="message"> Send to:<input name="receiver" defaultValue={this.state.username} onChange={this.handleUsernameChange} /></h2> <br/></div>
             }else{
                 rec_field =<div> <h2 className="message"> Send to:<input name="receiver" onChange={this.handleUsernameChange} /></h2> <br/></div>
@@ -189,7 +195,7 @@ class CreateMessage extends Component{
                     </form>
                 </div>
             )
-        }else{
+        }else{//Only hosts and renters may create messages.
             return(<h1 className="message" >You can't access this page!</h1>)
         }
 

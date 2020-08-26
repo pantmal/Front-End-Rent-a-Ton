@@ -5,6 +5,7 @@ import axios from '../AXIOS_conf'
 
 import './editProfile.css'
 
+//EditProfile component for any user who wants to update his information. (can't change roles)
 class EditProfile extends Component{
     
     constructor(props){
@@ -40,15 +41,19 @@ class EditProfile extends Component{
 
 
         const {id} = this.props.match.params
-        if (id != this.props.app_state.user_primary_key){
+        if (id != this.props.app_state.user_primary_key){ //A user can only edit his own profile.
             alert('You can only edit your own profile')
             this.props.history.push("/")
         }
+
+        //Getting the user item of the user that is logged in.
         axios.get(`users/userList/${id}`/*, {
             headers: {
               Authorization: `JWT ${localStorage.getItem('storage_token')}`
             }}*/).then( 
             response => {
+
+                //Updating the state with the user we found.
                 const res_user = response.data
                 this.setState({
                     username: res_user.username,
@@ -62,6 +67,8 @@ class EditProfile extends Component{
             }
         )
     }
+
+    //Event handles for the fields of the edit form.
 
     handleUsernameChange = event => {
         const form_name = event.target.value
@@ -112,6 +119,7 @@ class EditProfile extends Component{
         })
     }
 
+    //Using FileReader() for image changes.
     handleImageChange = event => {
         event.preventDefault();
 
@@ -130,6 +138,7 @@ class EditProfile extends Component{
         f_reader.readAsDataURL(file)
       }
     
+    //Validating the edit form data and setting the errors object accordingly.
     handleValidation(){
         let errors = {};
         let formIsValid = true;
@@ -140,14 +149,13 @@ class EditProfile extends Component{
            errors["name"] = "\u2757Cannot be empty";
         }
 
-        if(this.state.password != '' && this.state.validation_pswd != '' ){        
+        if(this.state.password != '' && this.state.validation_pswd != '' ){ //Password validation.     
             if(this.state.password !== this.state.validation_pswd){
                 formIsValid = false;
                 errors["v_pswd"] = "\u2757The two password fields are not the same";
             }
         }
 
-        
         if(this.state.first_name == ''){
             formIsValid = false;
             errors["f_name"] = "\u2757Cannot be empty";
@@ -195,7 +203,7 @@ class EditProfile extends Component{
         return formIsValid;
     }
 
-    
+    //If handleValidation() returns true, which means the data is ok, call proceedSubmission()
     handleFormSubmit = event => {
         event.preventDefault()
 
@@ -205,6 +213,7 @@ class EditProfile extends Component{
 
     }
 
+    //In proceedSubmission() an axios.patch request is made to update the user in the database.
     proceedSubmission(){
 
         const data = {
@@ -217,7 +226,7 @@ class EditProfile extends Component{
             picture: this.state.picture
         }
 
-        const formData = new FormData();
+        const formData = new FormData();//FormData used in case we have pictures.
 
         formData.append("username", data.username);
         formData.append("password", data.password);
@@ -232,12 +241,7 @@ class EditProfile extends Component{
             formData.append("picture", data.picture);            
         }
 
-        /*axios.patch(`users/userList/${id_match}/`, JSON.stringify(data), {headers: {
-            'Content-Type': 'application/json',
-             Authorization: `JWT ${localStorage.getItem('storage_token')}`
-                
-          }}*/
-        console.log(formData)
+
         axios.patch(`users/userList/${this.props.app_state.user_primary_key}/`, formData, {headers: {
             'Content-Type': 'application/json',
             Authorization: `JWT ${localStorage.getItem('storage_token')}`
@@ -245,6 +249,8 @@ class EditProfile extends Component{
           }}).then(response => {alert('Your changes have been saved. ');  
             }).catch(error => {
                 console.log(error.response);   
+
+                //Alerting the user if the name he tried to update is used by another user.
                 if(error.response.request.response.includes("A user with that username already exists")){
                     alert('A user with that username already exists. Please fill in the edit form again with another username.')
                 }else{
@@ -253,6 +259,7 @@ class EditProfile extends Component{
             })
     }
 
+    //Render function displayes the edit form.
     render(){
 
         let {imagePreviewUrl} = this.state;
@@ -290,7 +297,7 @@ class EditProfile extends Component{
 
             )
             
-        }else{
+        }else{ //Denying access to visitor users.
             return(
                 <h1 className="message" >You can't edit profile as an anonymous user!</h1>
             )

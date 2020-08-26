@@ -8,8 +8,7 @@ import axios from '../AXIOS_conf'
 
 import './userList.css'
 
-//CSS note: change view
-
+//UseList component so an Admin may navigate each user.
 class UserList extends Component{
 
 
@@ -27,22 +26,23 @@ class UserList extends Component{
         this.handlePageClick = this.handlePageClick.bind(this);
     }
 
+    //componentDidMount calls the receivedData() function.
+    componentDidMount() {
+        this.receivedData()
+    }
+
+    //Getting the data from the server and assigning them to the current page.
     receivedData() {
         axios.get('users/userList/')
             .then(res => {
 
                 //check results if picture is null
                 const data = res.data;
-                /*let count = 0
-                const price_data = data.map(d =>
-                    (
-                    { ...d,
-                    price: count+=1
-                    }
-                    )
-                    )
-                */
+                
+                //Getting a slice of the data according to the offset of the page we're on.
                 const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
+
+                //Now we map each room to a React Fragment so it can be rendered.
                 const postData = slice.map(pd =>
                 //add a message if it's him!
                 <React.Fragment>
@@ -57,14 +57,14 @@ class UserList extends Component{
                     <hr/> 
                 </React.Fragment>)
 
-                this.setState({
+                this.setState({ //Updating the state with our room data to be displayed.
                     pageCount: Math.ceil(data.length / this.state.perPage),
                     postData
                 })
             });
     }
 
-
+    //Handling a new page change by updating the current page, the offset and calling the receivedData() function to get data for the new page.
     handlePageClick = (event) => {
         const selectedPage = event.selected;
         const offset = selectedPage * this.state.perPage;
@@ -77,11 +77,8 @@ class UserList extends Component{
 
     };
 
-    componentDidMount() {
-        this.receivedData()
-    }
     
-    
+    //Render function displays the users returned.
     render(){
 
         let permission = false
@@ -94,12 +91,13 @@ class UserList extends Component{
         }
 
         
-        if (!permission){
+        if (!permission){ //Denying access to non-admins.
             return(
                 <h1 className="message">You can't access this page!</h1>
             )
         }else{
 
+            //Defining the pagination component.
             let paginate = 
                 
                 <ReactPaginate
@@ -118,7 +116,7 @@ class UserList extends Component{
                 />
             
             
-            
+            //Returning the paginated data.
             return (
                 <div>
                     {paginate}

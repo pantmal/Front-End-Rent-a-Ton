@@ -1,14 +1,12 @@
 import React from 'react';
 import {Component} from 'react';
 
-import {Link, Route} from 'react-router-dom';
-
 import axios from '../AXIOS_conf'
 
-
+//RoomImageDetail is used when the user examines one Room Image.
 class RoomImageDetail extends Component{
 
-    constructor(props){
+    constructor(props){//Constructor function.
         super(props)
 
         this.state = {
@@ -25,6 +23,7 @@ class RoomImageDetail extends Component{
         this.handleImageChange = this.handleImageChange.bind(this)
     }
 
+    //When the component mounts we get the details of the user that is viewing the page.
     componentDidMount(){
     
         const id = this.props.app_state.user_primary_key
@@ -36,13 +35,15 @@ class RoomImageDetail extends Component{
           this.setState({
             approved: user.approved
           })
-           if(this.state.approved){
+           if(this.state.approved){ //If he is an approved host, get the Room Image item from the server.
             const {id} = this.props.match.params
             axios.get(`rooms/roomImages/${id}`/*, {
                 headers: {
                   Authorization: `JWT ${localStorage.getItem('storage_token')}`
                 }}*/).then( 
                     response => {
+
+                    //Update the state
                     const res_image = response.data
                     this.setState({
                         pk: res_image.pk,
@@ -51,16 +52,20 @@ class RoomImageDetail extends Component{
                         imagePreviewUrl: res_image.picture
                     })
 
+                    //Get the Room Item this image belongs to.
                     axios.get(`rooms/roomList/${this.state.room_id}`/*, {
                         headers: {
                           Authorization: `JWT ${localStorage.getItem('storage_token')}`
                         }}*/).then( 
-                    response => {
+                        response => {
+                        
+                        //Getting the host id who has this room.
                         const res_room = response.data
                         this.setState({
                             host_id: res_room.host_id
                         })
     
+                        //If the room doesn't belong to the host viewing the page, he may not access this Room Image page.
                         if(this.state.host_id != this.props.app_state.user_primary_key){
                             alert('You can only edit your own images')
                             this.props.history.push("/")
@@ -76,6 +81,7 @@ class RoomImageDetail extends Component{
         
     }
 
+    //Updating the Image with FileReader()
     handleImageChange = (event) => {
         event.preventDefault();
     
@@ -90,8 +96,9 @@ class RoomImageDetail extends Component{
         }
         
         f_reader.readAsDataURL(file)
-      }
+    }
 
+    //Updating this image data on the database.
     handleUpdate = event =>{
 
         const data = {
@@ -115,6 +122,7 @@ class RoomImageDetail extends Component{
 
     }
 
+    //Deleting this image from the database.
     handleDelete = event =>{
 
         axios.delete(`rooms/roomImages/${this.state.pk}/`, {headers: {
@@ -129,8 +137,10 @@ class RoomImageDetail extends Component{
 
     }
     
+    //Render function previews the image and includes and Update and Delete button.
     render(){
 
+        //If imagePreviewUrl is not null, update the $imagePreview variable with the image data.
         let {imagePreviewUrl} = this.state;
         let $imagePreview = null;
         if (imagePreviewUrl) {
@@ -140,17 +150,17 @@ class RoomImageDetail extends Component{
         let permission = false
         
         let login_check = this.props.app_state.isLoggedIn;
-        if (login_check){
+        if (login_check){ //MAYBE ADD CHECK FOR NON-APPROVED HOSTS
             if (this.props.app_state.isHost){
              permission = true
             }
         }
         
-        if (!permission){
+        if (!permission){ //Denying access to non-hosts.
             return(
                 <h1 className="message">You can't access this page!</h1>
             )
-        }else{
+        }else{ //Rendering the page.
             return(
                 <div>
                     {$imagePreview} <br/>

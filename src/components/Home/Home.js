@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 
 import './home.css'
 
+//Home page displays a different starting page for every user.
 class Home extends Component{
 
     constructor(props){
@@ -28,6 +29,8 @@ class Home extends Component{
         this.handleSearchFormSubmit = this.handleSearchFormSubmit.bind(this)
         this.handleRecomClick = this.handleRecomClick.bind(this)
     }
+
+    //These event handles are used to update the fields of the search form.
 
     handleHoodChange = event => {
         const form_hood = event.target.value
@@ -71,6 +74,7 @@ class Home extends Component{
         })
     }
 
+    //Validating the search form data and setting the errors object accordingly.
     handleValidation(){
         
         let errors = {};
@@ -122,7 +126,7 @@ class Home extends Component{
             errors["e_date"] = "\u2757Cannot be empty";
         }
 
-        if (this.state.s_date != ''  && this.state.e_date != ''){
+        if (this.state.s_date != ''  && this.state.e_date != ''){ //A little extra work for dates.
             let start_date = this.state.s_date
             let end_date = this.state.e_date
 
@@ -175,6 +179,7 @@ class Home extends Component{
         return formIsValid;
     }
 
+    //If handleValidation() returns true, which means the data is ok, call proceedSubmission()
     handleSearchFormSubmit = event => {
         event.preventDefault()
 
@@ -184,6 +189,7 @@ class Home extends Component{
 
     }
 
+    //In proceedSubmission() the search URL is created using the values of the state, and then we go to the search results page using history.push()
     proceedSubmission(){
         console.log(this.state)
 
@@ -193,6 +199,7 @@ class Home extends Component{
         this.props.history.push({pathname:'/search/', search: search_values})
     }
 
+    //Redirecting the user to recommendation results.
     handleRecomClick = () =>{
 
         let search_values
@@ -201,6 +208,7 @@ class Home extends Component{
         this.props.history.push({pathname:'/search/', search: search_values})
     }
     
+    //Various cases for the render function
     render(){
 
         let search 
@@ -222,13 +230,14 @@ class Home extends Component{
                 role = 'um...'
             } 
 
+            //Defining a user message depending on the user's role.
             user_message = <h1 className="message"> <span> Welcome dear user. You are logged in as {role} </span> </h1>       
 
-        }else{
+        }else{ //Defining a message for visitors.
             anon_message = <h1 className="message"> Welcome dear visitor </h1>
         }
 
-        if(login_check === false || this.props.app_state.isRenter){
+        if(login_check === false || this.props.app_state.isRenter){ //Defining a search form, but only used for visitors and renters.
             search = <div>
                 <h1 className="message"> You may search for rooms by filling in the form: </h1>
                 <form onSubmit={this.handleSearchFormSubmit}>
@@ -252,7 +261,7 @@ class Home extends Component{
         
         let res_list
         let recommend
-        if(this.props.app_state.isRenter){
+        if(this.props.app_state.isRenter){ //Defining a link to reserved rooms and a recommendation button for renters.
             res_list = <div>
             <h2 className="message">You may click <Link to={'/renterRooms/'}>here</Link> to check your reservations</h2>
             </div>
@@ -262,6 +271,7 @@ class Home extends Component{
             </div>
         }
 
+        //Displaying the JSX variables in the right order.
         return(
             <div>
                 {user_message}

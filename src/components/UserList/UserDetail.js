@@ -3,8 +3,7 @@ import {Component} from 'react';
 
 import axios from '../AXIOS_conf'
 
-//CSS note: change view
-
+//UserDetail component so an admin may view the data of a user and approve him if he's a host.
 class UserDetail extends Component{
 
     constructor(props){
@@ -24,7 +23,7 @@ class UserDetail extends Component{
         this.handleApprovalChange = this.handleApprovalChange.bind(this)
     }
 
-
+    //Getting the user item from the server.
     componentDidMount(){
 
         const {id} = this.props.match.params
@@ -33,6 +32,8 @@ class UserDetail extends Component{
               Authorization: `JWT ${localStorage.getItem('storage_token')}`
             }}*/).then( 
             response => {
+
+                //Updating the state.
                 const res_user = response.data
                 this.setState({
                     username: res_user.username,
@@ -48,9 +49,9 @@ class UserDetail extends Component{
         )
     }
 
+    //Updating a host's approval status.
     handleApprovalChange(){
 
-        
         const id_match = this.props.match.params.id
         const data_send = {ID: id_match, activation: !this.state.approval}
         axios.post(
@@ -60,17 +61,19 @@ class UserDetail extends Component{
             }}
         ).then( response => {
             alert('The status of this host has been successfully updated.')
+            this.setState(prevState =>{ //Changing the state with the new status.
+                return{
+                    approval: !prevState.approval
+                }
+            })
         }).catch(error => {
             console.log(error.response)
             alert('Some kind of error occured...')
-        }).finally(this.setState(prevState =>{
-            return{
-                approval: !prevState.approval
-            }
-        }))
+        })
 
     }
     
+    //Render function diplays the user's data and a button to change his status, if he is a host.
     render(){
 
         let permission = false
@@ -85,16 +88,16 @@ class UserDetail extends Component{
         let button_string 
         let button_obj
         
-        if(this.state.host){
+        if(this.state.host){ //Defining the required button if the user is a host.
             button_string = this.state.approval ? "Deactivate this host" : "Approve this host"
             button_obj = <button className="apply" onClick={this.handleApprovalChange}>{button_string}</button>
         }
         
-        if (!permission){
+        if (!permission){ //Denying access to non-admins.
             return(
                 <h1 className="message">You can't access this page!</h1>
             )
-        }else{
+        }else{ //Displaying the user's data (and the approval button if needed)
             return(
                 <div>
                     <div className="message">Username: {this.state.username}</div> <br/>
@@ -107,10 +110,8 @@ class UserDetail extends Component{
                 </div>
             )
         }
-
         
     }
-
 }
 
 export default UserDetail

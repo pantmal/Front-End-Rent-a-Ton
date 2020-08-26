@@ -6,6 +6,7 @@ import axios from '../AXIOS_conf'
 
 import EditMap from './EditMap.js'
 
+//HostRoomDetail component used so a host can view one of his rooms and update its data.
 class HostRoomDetail extends Component{
 
     constructor(props){
@@ -88,6 +89,7 @@ class HostRoomDetail extends Component{
 
     pic_change = false
     
+    //When the component mounts we get the details of the user that is viewing the page.
     componentDidMount(){
          
         const id = this.props.app_state.user_primary_key
@@ -100,6 +102,8 @@ class HostRoomDetail extends Component{
             approved: user.approved
           })
            if(this.state.approved){
+
+            //Getting the room item from the server.
             const {id} = this.props.match.params
             axios.get(`rooms/roomList/${id}`/*, {
                 headers: {
@@ -144,7 +148,7 @@ class HostRoomDetail extends Component{
                         host_id: res_room.host_id
                     })
 
-                
+                    //Getting the coordinates.
                     let location = res_room.geolocation.split(' ')
                     let lng = location[1].replace('(','')
                     let lat = location[2].replace(')','')
@@ -153,7 +157,7 @@ class HostRoomDetail extends Component{
                         lng: lng
                     })
 
-                    
+                    //If the room doesn't belong to the host viewing the page, he may not access this page.
                     if(this.state.host_id != this.props.app_state.user_primary_key){
                         alert('You can only edit your own rooms')
                         this.props.history.push("/")
@@ -165,6 +169,8 @@ class HostRoomDetail extends Component{
 
 
     }
+
+    //The following event handles are used to update the values of the form that updates an existing room.
 
     handleNameChange = event => {
         const form_name = event.target.value
@@ -249,6 +255,7 @@ class HostRoomDetail extends Component{
         });
     }
 
+    //Using FileReader() for image changes.
     handleImageChange = (event) => {
         event.preventDefault();
 
@@ -383,6 +390,7 @@ class HostRoomDetail extends Component{
         })
     }
 
+    //Validating the form data and setting the errors object accordingly.
     handleValidation(){ 
         
         let errors = {};
@@ -455,7 +463,7 @@ class HostRoomDetail extends Component{
             errors["e_date"] = "\u2757Cannot be empty";
         }
 
-        if (this.state.s_date != ''  && this.state.e_date != ''){
+        if (this.state.s_date != ''  && this.state.e_date != ''){ //A little extra work for dates.
             let start_date = this.state.s_date
             let end_date = this.state.e_date
 
@@ -605,6 +613,7 @@ class HostRoomDetail extends Component{
 
     }
 
+    //If handleValidation() returns true, which means the data is ok, call proceedSubmission()
     handleFormSubmit = event => {
         event.preventDefault()
 
@@ -614,10 +623,11 @@ class HostRoomDetail extends Component{
 
     }
 
-    
+    //In proceedSubmission() an axios.patch request is made to update the room in the database. 
     proceedSubmission(){
         console.log(this.state)
 
+        //Geolocation variable set in Django format.
         let geolocation = `POINT(${this.state.lng} ${this.state.lat})`
 
         const data = {
@@ -657,7 +667,7 @@ class HostRoomDetail extends Component{
             reserved: false
         }
 
-        const formData = new FormData();
+        const formData = new FormData();//FormData used for the pictures.
 
         formData.append("name", data.name);
         formData.append("geolocation", data.geolocation);
@@ -701,13 +711,16 @@ class HostRoomDetail extends Component{
             Authorization: `JWT ${localStorage.getItem('storage_token')}`
           }}).then(response => {
               alert('Your room has been updated!');
-            }).catch(error => {console.log(error.response);  
-                               alert('Some kind of error occured, please try again.')                
+            }).catch(error => {
+                console.log(error.response);  
+                alert('Some kind of error occured, please try again.')                
             })
 
         
     }
 
+    //Render function provides a link to the user messages page and the data of the current room with the ability to update them.
+    //Note: To handle the additional images of a room (meaning all of them except the representative photo) one must click the related link.
     render(){
 
         let {imagePreviewUrl} = this.state;
@@ -720,7 +733,7 @@ class HostRoomDetail extends Component{
         let login_check = this.props.app_state.isLoggedIn;
         if (login_check){
             if(this.props.app_state.isHost){
-                if(this.state.approved){
+                if(this.state.approved){ //Defining the JSX elements if the host is approved.
                     return(
                     <div>
                     <h1 className="message"> You may click <Link to={'/userMessages/type=rec'}>here</Link> to check your messages </h1>    
@@ -792,15 +805,14 @@ class HostRoomDetail extends Component{
                     
                     </div>
                     )
-                }else{
+                }else{ //Denying access to non-approved hosts.
                     return(<h1 className="message">You don't have permission to access this page yet, please be patient</h1>)
                 }
             }
 
-
         }
 
-        if(login_check === false || !this.props.app_state.isHost){
+        if(login_check === false || !this.props.app_state.isHost){ //Denying access to non-hosts.
             return( <h1 className="message">You can't access this page!</h1>)
         }
 

@@ -6,14 +6,12 @@ import {Link} from 'react-router-dom';
 import AwesomeSlider from "react-awesome-slider";
 
 import axios from '../AXIOS_conf'
-//import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
-import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import styled from 'styled-components'
+
 
 import CreateMap from './CreateMap.js'
 
-
+//HostPage used so the hosts can create a new room or navigate to their existing rooms.
 class HostPage extends Component{
 
     constructor(props){
@@ -96,6 +94,7 @@ class HostPage extends Component{
 
     }
 
+    //When the component mounts we get the details of the user that is viewing the page.
     componentDidMount(){
 
         const id = this.props.app_state.user_primary_key
@@ -110,6 +109,8 @@ class HostPage extends Component{
     }
 
     
+    //The following event handles are used to update the values of the form that adds a new room.
+
     handleNameChange = event => {
         const form_name = event.target.value
         this.setState({
@@ -193,6 +194,7 @@ class HostPage extends Component{
         });
     }
 
+    //Using FileReader() for image changes.
     handleImageChange = event => {
         event.preventDefault();
     
@@ -212,10 +214,8 @@ class HostPage extends Component{
     handleMultipleImageChange = event =>{
         event.preventDefault();
 
-        // FileList to Array
         let files = Array.from(event.target.files);
-
-        // File Reader for Each file and and update state arrays
+ 
         files.forEach((file, i) => {
             let f_reader = new FileReader();
 
@@ -346,6 +346,7 @@ class HostPage extends Component{
         console.log(this.state)
     }
 
+    //Validating the form data and setting the errors object accordingly.
     handleValidation(){ 
         
         let errors = {};
@@ -418,7 +419,7 @@ class HostPage extends Component{
             errors["e_date"] = "\u2757Cannot be empty";
         }
 
-        if (this.state.s_date != ''  && this.state.e_date != ''){
+        if (this.state.s_date != ''  && this.state.e_date != ''){ //A little extra work for dates.
             let start_date = this.state.s_date
             let end_date = this.state.e_date
 
@@ -574,6 +575,7 @@ class HostPage extends Component{
 
     }
 
+    //If handleValidation() returns true, which means the data is ok, call proceedSubmission()
     handleFormSubmit = event => {
         event.preventDefault()
 
@@ -583,9 +585,11 @@ class HostPage extends Component{
 
     }
 
+    //In proceedSubmission() an axios.post request is made to add the room and its images in the database. 
     proceedSubmission(){
-        console.log(this.state)
+        //console.log(this.state)
 
+        //Geolocation variable set in Django format.
         let geolocation = `POINT(${this.state.lng} ${this.state.lat})`
 
         const data = {
@@ -625,7 +629,7 @@ class HostPage extends Component{
             reserved: false
         }
 
-        const formData = new FormData();
+        const formData = new FormData();//FormData used for the pictures.
 
         formData.append("name", data.name);
         formData.append("geolocation", data.geolocation);
@@ -666,7 +670,8 @@ class HostPage extends Component{
             Authorization: `JWT ${localStorage.getItem('storage_token')}`
           }}).then(response => {
               alert('Your new room has been added! You may see it in the room list');
-              if(this.state.files.length > 0){
+              
+              if(this.state.files.length > 0){//Adding the images of this room.
               this.state.files.forEach(function(value, index, array) {
                 const formData = new FormData();
    
@@ -678,13 +683,14 @@ class HostPage extends Component{
                   }}).then(response => {console.log('ok')}).catch(error => {console.log(error.response);})  
                 })    
             }
-            }).catch(error => {console.log(error.response);  
-                               alert('Some kind of error occured, please try again.')                
+            }).catch(error => {
+                console.log(error.response);  
+                alert('Some kind of error occured, please try again.')                
             })
                     
     }
 
-    
+    //Render function provides a link to the existing rooms and a form to add a new one.
     render(){
 
         let {imagePreviewUrl} = this.state;
@@ -699,7 +705,7 @@ class HostPage extends Component{
         if (login_check){
 
             if(this.props.app_state.isHost){
-                if(this.state.approved){
+                if(this.state.approved){ //Defining the JSX elements if the host is approved.
                     return(
                     <div>
                     <h1 className="message">You may click  <Link to={'/hostRooms/'}><span>here</span> </Link> to manage your existing rooms, or </h1>
@@ -775,7 +781,7 @@ class HostPage extends Component{
                     
                     </div>
                     )
-                }else{
+                }else{ //Denying access to non-approved hosts.
                     return(<h1 className="message">You don't have permission to access this page yet, please be patient</h1>)
                 }
             }
@@ -783,7 +789,7 @@ class HostPage extends Component{
 
         }
 
-        if(login_check === false || !this.props.app_state.isHost){
+        if(login_check === false || !this.props.app_state.isHost){ //Denying access to non-hosts.
             return( <h1 className="message">You can't access this page!</h1>)
         }
 

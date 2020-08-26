@@ -1,7 +1,7 @@
 import React from 'react';
 import {Component} from 'react';
 
-
+//Login component used so a user can login to the website.
 class Login extends Component{
 
     constructor(props){
@@ -18,6 +18,7 @@ class Login extends Component{
         this.handleFormSubmit = this.handleFormSubmit.bind(this)
     }
 
+    //Handling username change 
     handleUsernameChange = event => {
         const form_name = event.target.value
         this.setState({
@@ -25,6 +26,7 @@ class Login extends Component{
         })
     }
 
+    //Handling password change 
     handlePasswordChange = event => {
         const form_pswd = event.target.value
         this.setState({
@@ -32,6 +34,7 @@ class Login extends Component{
         })
     }
 
+    //Validating the login form data and setting the errors object accordingly.
     handleValidation(){
         
         let errors = {};
@@ -52,6 +55,7 @@ class Login extends Component{
         return formIsValid;
     }
 
+    //If handleValidation() returns true, which means the data is ok, call handleLoginSubmission() from the App state.
     handleFormSubmit = event => {
         event.preventDefault()
 
@@ -64,11 +68,11 @@ class Login extends Component{
     render(){
 
         let login_check = this.props.app_state.isLoggedIn;
-        if (login_check === true){
+        if (login_check === true){ //Appropriate message for users who are already logged in.
             return(
                 <h1 className="message">You are already logged in!</h1>
             )
-        }else{
+        }else{ //Defining the login form.
             return(
 
                 <div>

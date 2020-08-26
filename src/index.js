@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 
 import {BrowserRouter} from 'react-router-dom';
 
-
+//Wrapping the App component around the BrowserRouter component so it can use the route props (history, location, etc).
 ReactDOM.render(
     <BrowserRouter>
         <App />

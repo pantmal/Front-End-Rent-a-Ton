@@ -9,9 +9,10 @@ import L from 'leaflet'
 import 'leaflet-defaulticon-compatibility';
 import styled from 'styled-components'
 
-
+//Setting the width and height of the map.
 const Wrapper = styled.div`width: ${props => props.width}; height: ${props => props.height}`
 
+//Defining the Map used for the hosts who want to update the coordinates of the room.
 class EditMap extends Component{
 
     constructor(props){
@@ -21,20 +22,20 @@ class EditMap extends Component{
         this.popupPop = this.popupPop.bind(this)
     }
 
+    //Whenever a host clicks on the map a popup is created showing the coordinates he specified.
     onMapClick(e) {
-         //console.log(e.latlng.lat)
-         //console.log(e.latlng.lng) 
          
-          let popup = L.popup();
+        let popup = L.popup();
 
-          popup
-         .setLatLng(e.latlng)
-         .setContent("You have specified the new location of this room at " + e.latlng.toString())
-         .openOn(this.map);
+        popup
+        .setLatLng(e.latlng)
+        .setContent("You have specified the new location of this room at " + e.latlng.toString())
+        .openOn(this.map);
          
-         this.props.form_state.handleGeoChange(e.latlng) 
+        this.props.form_state.handleGeoChange(e.latlng) 
     }
 
+    //Whenever the mouse enters the map, a marker shows up showing the last specified location of the room.
     popupPop(e){
 
         let marker = L.marker([this.props.form_state.lat, this.props.form_state.lng]).addTo(this.map);
@@ -42,7 +43,7 @@ class EditMap extends Component{
 
     }
     
-
+    //Defining the map's information.
     componentDidMount(){
 
         
@@ -61,6 +62,7 @@ class EditMap extends Component{
         
     }
 
+    //Rendering the map.
     render(){
         return(<Wrapper width="600px" height="400px" id="map" />  )
     }

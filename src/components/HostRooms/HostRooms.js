@@ -5,7 +5,7 @@ import axios from '../AXIOS_conf'
 import ReactPaginate from 'react-paginate';
 import {Link} from 'react-router-dom';
 
-
+//HostRooms component used for the rooms that belong to the host.
 class HostRooms extends Component{
 
     constructor(props){
@@ -25,6 +25,7 @@ class HostRooms extends Component{
 
     }
 
+    //When the component mounts we get the details of the user that is viewing the page.
     componentDidMount(){
         
         const id = this.props.app_state.user_primary_key
@@ -37,15 +38,17 @@ class HostRooms extends Component{
           this.setState({
             approved: user.approved
           });
+
+          //If the host is approved, call receivedData()
           this.receivedData();
         }).catch(error => {console.log(error.response);})
 
 
     }
 
+    //Getting the data from the server and assigning them to the current page.
     receivedData(){
         
-
         const data = {host_id: this.props.app_state.user_primary_key}
         
         axios.post('/rooms/search/', JSON.stringify(data), {headers: { 
@@ -53,7 +56,7 @@ class HostRooms extends Component{
             }})
             .then(res => {
             
-            if (res.data==='not found'){
+            if (res.data==='not found'){ //Updating the state if there weren't any results.
                 this.setState({
                     not_found: true
                 })
@@ -63,15 +66,21 @@ class HostRooms extends Component{
             //check results if picture is null
             const data = res.data;
             
+            //Adding an extra total_price field according to the max people this room accomodates.
             const price_data = data.map(d =>
                 ({ ...d,
                 total_price: d.price + ((d.max_people-1) * d.price_per_person)})
                 )
             
+            //Sorting the items according to their price.
             price_data.sort( (a, b) => parseFloat(a.total_price) - parseFloat(b.total_price) )
             //console.log(price_data)
+
+            //Getting a slice of the data according to the offset of the page we're on.
             const slice = price_data.slice(this.state.offset, this.state.offset + this.state.perPage)
             //console.log(slice)
+
+            //Now we map each room to a React Fragment so it can be rendered.
             const postData = slice.map(pd =>
                 
             //add a message if it's him!
@@ -84,8 +93,8 @@ class HostRooms extends Component{
                 <p className="message">Beds: {pd.beds}</p>
                 <hr/>
             </React.Fragment>)
-
-            this.setState({
+    
+            this.setState({ //Updating the state with our room data to be displayed.
                 pageCount: Math.ceil(data.length / this.state.perPage),
                 postData
             })
@@ -93,10 +102,10 @@ class HostRooms extends Component{
         }
     })
         
-
     }
 
 
+    //Handling a new page change by updating the current page, the offset and calling the receivedData() function to get data for the new page.
     handlePageClick = (event) => {
         const selectedPage = event.selected;
         const offset = selectedPage * this.state.perPage;
@@ -110,6 +119,7 @@ class HostRooms extends Component{
     };
 
 
+    //Render function displays the rooms returned.
     render(){
         let not_found_msg = <h1 className="message">Sorry, nothing found</h1>
 
@@ -144,7 +154,7 @@ class HostRooms extends Component{
                             {paginate}
                         </div>
                     )
-                }else{
+                }else{ //Displaying the necessary message if there weren't any rooms returned.
                     return(
                         <div>
                         {not_found_msg}
@@ -152,13 +162,13 @@ class HostRooms extends Component{
                     )
                 }
 
-                }else{
+                }else{ //Denying access to non-approved hosts.
                     return(<h1 className="message">You don't have permission to access this page yet, please be patient</h1>)
                 }
             }
         }
 
-        if(login_check === false || !this.props.app_state.isHost){
+        if(login_check === false || !this.props.app_state.isHost){ //Denying access to non-hosts.
             return( <h1 className="message">You can't access this page!</h1>)
         }
 

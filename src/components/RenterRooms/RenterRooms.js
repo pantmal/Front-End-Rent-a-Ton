@@ -5,7 +5,7 @@ import axios from '../AXIOS_conf'
 import ReactPaginate from 'react-paginate';
 import {Link} from 'react-router-dom';
 
-
+//RenterRooms used for renters who want to view their resevations.
 class RenterRooms extends Component{
 
     constructor(props){
@@ -24,28 +24,13 @@ class RenterRooms extends Component{
 
     }
 
+    //componentDidMount calls the receivedData() function.
     componentDidMount(){
 
-        
-        
-    //     const id = this.props.app_state.user_primary_key
-    //     axios.get(`users/userList/${id}`/*,
-    //   {
-    //     headers: {
-    //       Authorization: `JWT ${localStorage.getItem('storage_token')}`
-    //     }}*/).then(response => { const user = response.data;
-    //         console.log(user);
-    //       this.setState({
-    //         approved: user.approved
-    //       });
-    //       this.receivedData();
-    //     }).catch(error => {console.log(error.response);})
-
-        this.receivedData();
-        
-        
+        this.receivedData();                
     }
 
+    //Getting the data from the server and assigning them to the current page.
     receivedData(){
         
         
@@ -56,25 +41,24 @@ class RenterRooms extends Component{
               }})
               .then(res => {
                 
-                if (res.data==='not found'){
+                if (res.data==='not found'){ //Updating the state if there weren't any results.
                     this.setState({
                         not_found: true
                     })
                 }else{
                 
 
-                //check results if picture is null
+                
                 const data = res.data;
-                // const price_data = data.map(d =>
-                //     ({ ...d,
-                //     total_price: d.price + ((this.state.people-1) * d.price_per_person)})
-                //     )
                 
-                
+                //Sorting the items according to their price.
                 data.sort( (a, b) => parseFloat(a.total_price) - parseFloat(b.total_price) )
-                //console.log(price_data)
+                
+                //Getting a slice of the data according to the offset of the page we're on.
                 const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
-                console.log(slice)
+                //console.log(slice)
+
+                //Now we map each room to a React Fragment so it can be rendered.
                 const postData = slice.map(pd =>
                 //add a message if it's him!
                 //this url shit will change hopefully
@@ -86,7 +70,7 @@ class RenterRooms extends Component{
                     <hr/>
                 </React.Fragment>)
 
-                this.setState({
+                this.setState({ //Updating the state with our room data to be displayed.
                     pageCount: Math.ceil(data.length / this.state.perPage),
                     postData
                 })
@@ -97,7 +81,7 @@ class RenterRooms extends Component{
 
     }
 
-
+    //Handling a new page change by updating the current page, the offset and calling the receivedData() function to get data for the new page.
     handlePageClick = (event) => {
         const selectedPage = event.selected;
         const offset = selectedPage * this.state.perPage;
@@ -111,16 +95,21 @@ class RenterRooms extends Component{
     };
 
 
+    //Render function provides a link to the user's messages and the data we retrieved.
     render(){
-
+        
+        //Messages link.
         let msg_link = <h1 className="message">Click <Link to={'/userMessages/type=rec'}>here</Link> to check your messages</h1> 
 
+        //No results message.
         let not_found_msg = <h1 className="message">Sorry, nothing found</h1>
 
         let login_check = this.props.app_state.isLoggedIn;
         if (login_check){
             if(this.props.app_state.isRenter){
                     if (this.state.not_found === false){
+
+                    //Defining the pagination component.
                     let paginate = 
                 
                     <ReactPaginate
@@ -137,7 +126,8 @@ class RenterRooms extends Component{
                                 activeClassName={"active"}
                                 forcePage={this.state.currentPage}
                     />
-
+                    
+                    //Returing the JSX elements.
                     return(
                         <div>
                             {msg_link}
@@ -147,6 +137,8 @@ class RenterRooms extends Component{
                         </div>
                     )
                 }else{
+
+                    //Returing the JSX elements.
                     return(
                         <div>
                         {msg_link}
@@ -159,7 +151,7 @@ class RenterRooms extends Component{
             }
         }
 
-        if(login_check === false || !this.props.app_state.isRenter){
+        if(login_check === false || !this.props.app_state.isRenter){ //Only renters may access this page.
             return( <h1 className="message">You can't access this page!</h1>)
         }
 

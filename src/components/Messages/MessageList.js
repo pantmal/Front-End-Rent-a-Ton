@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 
 import axios from '../AXIOS_conf'
 
-
+//MessageList component so a user may see his list of messages, sent and received.
 class MessageList extends Component{
 
 
@@ -15,10 +15,10 @@ class MessageList extends Component{
 
         let sender_mode = false
         
+        //Setting the viewmode depending on the type specified on the URL.
         let query = this.props.match.params
         if (query.parameters!=null){
             
-        
             let split_params = query.parameters.split('=')
             if(split_params[1]==='sent'){
                 sender_mode = true
@@ -46,30 +46,38 @@ class MessageList extends Component{
         this.handleReceivedButton = this.handleReceivedButton.bind(this);
     }
 
+    //Getting the message data from the server and assigning them to the current page.
     receivedData() {
 
 
         let data
         if(this.state.sender_mode){
+            
+            //Getting the messages by the type we need.
             data = {
                 type: 'sent',
                 id: this.props.app_state.user_primary_key
             }
+
             axios.post(
                 'users/getMessages/', JSON.stringify(data), {headers: {
                     'Content-Type': 'application/json',
                     Authorization: `JWT ${localStorage.getItem('storage_token')}`
                 }}
             ).then( response => {
-                if (response.data==='not found'){
+                if (response.data==='not found'){ //Updating the state if there weren't any results.
                     this.setState({
                         not_found: true
                     })
                 }else{
+
                     const data = response.data;
-                    console.log(data)
+                    //console.log(data)
+
+                    //Getting a slice of the data according to the offset of the page we're on.
                     const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)    
                 
+                    //Now we map each message to a React Fragment so it can be rendered.
                     const postData = slice.map(pd =>
                     <React.Fragment>
                         <Link to={`/userMessageDetail/${pd.pk}`}> <p>Title: {pd.title}</p> </Link>
@@ -77,6 +85,7 @@ class MessageList extends Component{
                         <hr/> 
                     </React.Fragment>)
     
+                    //Updating the state with our message data to be displayed.
                     this.setState({
                         pageCount: Math.ceil(data.length / this.state.perPage),
                         postData
@@ -86,7 +95,7 @@ class MessageList extends Component{
                 console.log(error.response)
                 alert('Some kind of error occured...')
             })
-        }else{
+        }else{ //Same work but for received messages.
             data = {
                 type: 'rec',
                 id: this.props.app_state.user_primary_key
@@ -125,7 +134,7 @@ class MessageList extends Component{
 
     }
 
-
+    //Handling a new page change by updating the current page, the offset and calling the receivedData() function to get data for the new page.
     handlePageClick = (event) => {
         const selectedPage = event.selected;
         const offset = selectedPage * this.state.perPage;
@@ -138,20 +147,24 @@ class MessageList extends Component{
 
     };
 
+    //componentDidMount calls the receivedData() function.
     componentDidMount() {
         this.receivedData()
     }
 
+    //Used so we can navigate to the sent messages.
     handleSentButton = event =>{
         this.props.history.push({pathname:'/userMessages/type=sent'})
         window.location.reload();
     }
 
+    //Used so we can navigate to the received messages.
     handleReceivedButton = event =>{
         this.props.history.push({pathname:'/userMessages/type=rec'})
         window.location.reload();
     }
     
+    //Render function provides a link so a user can create a new message, two buttons so he can switch between sent and received messages and messages we got.
     render(){
 
         if(this.props.app_state.isRenter || this.props.app_state.isHost){
@@ -164,7 +177,8 @@ class MessageList extends Component{
             let paginate 
             let results
             if (this.state.not_found === false){
-                
+    
+                //Defining the pagination component.            
                 paginate = 
                     <ReactPaginate
                                 previousLabel={"Previous"}
@@ -184,15 +198,14 @@ class MessageList extends Component{
 
             
                 results =         
-                    <div>
-                        
+                    <div>                    
                         {paginate}
                         {this.state.postData}
                         {paginate}
                     </div>
             
 
-            }else{
+            }else{ //Defining a message if no messages exist yet.
                 not_found_msg = <h1 className="message">Sorry, nothing found</h1>
             }
 
@@ -206,11 +219,10 @@ class MessageList extends Component{
                 </div>
             )
 
-        }else{
+        }else{ //Only hosts and renters may handle messages.
             return(<h1 className="message" >You can't access this page!</h1>)
         }
 
-        
     }
 
 }

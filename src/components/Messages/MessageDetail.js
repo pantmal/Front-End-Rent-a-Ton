@@ -6,9 +6,9 @@ import {Link} from 'react-router-dom';
 
 import axios from '../AXIOS_conf'
 
-
 //DATE IS NOT SHOWN 
 
+//MessageDetail used so a user may update one of his messages (if he's the sender) or reply to them (if he's the receiver).
 class MessageDetail extends Component{
 
     constructor(props){
@@ -40,6 +40,7 @@ class MessageDetail extends Component{
 
     }
 
+    //Getting the message data and setting the viewform of the page (depending if the user is sender or not).
     componentDidMount(){
 
         let id = this.props.match.params.id
@@ -80,7 +81,7 @@ class MessageDetail extends Component{
 
     }
 
-    
+    //Handling change in the 'reply' text area.
     handleReplyChange = event => {
         const form_reply = event.target.value
         this.setState({
@@ -88,6 +89,7 @@ class MessageDetail extends Component{
         })
     }
 
+    //Validating the reply form.
     handleReplyValidation(){
         
         let errors = {};
@@ -103,6 +105,7 @@ class MessageDetail extends Component{
         return formIsValid;
     }
 
+    //If handleReplyValidation() returns true, which means the data is ok, we add the message to the database.
     handleReplySubmit(){
         
 
@@ -115,7 +118,7 @@ class MessageDetail extends Component{
 
             let date_now = `${year}-${month}-${day}`
             console.log(this.props.app_state.username)
-            const msg_data = {
+            const msg_data = { //Title is same with the one he's replying on, except for the 'Re:' at the start.
                 sender: this.props.app_state.user_primary_key,
                 receiver: this.state.sender,
                 sender_name: this.props.app_state.username,
@@ -142,6 +145,7 @@ class MessageDetail extends Component{
 
     }
 
+    //Used when one wants to update one of his sent messages.
     handleContentChange = event => {
         const form_content = event.target.value
         this.setState({
@@ -149,6 +153,7 @@ class MessageDetail extends Component{
         })
     }
 
+    //Validating the changes made in the 'content' text area.
     handleValidation(){
         
         let errors = {};
@@ -164,7 +169,7 @@ class MessageDetail extends Component{
         return formIsValid;
     }
 
-
+    //If handleValidation() returns true, which means the data is ok, we update the message in the database.
     handleUpdate = event =>{
 
         if(this.handleValidation()){
@@ -202,7 +207,7 @@ class MessageDetail extends Component{
 
     }
 
-
+    //Deleting an existing message.
     handleDelete = event =>{
 
         axios.delete(`users/messageList/${this.state.pk}/`, {headers: {
@@ -218,14 +223,14 @@ class MessageDetail extends Component{
 
     }
 
+    //Render functions displays different stuff depending on the viewform.
     render(){
 
         if(this.props.app_state.isRenter || this.props.app_state.isHost){
 
-
             let sender_stuff
             let receiver_stuff
-            if(this.state.sender_mode){
+            if(this.state.sender_mode){ //Senders may update or delete a message.
                 sender_stuff = <div>
                 <h2 className="message"> Sent to:{this.state.receiver_name}</h2>
                 <h2 className="message"> Title:{this.state.title}</h2>
@@ -234,7 +239,7 @@ class MessageDetail extends Component{
                 <button className="apply" onClick={this.handleUpdate}>Update this message</button>
                 <button className="apply" onClick={this.handleDelete}>Delete this message</button>
                 </div>
-            }else{
+            }else{ //Receivers may view a message and reply to it.
                 receiver_stuff = <div>
                 <h2 className="message"> Sent by:{this.state.sender_name}</h2>
                 <h2 className="message"> Title:{this.state.title}</h2>
@@ -253,14 +258,13 @@ class MessageDetail extends Component{
                 </div>
             )
 
-        }else{
+        }else{ //Only hosts and renters may handle messages.
             return(<h1 className="message" >You can't access this page!</h1>)
         }
 
     }
 
 }
-
 
 
 export default MessageDetail

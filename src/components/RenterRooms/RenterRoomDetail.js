@@ -7,14 +7,15 @@ import axios from '../AXIOS_conf'
 
 import ViewMap from './ViewMap.js'
 
-
+//RenterRoomDetail so a renter may see a room and make a reservation and/or add ratings. Also used for visitors, though they can only view the room.
 class RenterRoomDetail extends Component{
 
     constructor(props){
         super(props)
 
         let date_mode = false
-        
+    
+        //If there are dates in the URL we are in date_mode. This means later on we will check if a renter can make a reservation on the specified dates.
         let query = this.props.match.params
         let start_date = '';
         let end_date = '';
@@ -94,223 +95,222 @@ class RenterRoomDetail extends Component{
 
     componentDidMount(){
 
-                
-    //     const id = this.props.app_state.user_primary_key
-    //     axios.get(`users/userList/${id}`/*,
-    //   {
-    //     headers: {
-    //       Authorization: `JWT ${localStorage.getItem('storage_token')}`
-    //     }}*/).then(response => { const user = response.data;
-    //       this.setState({
-    //         approved: user.approved
-    //       })
-        //   if(this.state.approved){
-            const {id} = this.props.match.params
-            axios.get(`rooms/roomList/${id}`/*, {
-                headers: {
-                  Authorization: `JWT ${localStorage.getItem('storage_token')}`
-                }}*/).then( 
+        //Getting the room from the database.
+        const {id} = this.props.match.params
+        axios.get(`rooms/roomList/${id}`/*, {
+            headers: {
+                Authorization: `JWT ${localStorage.getItem('storage_token')}`
+            }}*/).then( 
+                response => {
+                const res_room = response.data
+                this.setState({
+                    room_id: res_room.pk,
+                    name: res_room.name,
+                    street: res_room.street,
+                    hood: res_room.neighborhood,
+                    city: res_room.city,
+                    country: res_room.country,
+                    transit: res_room.transit,
+                    s_date: res_room.start_date,
+                    e_date: res_room.end_date,
+                    price: res_room.price,
+                    extra_price: res_room.price_per_person,
+                    max_people: res_room.max_people,
+                    beds: res_room.beds,
+                    bedrooms: res_room.bedrooms,
+                    bathrooms: res_room.bathrooms,
+                    picture: res_room.rep_photo,
+                    imagePreviewUrl: res_room.rep_photo,
+                    room_type: res_room.room_type,
+                    wifi: res_room.has_wifi,
+                    heating: res_room.has_heating,
+                    freezer: res_room.has_freezer,
+                    kitchen: res_room.has_kitchen,
+                    TV: res_room.has_TV,
+                    parking: res_room.has_parking,
+                    elevator: res_room.has_elevator,
+                    living_room: res_room.has_living_room,
+                    feet: res_room.square_feet,
+                    desc: res_room.description,
+                    smoking: res_room.smoking,
+                    pets: res_room.pets,
+                    events: res_room.events,
+                    min_nights: res_room.minimum_nights,
+                    host_id: res_room.host_id
+                })
+
+                //Getting the geographical location.
+                let location = res_room.geolocation.split(' ')
+                let lng = location[1].replace('(','')
+                let lat = location[2].replace(')','')
+                this.setState({
+                    lat: lat,
+                    lng: lng
+                })
+
+                //Now getting its images.
+                const data = {room_id_img: this.state.room_id}
+        
+                axios.post('/rooms/getImages/', JSON.stringify(data), {headers: { 
+                    'Content-Type': 'application/json'
+                }})
+                .then(res => {
+
+                    if (res.data!=='not found'){ //Making sure this room has additional images.
+
+                        let new_arr = []
+                        res.data.forEach(function(value, index, array) {
+                            
+                            new_arr.push("http://localhost:8000"+value.picture)
+                            
+                        })
+                            
+                        this.setState({ //Updating the state with the images we got.
+                            files: new_arr,
+                            imagesPreviewUrls: new_arr
+                        })
+                    }
+                })
+
+                //Getting the host's data.
+                const id = this.state.host_id
+                axios.get(`users/userList/${id}`/*, {
+                    headers: {
+                    Authorization: `JWT ${localStorage.getItem('storage_token')}`
+                    }}*/).then( 
                     response => {
-                    const res_room = response.data
-                    this.setState({
-                        room_id: res_room.pk,
-                        name: res_room.name,
-                        street: res_room.street,
-                        hood: res_room.neighborhood,
-                        city: res_room.city,
-                        country: res_room.country,
-                        transit: res_room.transit,
-                        s_date: res_room.start_date,
-                        e_date: res_room.end_date,
-                        price: res_room.price,
-                        extra_price: res_room.price_per_person,
-                        max_people: res_room.max_people,
-                        beds: res_room.beds,
-                        bedrooms: res_room.bedrooms,
-                        bathrooms: res_room.bathrooms,
-                        picture: res_room.rep_photo,
-                        imagePreviewUrl: res_room.rep_photo,
-                        room_type: res_room.room_type,
-                        wifi: res_room.has_wifi,
-                        heating: res_room.has_heating,
-                        freezer: res_room.has_freezer,
-                        kitchen: res_room.has_kitchen,
-                        TV: res_room.has_TV,
-                        parking: res_room.has_parking,
-                        elevator: res_room.has_elevator,
-                        living_room: res_room.has_living_room,
-                        feet: res_room.square_feet,
-                        desc: res_room.description,
-                        smoking: res_room.smoking,
-                        pets: res_room.pets,
-                        events: res_room.events,
-                        min_nights: res_room.minimum_nights,
-                        host_id: res_room.host_id
-                    })
-
-                    let location = res_room.geolocation.split(' ')
-                    let lng = location[1].replace('(','')
-                    let lat = location[2].replace(')','')
-                    this.setState({
-                        lat: lat,
-                        lng: lng
-                    })
-
-                    const data = {room_id_img: this.state.room_id}
-            
-                    axios.post('/rooms/getImages/', JSON.stringify(data), {headers: { 
-                        'Content-Type': 'application/json'
-                    }})
-                    .then(res => {
-
-                        if (res.data!=='not found'){
-
-                            let new_arr = []
-                            res.data.forEach(function(value, index, array) {
-                                
-                                new_arr.push("http://localhost:8000"+value.picture)
-                                
-                            })
-                               
-                            this.setState({
-                                files: new_arr,
-                                imagesPreviewUrls: new_arr
-                            })
-                        }
-                    })
-
-                    //check retrieve permission
-                    const id = this.state.host_id
-                    axios.get(`users/userList/${id}`/*, {
-                        headers: {
-                        Authorization: `JWT ${localStorage.getItem('storage_token')}`
-                        }}*/).then( 
-                        response => {
-                            const res_user = response.data
-                            this.setState({
-                                host_username: res_user.username,
-                                host_picture: res_user.picture,
-                                host_email: res_user.email
-                            })
-                        }
-                    )
-
-
-                    if(this.props.app_state.isHost && this.props.app_state.isRenter){
-                        if (this.state.host_id == this.props.app_state.user_primary_key){
-                            alert('You can\'t make a reservation on your own rooms')
-                            this.props.history.push("/")
-                        }
-                    }
-
-                    if(this.props.app_state.isRenter && this.state.date_mode===true){
-                        
-                        const formData = new FormData();
-                        formData.append("click", 'click');
-                        formData.append("room_id_click", this.state.room_id);
-                        formData.append("renter_id_click", this.props.app_state.user_primary_key);//fix for anon
-                        axios.post('rooms/addSearchesClicks/',formData, {headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `JWT ${localStorage.getItem('storage_token')}`
-                        }}).then(response => {console.log('click ok')}).catch(error => {console.log(error.response);})
-
-                    }
-
-                        if (this.state.date_mode){
-                            const dateData = new FormData();
-                            dateData.append("room_id", this.state.room_id);
-                            dateData.append("start_date", this.state.start_date);
-                            dateData.append("end_date", this.state.end_date);
-                            axios.post('rooms/resCheck/',dateData, {headers: {
-                            'Content-Type': 'application/json'
-                            }}).then(response => {console.log(response.data)
-                                if(response.data==='free'){
-                                    this.setState({
-                                        date_free: true
-                                    })
-                                }else{
-                                    this.setState({
-                                        date_free: false
-                                    })
-                                }
-                            }).catch(error => {console.log(error.response);})
-                        }
-
-                        if(this.props.app_state.user_primary_key != -1){
-
-                            let date = new Date();
-                            let year = date.getFullYear()
-                            let month = date.getMonth()+1
-                            let day = date.getDate()
-
-                            let date_now = `${year}-${month}-${day}`
-
-                            const dateData = new FormData();
-                            dateData.append("room_id", this.state.room_id);
-                            dateData.append("user_id", this.props.app_state.user_primary_key);
-                            dateData.append("date_now", date_now);
-
-                            axios.post('rooms/ratCheck/',dateData, {headers: {
-                                'Content-Type': 'application/json'
-                                }}).then(response => {console.log(response.data)
-                                    if(response.data==='free'){
-                                        this.setState({
-                                            can_review: true
-                                        })
-                                    }else{
-                                        this.setState({
-                                            can_review: false
-                                        })
-                                    }
-                                }).catch(error => {console.log(error.response);})
-    
-                        }
-
-                        
-                        const revData = new FormData();    
-                        revData.append("room", 'room');
-                        revData.append("room_id", this.state.room_id);
-                        
-                        axios.post('rooms/ratCount/',revData, {headers: {
-                                'Content-Type': 'application/json'
-                        }}).then(response => {
-                        console.log(response.data)
+                        const res_user = response.data
                         this.setState({
-                            count: response.data.count,
-                            avg: response.data.avg.rating__avg
-                        })  
-                        }).catch(error => {console.log(error.response);})
+                            host_username: res_user.username,
+                            host_picture: res_user.picture,
+                            host_email: res_user.email
+                        })
+                    }
+                )
 
-                        const hostData = new FormData();    
-                        hostData.append("host", 'host');
-                        hostData.append("host_id", this.state.host_id);
-                        
-                        axios.post('rooms/ratCount/',hostData, {headers: {
-                                'Content-Type': 'application/json'
-                        }}).then(response => {
-                        console.log(response.data)
-                        this.setState({
-                            h_count: response.data.count,
-                            h_avg: response.data.avg.rating__avg
-                        })  
-                        }).catch(error => {console.log(error.response);})
-                        
+                //If the user is both a host and renter, make sure he can't make a reservation on one of his own rooms.
+                if(this.props.app_state.isHost && this.props.app_state.isRenter && this.state.date_mode===true){
+                    if (this.state.host_id == this.props.app_state.user_primary_key){
+                        alert('You can\'t make a reservation on your own rooms')
+                        this.props.history.push("/")
+                    }
+                }
 
+                //If we're clicking this room for the first time, add its id in the server for future recommendations.
+                if(this.props.app_state.isRenter && this.state.date_mode===true){
+                    
+                    const formData = new FormData();
+                    formData.append("click", 'click');
+                    formData.append("room_id_click", this.state.room_id);
+                    formData.append("renter_id_click", this.props.app_state.user_primary_key);
+                    axios.post('rooms/addSearchesClicks/',formData, {headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `JWT ${localStorage.getItem('storage_token')}`
+                    }}).then(response => {console.log('click ok')}).catch(error => {console.log(error.response);})
 
                 }
-            )
-          // }   
-        //}).catch(error => {console.log(error.response);})
+
+                //If we're in date mode, check if we can make a reservation and update the state.
+                if (this.state.date_mode){
+
+                    const dateData = new FormData();
+                    dateData.append("room_id", this.state.room_id);
+                    dateData.append("start_date", this.state.start_date);
+                    dateData.append("end_date", this.state.end_date);
+
+                    axios.post('rooms/resCheck/',dateData, {headers: {
+                    'Content-Type': 'application/json'
+                    }}).then(response => {console.log(response.data)
+                        if(response.data==='free'){
+                            this.setState({
+                                date_free: true
+                            })
+                        }else{
+                            this.setState({
+                                date_free: false
+                            })
+                        }
+                    }).catch(error => {console.log(error.response);})
+                }
+
+                //Check if a renter can leave ratings.
+                if(this.props.app_state.user_primary_key != -1){
+
+                    let date = new Date();
+                    let year = date.getFullYear()
+                    let month = date.getMonth()+1
+                    let day = date.getDate()
+
+                    let date_now = `${year}-${month}-${day}`
+
+                    const dateData = new FormData();
+                    dateData.append("room_id", this.state.room_id);
+                    dateData.append("user_id", this.props.app_state.user_primary_key);
+                    dateData.append("date_now", date_now);
+
+                    axios.post('rooms/ratCheck/',dateData, {headers: {
+                        'Content-Type': 'application/json'
+                        }}).then(response => {console.log(response.data)
+                            if(response.data==='free'){
+                                this.setState({
+                                    can_review: true
+                                })
+                            }else{
+                                this.setState({
+                                    can_review: false
+                                })
+                            }
+                        }).catch(error => {console.log(error.response);})
+
+                }
+
+                //Getting room ratings count and average number.
+                const revData = new FormData();    
+                revData.append("room", 'room');
+                revData.append("room_id", this.state.room_id);
+                
+                axios.post('rooms/ratCount/',revData, {headers: {
+                        'Content-Type': 'application/json'
+                }}).then(response => {
+                console.log(response.data)
+                this.setState({
+                    count: response.data.count,
+                    avg: response.data.avg.rating__avg
+                })  
+                }).catch(error => {console.log(error.response);})
+
+                //Getting host ratings count and average number.
+                const hostData = new FormData();    
+                hostData.append("host", 'host');
+                hostData.append("host_id", this.state.host_id);
+                
+                axios.post('rooms/ratCount/',hostData, {headers: {
+                        'Content-Type': 'application/json'
+                }}).then(response => {
+                console.log(response.data)
+                this.setState({
+                    h_count: response.data.count,
+                    h_avg: response.data.avg.rating__avg
+                })  
+                }).catch(error => {console.log(error.response);})
+                    
+
+            }
+        )
 
 
     }
 
+    //Adding a reservation item in the server.
     handleRentChange = event =>{
+        
         const resData = new FormData();
         resData.append("room_id_res", this.state.room_id);
         resData.append("renter_id_res", this.props.app_state.user_primary_key);
         resData.append("start_date", this.state.start_date);
         resData.append("end_date", this.state.end_date);
+
+
         axios.post('rooms/reservations/',resData, {headers: {
         'Content-Type': 'application/json',
         Authorization: `JWT ${localStorage.getItem('storage_token')}`
@@ -318,11 +318,14 @@ class RenterRoomDetail extends Component{
             this.setState({
                 date_free: false
             })
+
+            //Displaying a message with the dates reserved and reloading the page.
             alert(`You have successfully rented the current room from ${this.state.start_date} to ${this.state.start_date}.\n You may see your reservations at the reservation list in the home page and click on their details to contact the host for more information.`)
             window.location.reload();
         }).catch(error => {console.log(error.response);})
     }
 
+    //Adding a room rating in the database.
     roomRatingChanged = (newRating) => {
 
         let date = new Date();
@@ -348,6 +351,7 @@ class RenterRoomDetail extends Component{
             }).catch(error => {console.log(error.response);})
     };
 
+    //Adding a host rating in the database.
     hostRatingChanged = (newRating) => {
 
         let date = new Date();
@@ -372,8 +376,10 @@ class RenterRoomDetail extends Component{
             }).catch(error => {console.log(error.response);})
     };
 
+    //Render function displays all the necessary data.
     render(){
 
+        //Defining images previews.
         let {imagePreviewUrl} = this.state;
         let $imagePreview = null;
         if (imagePreviewUrl) {
@@ -382,11 +388,13 @@ class RenterRoomDetail extends Component{
         
         let {imagesPreviewUrls} = this.state;     
         
+        //Defining a reservation button.
         let button_obj
         if (this.state.date_mode && this.state.date_free && this.props.app_state.isRenter){
             button_obj = <button className="apply" onClick={this.handleRentChange}>Make a reservation!</button>
         }
 
+        //Defining rating-related elements.
         let review_stuff
         if (this.state.can_review && this.props.app_state.isRenter){
             review_stuff = 
@@ -417,6 +425,7 @@ class RenterRoomDetail extends Component{
             
         }
         
+        //Displaying the room's data.
         if(this.props.app_state.isRenter || !this.props.app_state.isLoggedIn){
                 return(
                 <div>
@@ -480,12 +489,11 @@ class RenterRoomDetail extends Component{
                 {review_stuff}
                 </div>
                 )
-            }else{
+            }else{ //Only renters and visitors may access this page.
                 return( <h1 className="message">You can't access this page!</h1>)
             }
     
     }
-
 
 }
 

@@ -3,7 +3,7 @@ import {Component} from 'react';
 
 import axios from '../AXIOS_conf'
 
-
+//Register component so a new user may register.
 class Register extends Component{
     
     constructor(props){
@@ -37,6 +37,7 @@ class Register extends Component{
         this.handleFormSubmit = this.handleFormSubmit.bind(this)
     }
 
+    //Handling changes in the register form.
     
     handleUsernameChange = event => {
         const form_name = event.target.value
@@ -100,6 +101,7 @@ class Register extends Component{
         }})
     }
 
+    //FileReader() used for image changes.
     handleImageChange = (event) => {
         event.preventDefault();
     
@@ -117,12 +119,12 @@ class Register extends Component{
         f_reader.readAsDataURL(file)
       }
 
+      //Validating the register form data and setting the errors object accordingly.
       handleValidation(){
         
         let errors = {};
         let formIsValid = true;
 
-        //Name
         if(this.state.username == ''){
            formIsValid = false;
            errors["name"] = "\u2757Cannot be empty";
@@ -138,7 +140,7 @@ class Register extends Component{
             errors["v_pswd"] = "\u2757Password is not validated";
         }
         
-        if(this.state.password !== this.state.validation_pswd){
+        if(this.state.password !== this.state.validation_pswd){//Password validation.
             formIsValid = false;
             errors["v_pswd"] = "\u2757The two password fields are not the same";
         }
@@ -189,8 +191,8 @@ class Register extends Component{
         return formIsValid;
     }
 
-    
-    
+
+    //If handleValidation() returns true, which means the data is ok, call proceedSubmission()
     handleFormSubmit = event => {
         event.preventDefault()
         
@@ -200,6 +202,7 @@ class Register extends Component{
 
     }
 
+    //In proceedSubmission() an axios.post request is made to add the new user in the database.
     proceedSubmission(){
         let approval = true
         if(this.state.host){
@@ -220,7 +223,7 @@ class Register extends Component{
             picture: this.state.picture
         }
 
-        const formData = new FormData();
+        const formData = new FormData();//FormData used in case we have pictures.
 
         formData.append("username", data.username);
         formData.append("password", data.password);
@@ -235,25 +238,25 @@ class Register extends Component{
         formData.append("picture", data.picture);
         formData.append("secondary_id", 1);
 
-        //"{\"username\":[\"A user with that username already exists.\"]}"
-        console.log(data)
+
         axios.post('users/userList/', formData, {headers: {
             'Content-Type': 'application/json'
           }}).then(response => {alert('You have successfully registered! Now proceed to log in at the navigation bar to continue using the application.');
-          if (data.is_host){
+          if (data.is_host){ //Displaying a message for new hosts, telling them their request is pending.
             alert('Since you have chosen the role of the host you will have to wait until further notice. The admin will activate your account someday')
           }  
             }).catch(error => {console.log(error.response);  
-                if(error.response.request.response.includes("A user with that username already exists")){
+                if(error.response.request.response.includes("A user with that username already exists")){ //Alerting the user if the name he tried to add is used by another user. 
                     alert('A user with that username already exists. Please fill in the register form again with another username.')
                 }else{
                     alert('Some kind of error occured, please try again.')
                 }
-            }).finally(() => { 
+            }).finally(() => { //Redirecting to the home page.
                 this.props.history.push("/");
             })
     }
 
+    //Render function displays the register form.
     render(){
 
         let {imagePreviewUrl} = this.state;
@@ -263,11 +266,11 @@ class Register extends Component{
         }
 
         let login_check = this.props.app_state.isLoggedIn;
-        if (login_check === true){
+        if (login_check === true){ //Appropriate message for users who are already logged in.
             return(
                 <h1>You are already logged in!</h1>
             )
-        }else{
+        }else{ //Defining the register form.
             return(
 
                 <div>
@@ -299,7 +302,6 @@ class Register extends Component{
             )
         }
     }
-
 }
 
 export default Register
