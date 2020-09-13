@@ -9,7 +9,7 @@ import 'leaflet-defaulticon-compatibility';
 import styled from 'styled-components'
 
 //Setting the width and height of the map.
-const Wrapper = styled.div`width: ${props => props.width}; height: ${props => props.height}`
+const Wrapper = styled.div`width: ${props => props.width}; height: ${props => props.height}; position: relative; left: 300px;`
 
 //Defining the map used by the users who want to view the geographic location of the room.
 class ViewMap extends Component{

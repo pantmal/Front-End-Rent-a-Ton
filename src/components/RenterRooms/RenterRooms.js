@@ -14,7 +14,7 @@ class RenterRooms extends Component{
         this.state = {
             offset: 0,
             users: [],
-            perPage: 2,
+            perPage: 10,
             currentPage: 0,
             not_found: false,
             receivedData: this.receivedData()
@@ -46,8 +46,6 @@ class RenterRooms extends Component{
                         not_found: true
                     })
                 }else{
-                
-
                 
                 const data = res.data;
                 
@@ -99,10 +97,10 @@ class RenterRooms extends Component{
     render(){
         
         //Messages link.
-        let msg_link = <h1 className="message">Click <Link to={'/userMessages/type=rec'}>here</Link> to check your messages</h1> 
+        let msg_link = <h1 className="message">Click <Link to={'/userMessages/type=rec'}>here</Link> to check your messages.</h1> 
 
         //No results message.
-        let not_found_msg = <h1 className="message">Sorry, nothing found</h1>
+        let not_found_msg = <h1 className="message">Sorry, nothing found.</h1>
 
         let login_check = this.props.app_state.isLoggedIn;
         if (login_check){
@@ -147,7 +145,6 @@ class RenterRooms extends Component{
                     )
                 }
 
-                
             }
         }
 
@@ -157,8 +154,6 @@ class RenterRooms extends Component{
 
     }
 
-
 }
-
 
 export default RenterRooms

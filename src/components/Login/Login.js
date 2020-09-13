@@ -77,9 +77,9 @@ class Login extends Component{
 
                 <div>
                     <form onSubmit={this.handleFormSubmit}>
-                        <h2 className="message"> Enter your name here:<input name="username" onChange={this.handleUsernameChange} /></h2> <br/>
+                        <h2 className="message"> Enter your name here: <input name="username" onChange={this.handleUsernameChange} /></h2> <br/>
                         <span style={{color: "red"}}>{this.state.errors["name"]}</span>
-                        <h2 className="message"> Enter your password here:<input name="pswd" type="password" onChange={this.handlePasswordChange} /></h2>
+                        <h2 className="message"> Enter your password here: <input name="pswd" type="password" onChange={this.handlePasswordChange} /></h2>
                         <span style={{color: "red"}}>{this.state.errors["pswd"]}</span>
                         <br/>
                         <button className="apply">Login now!</button>

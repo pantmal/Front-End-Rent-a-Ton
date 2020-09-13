@@ -17,7 +17,7 @@ class RoomImages extends Component{
             room_id: '',
             offset: 0,
             users: [],
-            perPage: 2,
+            perPage: 10,
             currentPage: 0,
             host_id: '',
             files: [],
@@ -59,7 +59,7 @@ class RoomImages extends Component{
 
                     //If the room doesn't belong to the host viewing the page, he may not access this page.
                     if(this.state.host_id != this.props.app_state.user_primary_key){
-                        alert('You can only edit your own images')
+                        alert('You can only edit your own images!')
                         this.props.history.push("/")
                     }
 
@@ -164,16 +164,18 @@ class RoomImages extends Component{
                 }}).then(response => {console.log('ok');
                 }).catch(error => {console.log(error.response);})  
               })
-            alert('Your new images have been added successfully. Refresh the page to see them on the list')      
+            alert('Your new images have been added successfully. Refresh the page to see them on the list.')      
           }
     }
 
     //Render function displays a button so a user may add new images and navigate to an existing image.
-    //NOTE: ADD A NOTE FOR LINKS
     render(){
 
         //Defining a message if there weren't any results.
         let not_found_msg = <h1 className="message">Sorry, nothing found</h1>
+
+        //Message for navigation.
+        let nav = <h1 className="message">Click on the existing images to either update them, or delete them.</h1>
 
         let {imagesPreviewUrls} = this.state;        
 
@@ -215,6 +217,7 @@ class RoomImages extends Component{
                         return(
                             <div>
                                 {add_photos}
+                                {nav}    
                                 {paginate}
                                 {this.state.postData}
                                 {paginate}
@@ -230,7 +233,7 @@ class RoomImages extends Component{
                     }
                     
                 }else{ //Denying access to non-approved hosts.
-                    return(<h1 className="message">You don't have permission to access this page yet, please be patient</h1>)
+                    return(<h1 className="message">You don't have permission to access this page yet, please be patient.</h1>)
                 }
             }
         }

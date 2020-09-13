@@ -174,10 +174,16 @@ class Register extends Component{
             errors["email"] = "\u2757Cannot be empty";
         }
 
-       
-        if(!this.state.phone.match(/^[0-9]+$/)){ //forgot some stuff here lol
+        if(this.state.phone == ''){
             formIsValid = false;
-            errors["phone"] = "\u2757Only numbers";
+            errors["name"] = "\u2757Cannot be empty";
+        }
+       
+        if(this.state.phone != ''){
+            if(!this.state.phone.match(/^[0-9]+$/)){ 
+                formIsValid = false;
+                errors["phone"] = "\u2757Only numbers";
+            }
         }
 
         if(this.state.host === false && this.state.renter === false){
@@ -243,11 +249,11 @@ class Register extends Component{
             'Content-Type': 'application/json'
           }}).then(response => {alert('You have successfully registered! Now proceed to log in at the navigation bar to continue using the application.');
           if (data.is_host){ //Displaying a message for new hosts, telling them their request is pending.
-            alert('Since you have chosen the role of the host you will have to wait until further notice. The admin will activate your account someday')
+            alert('Since you have chosen the role of the host you will have to wait until further notice. The admin will activate your account sometime.')
           }  
             }).catch(error => {console.log(error.response);  
                 if(error.response.request.response.includes("A user with that username already exists")){ //Alerting the user if the name he tried to add is used by another user. 
-                    alert('A user with that username already exists. Please fill in the register form again with another username.')
+                    alert('A user with that username already exists. Please fill in the register form again with a different username.')
                 }else{
                     alert('Some kind of error occured, please try again.')
                 }
@@ -275,19 +281,20 @@ class Register extends Component{
 
                 <div>
                     <form onSubmit={this.handleFormSubmit}>
-                        <h5 className="message" > Enter your name here:<input name="username" onChange={this.handleUsernameChange} /></h5> 
+                        <h1 className="message"> Create a new account using the following form:</h1>
+                        <h5 className="message" > Enter your name here: <input name="username" onChange={this.handleUsernameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["name"]}</span>
-                        <h5 className="message" > Enter your password here:<input name="pswd" type="password" onChange={this.handlePasswordChange} /></h5>
+                        <h5 className="message" > Enter your password here: <input name="pswd" type="password" onChange={this.handlePasswordChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["pswd"]}</span>
-                        <h5 className="message" > Please validate your password:<input name="valid_pswd" type="password" onChange={this.handleValidPasswordChange} /></h5>
+                        <h5 className="message" > Please validate your password: <input name="valid_pswd" type="password" onChange={this.handleValidPasswordChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["v_pswd"]}</span>
-                        <h5 className="message" > Enter your first name here:<input name="fist_name" onChange={this.handleFirstnameChange} /></h5> 
+                        <h5 className="message" > Enter your first name here: <input name="fist_name" onChange={this.handleFirstnameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["f_name"]}</span>
-                        <h5 className="message" > Enter your last name here:<input name="last_name" onChange={this.handleLastnameChange} /></h5> 
+                        <h5 className="message" > Enter your last name here: <input name="last_name" onChange={this.handleLastnameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["l_name"]}</span>
-                        <h5 className="message" > Enter your email here:<input type="email" name="email" size="30" onChange={this.handleEmailChange}/></h5> 
+                        <h5 className="message" > Enter your email here: <input type="email" name="email" size="30" onChange={this.handleEmailChange}/></h5> 
                         <span style={{color: "red"}}>{this.state.errors["email"]}</span>
-                        <h5 className="message" > Enter your phone here:<input type="tel" name="phone" size="30" onChange={this.handlePhoneChange}/></h5>
+                        <h5 className="message" > Enter your phone here: <input type="tel" name="phone" size="30" onChange={this.handlePhoneChange}/></h5>
                         <span style={{color: "red"}}>{this.state.errors["phone"]}</span>
                         <h5 className="message" >Choose your role here. You may choose host or renter or both</h5>
                         <h5 className="message" > Host:<input type="checkbox" name="host" onChange={this.handleHostChange}/></h5> 

@@ -28,7 +28,7 @@ class AdminPage extends Component{
         axios.post('/rooms/exportData/',JSON.stringify(data), {headers: { 
             'Content-Type': 'application/json',
             Authorization: `JWT ${localStorage.getItem('storage_token')}`
-          }}).then(response => {alert('The data has been exported.');  
+          }}).then(response => {alert('The data has been successfully exported.');  
             }).catch(error => {
                 console.log(error.response);   
                 alert('Some kind of error occured, please try again.')
@@ -46,7 +46,7 @@ class AdminPage extends Component{
         axios.post('/rooms/exportData/',JSON.stringify(data), {headers: { 
             'Content-Type': 'application/json',
             Authorization: `JWT ${localStorage.getItem('storage_token')}`
-          }}).then(response => {alert('The data has been exported.');  
+          }}).then(response => {alert('The data has been successfully exported.');  
             }).catch(error => {
                 console.log(error.response);   
                 alert('Some kind of error occured, please try again.')

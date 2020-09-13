@@ -231,15 +231,15 @@ class Home extends Component{
             } 
 
             //Defining a user message depending on the user's role.
-            user_message = <h1 className="message"> <span> Welcome dear user. You are logged in as {role} </span> </h1>       
+            user_message = <h1 className="message"> <span> Welcome dear user. You are logged in as a {role}. </span> </h1>       
 
         }else{ //Defining a message for visitors.
-            anon_message = <h1 className="message"> Welcome dear visitor </h1>
+            anon_message = <h1 className="message"> Welcome dear visitor. </h1>
         }
 
         if(login_check === false || this.props.app_state.isRenter){ //Defining a search form, but only used for visitors and renters.
             search = <div>
-                <h1 className="message"> You may search for rooms by filling in the form: </h1>
+                <h1 className="message"> You can search for rooms by filling in the following form: </h1>
                 <form onSubmit={this.handleSearchFormSubmit}>
                         <h2 className="message"> Enter neighborhood name here:<input name="hood" onChange={this.handleHoodChange} /></h2> 
                         <span style={{color: "red"}}>{this.state.errors["hood"]}</span>
@@ -263,7 +263,7 @@ class Home extends Component{
         let recommend
         if(this.props.app_state.isRenter){ //Defining a link to reserved rooms and a recommendation button for renters.
             res_list = <div>
-            <h2 className="message">You may click <Link to={'/renterRooms/'}>here</Link> to check your reservations</h2>
+            <h1 className="message">You may click <Link to={'/renterRooms/'}>here</Link> to check your reservations.</h1>
             </div>
 
             recommend = <div><h4 className="message">or</h4>

@@ -129,42 +129,47 @@ class CreateMessage extends Component{
                 this.setState({
                     rec_id: response.data.pk
                 })
+
+                //Getting the current date
+                let date = new Date();
+                let year = date.getFullYear()
+                let month = date.getMonth()+1
+                let day = date.getDate()
+
+                let date_now = `${year}-${month}-${day}`
+                console.log(this.props.app_state.username)
+                const msg_data = {
+                    sender: this.props.app_state.user_primary_key,
+                    receiver: this.state.rec_id,
+                    sender_name: this.props.app_state.username,
+                    receiver_name: this.state.username,
+                    title: this.state.title,
+                    content: this.state.content,
+                    date: date_now
+                }
+
+                console.log(msg_data)
+
+                //Adding the message in the database.
+                axios.post(
+                    'users/messageList/', JSON.stringify(msg_data), {headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `JWT ${localStorage.getItem('storage_token')}`
+                    }}
+                ).then( response => {
+                    console.log(response)
+                    alert('Your message has been sent successfully. You may see your sent and received messages at the message list.')
+                }).catch(error => {
+                    console.log(error.response)
+                    alert('Some kind of error occured...')
+                })
+
+            
             }).catch(error => {
                 console.log(error.response)
                 alert('Some kind of error occured...')
             })
 
-            //Getting the current date
-            let date = new Date();
-            let year = date.getFullYear()
-            let month = date.getMonth()+1
-            let day = date.getDate()
-
-            let date_now = `${year}-${month}-${day}`
-            console.log(this.props.app_state.username)
-            const msg_data = {
-                sender: this.props.app_state.user_primary_key,
-                receiver: this.state.rec_id,
-                sender_name: this.props.app_state.username,
-                receiver_name: this.state.username,
-                title: this.state.title,
-                content: this.state.content,
-                date: date_now
-            }
-
-            //Adding the message in the database.
-            axios.post(
-                'users/messageList/', JSON.stringify(msg_data), {headers: {
-                    'Content-Type': 'application/json'/*,
-                    Authorization: `JWT ${localStorage.getItem('storage_token')}`*/
-                }}
-            ).then( response => {
-                console.log(response)
-                alert('Your message has been sent successfully. You may see your sent and received messages at the message list')
-            }).catch(error => {
-                console.log(error.response)
-                alert('Some kind of error occured...')
-            })
             
         }
 
@@ -175,10 +180,10 @@ class CreateMessage extends Component{
 
         if(this.props.app_state.isRenter || this.props.app_state.isHost){
             let rec_field 
-            if(this.state.default_mode){ //If default mode is on, set the receiver's username.
-                rec_field =<div> <h2 className="message"> Send to:<input name="receiver" defaultValue={this.state.username} onChange={this.handleUsernameChange} /></h2> <br/></div>
+            if(this.state.default_mode){ //If default mode is on, set the receiver's username as a default value.
+                rec_field =<div> <h2 className="message"> Send to: <input name="receiver" defaultValue={this.state.username} onChange={this.handleUsernameChange} /></h2> <br/></div>
             }else{
-                rec_field =<div> <h2 className="message"> Send to:<input name="receiver" onChange={this.handleUsernameChange} /></h2> <br/></div>
+                rec_field =<div> <h2 className="message"> Send to: <input name="receiver" onChange={this.handleUsernameChange} /></h2> <br/></div>
             }
 
             return(
@@ -186,9 +191,9 @@ class CreateMessage extends Component{
                     <form onSubmit={this.handleFormSubmit}>
                         {rec_field}
                         <span style={{color: "red"}}>{this.state.errors["name"]}</span>
-                        <h2 className="message"> Title:<input name="title" onChange={this.handleTitleChange} /></h2>
+                        <h2 className="message"> Title: <input name="title" onChange={this.handleTitleChange} /></h2>
                         <span style={{color: "red"}}>{this.state.errors["content"]}</span>
-                        <h5 className="message" > Message:<textarea onChange={this.handleContentChange} /></h5> 
+                        <h5 className="message" > Message: <textarea onChange={this.handleContentChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["content"]}</span>
                         <br/>
                         <button className="apply">Send message!</button>

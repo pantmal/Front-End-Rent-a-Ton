@@ -15,7 +15,7 @@ class HostRooms extends Component{
             approved: false,
             offset: 0,
             users: [],
-            perPage: 2,
+            perPage: 10,
             currentPage: 0,
             not_found: false,
             receivedData: this.receivedData()
@@ -121,7 +121,7 @@ class HostRooms extends Component{
 
     //Render function displays the rooms returned.
     render(){
-        let not_found_msg = <h1 className="message">Sorry, nothing found</h1>
+        let not_found_msg = <h1 className="message">Sorry, nothing found.</h1>
 
         let login_check = this.props.app_state.isLoggedIn;
         if (login_check){
@@ -163,7 +163,7 @@ class HostRooms extends Component{
                 }
 
                 }else{ //Denying access to non-approved hosts.
-                    return(<h1 className="message">You don't have permission to access this page yet, please be patient</h1>)
+                    return(<h1 className="message">You don't have permission to access this page yet, please be patient.</h1>)
                 }
             }
         }

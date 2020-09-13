@@ -7,7 +7,7 @@ import 'leaflet/dist/leaflet.css'
 import styled from 'styled-components'
 
 //Setting the width and height of the map.
-const Wrapper = styled.div`width: ${props => props.width}; height: ${props => props.height}`
+const Wrapper = styled.div`width: ${props => props.width}; height: ${props => props.height}; position: relative; left: 300px;`
 
 //Defining the Map used for the hosts who want to specify the coordinates of the room.
 class CreateMap extends Component{

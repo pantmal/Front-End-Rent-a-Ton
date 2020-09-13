@@ -159,7 +159,7 @@ class HostRoomDetail extends Component{
 
                     //If the room doesn't belong to the host viewing the page, he may not access this page.
                     if(this.state.host_id != this.props.app_state.user_primary_key){
-                        alert('You can only edit your own rooms')
+                        alert('You can only edit your own rooms!')
                         this.props.history.push("/")
                     }
                 }
@@ -736,33 +736,33 @@ class HostRoomDetail extends Component{
                 if(this.state.approved){ //Defining the JSX elements if the host is approved.
                     return(
                     <div>
-                    <h1 className="message"> You may click <Link to={'/userMessages/type=rec'}>here</Link> to check your messages </h1>    
-                    <h1 className="message"> You may add a new room by filling in the form below: </h1>
+                    <h1 className="message"> You may click <Link to={'/userMessages/type=rec'}>here</Link> to check your messages. </h1>    
+                    <h1 className="message"> You may update your room by filling in the form below: </h1>
                     <form onSubmit={this.handleFormSubmit}>
-                        <h5 className="message" > Name:<input name="name" defaultValue={this.state.name} onChange={this.handleNameChange} /></h5> 
+                        <h5 className="message" > Name: <input name="name" defaultValue={this.state.name} onChange={this.handleNameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["name"]}</span>
                         <h5 className="message">Specify the geographic location of the room using the map:</h5> 
                         <EditMap form_state={{...this.state}}/>
                         <span style={{color: "red"}}>{this.state.errors["geolocation"]}</span>
-                        <h5 className="message" > Address:<input name="address" defaultValue={this.state.street} onChange={this.handleAddressChange} /></h5> 
+                        <h5 className="message" > Address: <input name="address" defaultValue={this.state.street} onChange={this.handleAddressChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["street"]}</span>
-                        <h5 className="message" > Neighborhood:<input name="hood" defaultValue={this.state.hood} onChange={this.handleHoodChange} /></h5> 
+                        <h5 className="message" > Neighborhood: <input name="hood" defaultValue={this.state.hood} onChange={this.handleHoodChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["hood"]}</span>
-                        <h5 className="message"> City:<input name="city" defaultValue={this.state.city} onChange={this.handleCityChange} /></h5>
+                        <h5 className="message"> City: <input name="city" defaultValue={this.state.city} onChange={this.handleCityChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["city"]}</span>
-                        <h5 className="message"> Country:<input name="country" defaultValue={this.state.country} onChange={this.handleCountryChange} /></h5>
+                        <h5 className="message"> Country: <input name="country" defaultValue={this.state.country} onChange={this.handleCountryChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["country"]}</span>
-                        <h5 className="message" > Transit:<input name="transit" defaultValue={this.state.transit} onChange={this.handleTransitChange} /></h5> 
+                        <h5 className="message" > Transit: <input name="transit" defaultValue={this.state.transit} onChange={this.handleTransitChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["transit"]}</span>
-                        <h5 className="message"> Enter starting date here:<input type="date" name="start_date" defaultValue={this.state.s_date} onChange={this.handleStartDateChange} /></h5>
+                        <h5 className="message"> Enter starting date here: <input type="date" name="start_date" defaultValue={this.state.s_date} onChange={this.handleStartDateChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["s_date"]}</span>
-                        <h5 className="message"> Enter ending date here:<input type="date" name="end_date" defaultValue={this.state.e_date} onChange={this.handleEndDateChange} /></h5>
+                        <h5 className="message"> Enter ending date here: <input type="date" name="end_date" defaultValue={this.state.e_date} onChange={this.handleEndDateChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["e_date"]}</span>
-                        <h5 className="message" > Max number of people:<input name="max_people" defaultValue={this.state.max_people} onChange={this.handlePeopleChange} /></h5> 
+                        <h5 className="message" > Max number of people: <input name="max_people" defaultValue={this.state.max_people} onChange={this.handlePeopleChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["max_people"]}</span>
-                        <h5 className="message" > Starting price:<input name="price" type="number" step="0.1" defaultValue={this.state.price} onChange={this.handlePriceChange} /></h5> 
+                        <h5 className="message" > Starting price: <input name="price" type="number" step="0.1" defaultValue={this.state.price} onChange={this.handlePriceChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["price"]}</span>
-                        <h5 className="message" > Price per extra people:<input name="ext_price" type="number" step="0.1" defaultValue={this.state.extra_price} onChange={this.handleExtraPriceChange} /></h5> 
+                        <h5 className="message" > Price per extra people: <input name="ext_price" type="number" step="0.1" defaultValue={this.state.extra_price} onChange={this.handleExtraPriceChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["ext_price"]}</span>
                         <h5 className="message">Choose room type here:</h5> 
                         <h5 className="message">Private Room<input type="radio" value="Private room" name="room_type" checked={this.state.room_type === "Private room"} onChange={this.handleRadioChange}/>  </h5>
@@ -775,15 +775,15 @@ class HostRoomDetail extends Component{
                         <span style={{color: "red"}}>{this.state.errors["picture"]}</span>
                         <h5 className="message" > Click <Link to={`/roomImages/${this.state.room_id}`}>here</Link> to manage the other images related to this room </h5>
                         </div>
-                        <h5 className="message" > Number of beds:<input name="beds" defaultValue={this.state.beds} onChange={this.handleBedsChange} /></h5> 
+                        <h5 className="message" > Number of beds: <input name="beds" defaultValue={this.state.beds} onChange={this.handleBedsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["beds"]}</span>
-                        <h5 className="message" > Number of bedrooms:<input name="bedrooms" defaultValue={this.state.bedrooms} onChange={this.handleBedroomsChange} /></h5> 
+                        <h5 className="message" > Number of bedrooms: <input name="bedrooms" defaultValue={this.state.bedrooms} onChange={this.handleBedroomsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["bedrooms"]}</span>
-                        <h5 className="message" > Number of bathrooms:<input name="bathrooms" defaultValue={this.state.bathrooms} onChange={this.handleBathroomsChange} /></h5> 
+                        <h5 className="message" > Number of bathrooms: <input name="bathrooms" defaultValue={this.state.bathrooms} onChange={this.handleBathroomsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["bathrooms"]}</span>
-                        <h5 className="message" > Square feet:<input name="feet" type="number" step="0.1" defaultValue={this.state.feet} onChange={this.handleFeetChange} /></h5> 
+                        <h5 className="message" > Square feet: <input name="feet" type="number" step="0.1" defaultValue={this.state.feet} onChange={this.handleFeetChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["feet"]}</span>
-                        <h5 className="message" > Description:<textarea defaultValue={this.state.desc} onChange={this.handleDescChange} /></h5> 
+                        <h5 className="message" > Description: <textarea defaultValue={this.state.desc} onChange={this.handleDescChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["desc"]}</span>
                         <h5 className="message">Amenities this room provides:</h5> 
                         <h5 className="message" > WiFi:<input type="checkbox" name="WiFi" defaultChecked={this.state.wifi} onChange={this.handleWiFiChange}/></h5> 
@@ -798,7 +798,7 @@ class HostRoomDetail extends Component{
                         <h5 className="message" > Smoking:<input type="checkbox" name="Smoking" defaultChecked={this.state.smoking} onChange={this.handleSmokingChange}/></h5> 
                         <h5 className="message" > Pets:<input type="checkbox" name="Pets" defaultChecked={this.state.pets} onChange={this.handlePetsChange}/></h5> 
                         <h5 className="message" > Events:<input type="checkbox" name="Events" defaultChecked={this.state.events} onChange={this.handleEventsChange}/></h5> 
-                        <h5 className="message" > Minimum nights:<input name="min_nights" defaultValue={this.state.min_nights} onChange={this.handleMinNightsChange} /></h5> 
+                        <h5 className="message" > Minimum nights: <input name="min_nights" defaultValue={this.state.min_nights} onChange={this.handleMinNightsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["min_nights"]}</span> <br/>
                         <button className="apply">Update your room</button>
                     </form>
@@ -806,7 +806,7 @@ class HostRoomDetail extends Component{
                     </div>
                     )
                 }else{ //Denying access to non-approved hosts.
-                    return(<h1 className="message">You don't have permission to access this page yet, please be patient</h1>)
+                    return(<h1 className="message">You don't have permission to access this page yet, please be patient.</h1>)
                 }
             }
 

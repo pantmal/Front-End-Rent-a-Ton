@@ -149,6 +149,16 @@ class EditProfile extends Component{
            errors["name"] = "\u2757Cannot be empty";
         }
 
+        if(this.state.password == ''){
+            formIsValid = false;
+            errors["pswd"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.validation_pswd == ''){
+            formIsValid = false;
+            errors["v_pswd"] = "\u2757Password is not validated";
+        }
+
         if(this.state.password != '' && this.state.validation_pswd != '' ){ //Password validation.     
             if(this.state.password !== this.state.validation_pswd){
                 formIsValid = false;
@@ -187,7 +197,7 @@ class EditProfile extends Component{
 
         if(this.state.phone == ''){
             formIsValid = false;
-            errors["name"] = "\u2757Cannot be empty";
+            errors["phone"] = "\u2757Cannot be empty";
         }
 
         if(this.state.phone != ''){
@@ -246,13 +256,13 @@ class EditProfile extends Component{
             'Content-Type': 'application/json',
             Authorization: `JWT ${localStorage.getItem('storage_token')}`
                 
-          }}).then(response => {alert('Your changes have been saved. ');  
+          }}).then(response => {alert('Your changes have been saved.');  
             }).catch(error => {
                 console.log(error.response);   
 
                 //Alerting the user if the name he tried to update is used by another user.
                 if(error.response.request.response.includes("A user with that username already exists")){
-                    alert('A user with that username already exists. Please fill in the edit form again with another username.')
+                    alert('A user with that username already exists. Please fill in the edit form again with a different username.')
                 }else{
                     alert('Some kind of error occured, please try again.')
                 }
@@ -274,22 +284,23 @@ class EditProfile extends Component{
 
                 <div>
                     <form onSubmit={this.handleFormSubmit}>
-                        <h5 className="message-edit"> Update your username here:<input name="username" defaultValue={this.state.username} onChange={this.handleUsernameChange} /></h5>
+                        <h1 className="message-edit"> Fill in the following form to update your data:</h1>
+                        <h5 className="message-edit"> Update your username here: <input name="username" defaultValue={this.state.username} onChange={this.handleUsernameChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["name"]}</span>
-                        <h5 className="message-edit"> Enter your new password here, or your previous one if you don't want to update it:<input name="pswd" type="password" onChange={this.handlePasswordChange} /></h5>
+                        <h5 className="message-edit"> Enter your new password here, or your previous one if you don't want to update it: <input name="pswd" type="password" onChange={this.handlePasswordChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["pswd"]}</span>
-                        <h5 className="message-edit"> Please validate your password:<input name="valid_pswd" type="password" onChange={this.handleValidPasswordChange} /></h5>
+                        <h5 className="message-edit"> Please validate your password: <input name="valid_pswd" type="password" onChange={this.handleValidPasswordChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["v_pswd"]}</span>
-                        <h5 className="message-edit"> Update your first name here:<input name="fist_name" defaultValue={this.state.first_name} onChange={this.handleFirstnameChange} /></h5> 
+                        <h5 className="message-edit"> Update your first name here: <input name="fist_name" defaultValue={this.state.first_name} onChange={this.handleFirstnameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["f_name"]}</span>
-                        <h5 className="message-edit"> Update your last name here:<input name="last_name" defaultValue={this.state.last_name} onChange={this.handleLastnameChange} /></h5>
+                        <h5 className="message-edit"> Update your last name here: <input name="last_name" defaultValue={this.state.last_name} onChange={this.handleLastnameChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["l_name"]}</span>
-                        <h5 className="message-edit"> Update your email here:<input type="email" name="email" size="30" defaultValue={this.state.email} onChange={this.handleEmailChange}/></h5> 
+                        <h5 className="message-edit"> Update your email here: <input type="email" name="email" size="30" defaultValue={this.state.email} onChange={this.handleEmailChange}/></h5> 
                         <span style={{color: "red"}}>{this.state.errors["email"]}</span>
-                        <h5 className="message-edit"> Update your phone here:<input type="tel" name="phone" size="30" defaultValue={this.state.phone} onChange={this.handlePhoneChange}/></h5> 
+                        <h5 className="message-edit"> Update your phone number here: <input type="tel" name="phone" size="30" defaultValue={this.state.phone} onChange={this.handlePhoneChange}/></h5> 
                         <span style={{color: "red"}}>{this.state.errors["phone"]}</span>
                         {$imagePreview} <br/>
-                        <h5 className="message-edit">Update your picture here: <input type="file" accept='image/*' onChange={this.handleImageChange} /> </h5> <br/> <br/>
+                        <h5 className="message-edit">Update your profile picture here: <input type="file" accept='image/*' onChange={this.handleImageChange} /> </h5> <br/> <br/>
                         <button className="apply"><span>Apply changes!</span></button>
                         <br/>
                     </form>
@@ -299,7 +310,7 @@ class EditProfile extends Component{
             
         }else{ //Denying access to visitor users.
             return(
-                <h1 className="message" >You can't edit profile as an anonymous user!</h1>
+                <h1 className="message" >You can't edit a profile as an anonymous user!</h1>
             )
         }
     }

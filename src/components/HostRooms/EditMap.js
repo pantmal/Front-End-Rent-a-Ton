@@ -10,7 +10,7 @@ import 'leaflet-defaulticon-compatibility';
 import styled from 'styled-components'
 
 //Setting the width and height of the map.
-const Wrapper = styled.div`width: ${props => props.width}; height: ${props => props.height}`
+const Wrapper = styled.div`width: ${props => props.width}; height: ${props => props.height}; position: relative; left: 300px;`
 
 //Defining the Map used for the hosts who want to update the coordinates of the room.
 class EditMap extends Component{
@@ -39,7 +39,7 @@ class EditMap extends Component{
     popupPop(e){
 
         let marker = L.marker([this.props.form_state.lat, this.props.form_state.lng]).addTo(this.map);
-        marker.bindPopup("This is your current location.").openPopup();
+        marker.bindPopup("This is the room's current location.").openPopup();
 
     }
     

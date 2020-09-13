@@ -8,7 +8,6 @@ import AwesomeSlider from "react-awesome-slider";
 import axios from '../AXIOS_conf'
 import 'leaflet/dist/leaflet.css'
 
-
 import CreateMap from './CreateMap.js'
 
 //HostPage used so the hosts can create a new room or navigate to their existing rooms.
@@ -103,9 +102,10 @@ class HostPage extends Component{
         headers: {
           Authorization: `JWT ${localStorage.getItem('storage_token')}`
         }}*/).then(response => { const user = response.data;
-          this.setState({
-            approved: user.approved
-          })}).catch(error => {console.log(error.response);})
+        this.setState({
+        approved: user.approved
+        })
+        }).catch(error => {console.log(error.response);})
     }
 
     
@@ -669,7 +669,7 @@ class HostPage extends Component{
             'Content-Type': 'application/json',
             Authorization: `JWT ${localStorage.getItem('storage_token')}`
           }}).then(response => {
-              alert('Your new room has been added! You may see it in the room list');
+              alert('Your new room has been added! You may see it in your room list.');
               
               if(this.state.files.length > 0){//Adding the images of this room.
               this.state.files.forEach(function(value, index, array) {
@@ -711,30 +711,30 @@ class HostPage extends Component{
                     <h1 className="message">You may click  <Link to={'/hostRooms/'}><span>here</span> </Link> to manage your existing rooms, or </h1>
                     <h1 className="message"> You may add a new room by filling in the form below: </h1>
                     <form onSubmit={this.handleFormSubmit}>
-                        <h5 className="message" > Name:<input name="name" onChange={this.handleNameChange} /></h5> 
+                        <h5 className="message" > Name: <input name="name" onChange={this.handleNameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["name"]}</span>
-                        <h5 className="message">Specify the geographic location of the room using the map:</h5> 
+                        <h5 className="message">Specify the geographic location of the room using the following map:</h5> 
                         <CreateMap form_state={{...this.state}}/>
                         <span style={{color: "red"}}>{this.state.errors["geolocation"]}</span>
-                        <h5 className="message" > Address:<input name="address" onChange={this.handleAddressChange} /></h5> 
+                        <h5 className="message" > Address: <input name="address" onChange={this.handleAddressChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["street"]}</span>
-                        <h5 className="message" > Neighborhood:<input name="hood" onChange={this.handleHoodChange} /></h5> 
+                        <h5 className="message" > Neighborhood: <input name="hood" onChange={this.handleHoodChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["hood"]}</span>
-                        <h5 className="message"> City:<input name="city" onChange={this.handleCityChange} /></h5>
+                        <h5 className="message"> City: <input name="city" onChange={this.handleCityChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["city"]}</span>
-                        <h5 className="message"> Country:<input name="country" onChange={this.handleCountryChange} /></h5>
+                        <h5 className="message"> Country: <input name="country" onChange={this.handleCountryChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["country"]}</span>
-                        <h5 className="message" > Transit:<input name="transit" onChange={this.handleTransitChange} /></h5> 
+                        <h5 className="message" > Transit: <input name="transit" onChange={this.handleTransitChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["transit"]}</span>
-                        <h5 className="message"> Enter starting date here:<input type="date" name="start_date" onChange={this.handleStartDateChange} /></h5>
+                        <h5 className="message"> Enter starting date here: <input type="date" name="start_date" onChange={this.handleStartDateChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["s_date"]}</span>
-                        <h5 className="message"> Enter ending date here:<input type="date" name="end_date" onChange={this.handleEndDateChange} /></h5>
+                        <h5 className="message"> Enter ending date here: <input type="date" name="end_date" onChange={this.handleEndDateChange} /></h5>
                         <span style={{color: "red"}}>{this.state.errors["e_date"]}</span>
-                        <h5 className="message" > Max number of people:<input name="max_people" onChange={this.handlePeopleChange} /></h5> 
+                        <h5 className="message" > Max number of people: <input name="max_people" onChange={this.handlePeopleChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["max_people"]}</span>
-                        <h5 className="message" > Starting price:<input name="price" type="number" step="0.1" onChange={this.handlePriceChange} /></h5> 
+                        <h5 className="message" > Starting price: <input name="price" type="number" step="0.1" onChange={this.handlePriceChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["price"]}</span>
-                        <h5 className="message" > Price per extra people:<input name="ext_price" type="number" step="0.1" onChange={this.handleExtraPriceChange} /></h5> 
+                        <h5 className="message" > Price per extra person: <input name="ext_price" type="number" step="0.1" onChange={this.handleExtraPriceChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["ext_price"]}</span>
                         <h5 className="message">Choose room type here:</h5> 
                         <h5 className="message">Private Room<input type="radio" value="Private room" name="room_type" checked={this.state.room_type === "Private room"} onChange={this.handleRadioChange}/>  </h5>
@@ -751,15 +751,15 @@ class HostPage extends Component{
                         return <div> <img key={i} src={imagePreviewUrl} style={{width:100,height: 100}} /> <br/> </div>
                         })} 
                         </div>
-                        <h5 className="message" > Number of beds:<input name="beds" onChange={this.handleBedsChange} /></h5> 
+                        <h5 className="message" > Number of beds: <input name="beds" onChange={this.handleBedsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["beds"]}</span>
-                        <h5 className="message" > Number of bedrooms:<input name="bedrooms" onChange={this.handleBedroomsChange} /></h5> 
+                        <h5 className="message" > Number of bedrooms: <input name="bedrooms" onChange={this.handleBedroomsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["bedrooms"]}</span>
-                        <h5 className="message" > Number of bathrooms:<input name="bathrooms" onChange={this.handleBathroomsChange} /></h5> 
+                        <h5 className="message" > Number of bathrooms: <input name="bathrooms" onChange={this.handleBathroomsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["bathrooms"]}</span>
-                        <h5 className="message" > Square feet:<input name="feet" type="number" step="0.1" onChange={this.handleFeetChange} /></h5> 
+                        <h5 className="message" > Square feet: <input name="feet" type="number" step="0.1" onChange={this.handleFeetChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["feet"]}</span>
-                        <h5 className="message" > Description:<textarea onChange={this.handleDescChange} /></h5> 
+                        <h5 className="message" > Description: <textarea onChange={this.handleDescChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["desc"]}</span>
                         <h5 className="message">Amenities this room provides:</h5> 
                         <h5 className="message" > WiFi:<input type="checkbox" name="WiFi" onChange={this.handleWiFiChange}/></h5> 
@@ -774,15 +774,15 @@ class HostPage extends Component{
                         <h5 className="message" > Smoking:<input type="checkbox" name="Smoking"  onChange={this.handleSmokingChange}/></h5> 
                         <h5 className="message" > Pets:<input type="checkbox" name="Pets"  onChange={this.handlePetsChange}/></h5> 
                         <h5 className="message" > Events:<input type="checkbox" name="Events"  onChange={this.handleEventsChange}/></h5> 
-                        <h5 className="message" > Minimum nights:<input name="min_nights" onChange={this.handleMinNightsChange} /></h5> 
+                        <h5 className="message" > Minimum nights: <input name="min_nights" onChange={this.handleMinNightsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["min_nights"]}</span> <br/>
-                        <button className="apply">Add a room</button>
+                        <button className="apply">Add a new room</button>
                     </form>
                     
                     </div>
                     )
                 }else{ //Denying access to non-approved hosts.
-                    return(<h1 className="message">You don't have permission to access this page yet, please be patient</h1>)
+                    return(<h1 className="message">You don't have permission to access this page yet, please be patient.</h1>)
                 }
             }
 

@@ -97,6 +97,8 @@ class UserList extends Component{
             )
         }else{
 
+            let nav = <h1 className="message"> Click on one of the users to get the detailed information:</h1> 
+
             //Defining the pagination component.
             let paginate = 
                 
@@ -119,6 +121,7 @@ class UserList extends Component{
             //Returning the paginated data.
             return (
                 <div>
+                    {nav}
                     {paginate}
                     {this.state.postData}
                     {paginate}

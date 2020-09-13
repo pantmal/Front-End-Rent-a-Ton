@@ -195,7 +195,7 @@ class MessageDetail extends Component{
                 'Content-Type': 'application/json',
                 Authorization: `JWT ${localStorage.getItem('storage_token')}`
                     
-              }}).then(response => {alert('Your message has been updated. ');  
+              }}).then(response => {alert('Your message has been updated.');  
                 }).catch(error => {
                     console.log(error.response);   
                     alert('Some kind of error occured, please try again.')
@@ -232,21 +232,21 @@ class MessageDetail extends Component{
             let receiver_stuff
             if(this.state.sender_mode){ //Senders may update or delete a message.
                 sender_stuff = <div>
-                <h2 className="message"> Sent to:{this.state.receiver_name}</h2>
-                <h2 className="message"> Title:{this.state.title}</h2>
-                <h5 className="message" > Message:<textarea defaultValue={this.state.content} onChange={this.handleContentChange} /></h5> 
+                <h2 className="message"> Sent to: {this.state.receiver_name}</h2>
+                <h2 className="message"> Title: {this.state.title}</h2>
+                <h5 className="message" > Message: <textarea defaultValue={this.state.content} onChange={this.handleContentChange} /></h5> 
                 <span style={{color: "red"}}>{this.state.errors["content"]}</span> <br/>
                 <button className="apply" onClick={this.handleUpdate}>Update this message</button>
                 <button className="apply" onClick={this.handleDelete}>Delete this message</button>
                 </div>
             }else{ //Receivers may view a message and reply to it.
                 receiver_stuff = <div>
-                <h2 className="message"> Sent by:{this.state.sender_name}</h2>
-                <h2 className="message"> Title:{this.state.title}</h2>
-                <h5 className="message" > Message:{this.state.content}</h5> 
-                <h5 className="message" > Add a reply:<textarea onChange={this.handleReplyChange} /></h5> 
+                <h2 className="message"> Sent by: {this.state.sender_name}</h2>
+                <h2 className="message"> Title: {this.state.title}</h2>
+                <h5 className="message" > Message: {this.state.content}</h5> 
+                <h5 className="message" > Add a reply: <textarea onChange={this.handleReplyChange} /></h5> 
                 <span style={{color: "red"}}>{this.state.errors["reply"]}</span> <br/>
-                <button className="apply" onClick={this.handleReplySubmit}>Add a reply</button>
+                <button className="apply" onClick={this.handleReplySubmit}>Send your reply</button>
                 </div>
             }
 

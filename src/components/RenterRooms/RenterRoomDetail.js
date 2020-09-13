@@ -7,6 +7,8 @@ import axios from '../AXIOS_conf'
 
 import ViewMap from './ViewMap.js'
 
+import './stars.css'
+
 //RenterRoomDetail so a renter may see a room and make a reservation and/or add ratings. Also used for visitors, though they can only view the room.
 class RenterRoomDetail extends Component{
 
@@ -191,7 +193,7 @@ class RenterRoomDetail extends Component{
                 //If the user is both a host and renter, make sure he can't make a reservation on one of his own rooms.
                 if(this.props.app_state.isHost && this.props.app_state.isRenter && this.state.date_mode===true){
                     if (this.state.host_id == this.props.app_state.user_primary_key){
-                        alert('You can\'t make a reservation on your own rooms')
+                        alert('You can\'t make a reservation on your own rooms.')
                         this.props.history.push("/")
                     }
                 }
@@ -290,14 +292,12 @@ class RenterRoomDetail extends Component{
                 console.log(response.data)
                 this.setState({
                     h_count: response.data.count,
-                    h_avg: response.data.avg.rating__avg
+                    h_avg: parseFloat(response.data.avg.rating__avg)
                 })  
                 }).catch(error => {console.log(error.response);})
                     
-
             }
         )
-
 
     }
 
@@ -361,7 +361,6 @@ class RenterRoomDetail extends Component{
 
         let date_now = `${year}-${month}-${day}`
 
-
         const rateData = new FormData();
         rateData.append("host_id_hostRate", this.state.host_id);
         rateData.append("renter_id_hostRate", this.props.app_state.user_primary_key);
@@ -400,7 +399,8 @@ class RenterRoomDetail extends Component{
             review_stuff = 
             <div>
                 <h5 className="message"> Looks like you have rented this room in the past. Would you like to leave a rating?</h5> 
-                <ReactStars
+                <div className='stars'>
+                <ReactStars className = {'stars'}
                 count={5}
                 onChange={this.roomRatingChanged}
                 size={24}
@@ -410,8 +410,10 @@ class RenterRoomDetail extends Component{
                 fullIcon={<i className="fa fa-star"></i>}
                 activeColor="#ffd700"
                 />
+                </div>
                 <h5 className="message"> You may also rate the host here:</h5> 
-                <ReactStars
+                <div className='stars'>
+                <ReactStars 
                 count={5}
                 onChange={this.hostRatingChanged}
                 size={24}
@@ -421,20 +423,21 @@ class RenterRoomDetail extends Component{
                 fullIcon={<i className="fa fa-star"></i>}
                 activeColor="#ffd700"
                 />
+                </div>
             </div>
             
         }
-        
+
         //Displaying the room's data.
         if(this.props.app_state.isRenter || !this.props.app_state.isLoggedIn){
                 return(
                 <div>
                 <h5 className="message"> Room information:</h5> 
                 <h5 className="message" > Name: {this.state.name} </h5> 
-                <h5 className="message" > Room type:{this.state.room_type} </h5> 
-                <h5 className="message" > Number of beds:{this.state.beds} </h5> 
-                <h5 className="message" > Number of bedrooms:{this.state.bedrooms} </h5> 
-                <h5 className="message" > Number of bathrooms:{this.state.bathrooms} </h5>     
+                <h5 className="message" > Room type: {this.state.room_type} </h5> 
+                <h5 className="message" > Number of beds: {this.state.beds} </h5> 
+                <h5 className="message" > Number of bedrooms: {this.state.bedrooms} </h5> 
+                <h5 className="message" > Number of bathrooms: {this.state.bathrooms} </h5>     
                 <h5 className="message" > Living room: {this.state.living_room ? '\u2705':'\u274c' } </h5>
                 <h5 className="message" > Square feet: {this.state.feet}</h5>     
                 <br/>
@@ -444,20 +447,20 @@ class RenterRoomDetail extends Component{
                 <h5 className="message" > Smoking: {this.state.smoking ? '\u2705':'\u274c' } </h5>
                 <h5 className="message" > Pets: {this.state.pets ? '\u2705':'\u274c' } </h5>
                 <h5 className="message" > Events: {this.state.events ? '\u2705':'\u274c' } </h5>
-                <h5 className="message" > Minimum nights:{this.state.min_nights}</h5>     
+                <h5 className="message" > Minimum nights: {this.state.min_nights}</h5>     
                 <br/>
                 <h5 className="message"> Location:</h5> 
                 <h5 className="message"> Move the mouse on the map to see the location of this room:</h5> 
                 <ViewMap form_state={{...this.state}}/>
-                <h5 className="message"> Address:{this.state.street} </h5> 
+                <h5 className="message"> Address: {this.state.street} </h5> 
                 <h5 className="message" > Neighborhood: {this.state.hood} </h5> 
-                <h5 className="message"> City:{this.state.city} </h5>
-                <h5 className="message"> Country:{this.state.country}</h5>
-                <h5 className="message" > Transit:{this.state.transit}</h5> 
+                <h5 className="message"> City: {this.state.city} </h5>
+                <h5 className="message"> Country: {this.state.country}</h5>
+                <h5 className="message" > Transit: {this.state.transit}</h5> 
                 <br/>
                 <h5 className="message"> Price:</h5> 
                 <h5 className="message" > Starting price: {this.state.price} </h5> 
-                <h5 className="message" > Price per extra people:{this.state.extra_price}</h5> 
+                <h5 className="message" > Price per extra person: {this.state.extra_price}</h5> 
                 <br/>
                 <h5 className="message"> Photos:</h5> 
                 {$imagePreview} <br/>
@@ -474,15 +477,14 @@ class RenterRoomDetail extends Component{
                 <h5 className="message" > Parking: {this.state.parking ? '\u2705':'\u274c' }</h5> 
                 <h5 className="message" > Elevator: {this.state.elevator ? '\u2705':'\u274c' }</h5> 
                 <br/>
-                <h5 className="message">Number of ratings: {this.state.count} </h5>
-                <h5 className="message">Average number of rating (out of 5 stars):{this.state.avg} </h5>
+                <h5 className="message">Average number of ratings: {this.state.avg} (out of 5 stars) </h5>
+                <h5 className="message">Total number of ratings: {this.state.count} </h5>
                 <br/>
                 <h5 className="message">Host information (click on the host to get to contact him!):</h5> 
                 <Link to={`/createMessage/${this.state.host_id}`}> <h5 className="message" > Host name: {this.state.host_username} </h5> </Link>
-                <Link to={`/createMessage/${this.state.host_id}`}>  <h5 className="message" > Host picture: <img src={this.state.host_picture} style={{width:100,height: 100}}/> </h5> </Link>
-                <h5 className="message">Number of ratings: {this.state.h_count} </h5>
-                <h5 className="message">Average number of rating (out of 5 stars):{this.state.h_avg} </h5>
-
+                <Link to={`/createMessage/${this.state.host_id}`}> <h5 className="message" > Host picture: <img src={this.state.host_picture} style={{width:100,height: 100}}/> </h5> </Link>
+                <h5 className="message">Average number of ratings: {this.state.h_avg} (out of 5 stars) </h5>
+                <h5 className="message">Total number of ratings: {this.state.h_count} </h5>
                 
                 {button_obj}
                 <br/>

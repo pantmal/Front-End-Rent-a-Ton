@@ -95,7 +95,7 @@ class Search extends Component{
             people: search_values.people,
             offset: 0,
             users: [],
-            perPage: 1,
+            perPage: 10,
             currentPage: 0,
             not_found: false,
             room_type: room_type,
@@ -418,7 +418,7 @@ class Search extends Component{
                 />
 
         
-        let not_found_msg = <h1 className="message">Sorry, nothing found</h1>
+        let not_found_msg = <h1 className="message">Sorry, nothing found.</h1>
 
         let permission = false
         if (this.props.app_state.isRenter || !this.props.app_state.isLoggedIn){
@@ -433,6 +433,8 @@ class Search extends Component{
 
             if (this.state.not_found === false){
 
+                let nav = <h1 className="message"> Click on one of the rooms to get its detailed information:</h1> 
+
                 //Defining the additional search filters.
                 let extra_filters 
                 if(this.state.recom_mode === false){
@@ -441,33 +443,33 @@ class Search extends Component{
                     <form onSubmit={this.handleExtraFormSubmit}>
                     <div className="radio">
                     <h5 className="message"> Choose room type here:</h5> 
-                    <h5 className="message">Private Room<input type="radio" value="Private_room" name="room_type" checked={this.state.room_type === "Private_room"} onChange={this.handleRadioChange}/>  </h5>
+                    <h5 className="message">Private Room <input type="radio" value="Private_room" name="room_type" checked={this.state.room_type === "Private_room"} onChange={this.handleRadioChange}/>  </h5>
                     <h5 className="message">Shared Room <input type="radio" value="Shared_room" name="room_type"  checked={this.state.room_type === "Shared_room"} onChange={this.handleRadioChange}/> </h5>
                     <h5 className="message">Entire home/apt <input type="radio" value="Entire_home/apt" name="room_type" checked={this.state.room_type === "Entire_home/apt"} onChange={this.handleRadioChange} /> </h5>
                     </div>
                     <div className="price">
-                    <h5 className="message"> Enter max price here:<input name="max_price" defaultValue={this.state.max_price} onChange={this.handleMaxPriceChange} /></h5>
+                    <h5 className="message"> Enter max price here: <input name="max_price" defaultValue={this.state.max_price} onChange={this.handleMaxPriceChange} /></h5>
                     </div>
                     <div className="wifi">
-                    <h5 className="message" > WiFi:<input type="checkbox" name="WiFi" defaultChecked={this.state.wifi} onChange={this.handleWiFiChange}/></h5> 
+                    <h5 className="message" > WiFi: <input type="checkbox" name="WiFi" defaultChecked={this.state.wifi} onChange={this.handleWiFiChange}/></h5> 
                     </div>
                     <div className="freezer">
-                    <h5 className="message" > Freezer:<input type="checkbox" name="Freezer" defaultChecked={this.state.freezer} onChange={this.handleFreezerChange}/></h5> 
+                    <h5 className="message" > Freezer: <input type="checkbox" name="Freezer" defaultChecked={this.state.freezer} onChange={this.handleFreezerChange}/></h5> 
                     </div>
                     <div className="heating">
-                    <h5 className="message" > Heating:<input type="checkbox" name="Heating" defaultChecked={this.state.heating} onChange={this.handleHeatingChange}/></h5> 
+                    <h5 className="message" > Heating: <input type="checkbox" name="Heating" defaultChecked={this.state.heating} onChange={this.handleHeatingChange}/></h5> 
                     </div>
                     <div className="kitchen">
-                    <h5 className="message" > Kitchen:<input type="checkbox" name="Kitchen" defaultChecked={this.state.kitchen} onChange={this.handleKitchenChange}/></h5> 
+                    <h5 className="message" > Kitchen: <input type="checkbox" name="Kitchen" defaultChecked={this.state.kitchen} onChange={this.handleKitchenChange}/></h5> 
                     </div>
                     <div className="tv">
-                    <h5 className="message" > TV:<input type="checkbox" name="TV" defaultChecked={this.state.TV} onChange={this.handleTVChange}/></h5> 
+                    <h5 className="message" > TV: <input type="checkbox" name="TV" defaultChecked={this.state.TV} onChange={this.handleTVChange}/></h5> 
                     </div>
                     <div className="parking">
-                    <h5 className="message" > Parking:<input type="checkbox" name="Parking" defaultChecked={this.state.parking} onChange={this.handleParkingChange}/></h5> 
+                    <h5 className="message" > Parking: <input type="checkbox" name="Parking" defaultChecked={this.state.parking} onChange={this.handleParkingChange}/></h5> 
                     </div>
                     <div className="elevator">
-                    <h5 className="message" > Elevator:<input type="checkbox" name="Elevator" defaultChecked={this.state.elevator} onChange={this.handleElevatorChange}/></h5> 
+                    <h5 className="message" > Elevator: <input type="checkbox" name="Elevator" defaultChecked={this.state.elevator} onChange={this.handleElevatorChange}/></h5> 
                     </div>
                     <br/>
                     
@@ -481,6 +483,7 @@ class Search extends Component{
                     <div>
 
                         {extra_filters}
+                        {nav}
                         {paginate}
                         {this.state.postData}
                         {paginate}

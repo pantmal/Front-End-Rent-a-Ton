@@ -72,8 +72,7 @@ class MessageList extends Component{
                 }else{
 
                     const data = response.data;
-                    //console.log(data)
-
+                    
                     //Getting a slice of the data according to the offset of the page we're on.
                     const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)    
                 
@@ -169,9 +168,9 @@ class MessageList extends Component{
 
         if(this.props.app_state.isRenter || this.props.app_state.isHost){
 
-            let create_str = <h1 className="message">You may click  <Link to={'/createMessage/'}><span>here</span> </Link> to create a new message </h1>
-            let sent = <button className="apply" onClick={this.handleSentButton}>Go to Sent</button>
-            let received = <button className="apply" onClick={this.handleReceivedButton}>Go to Received</button>
+            let create_str = <h1 className="message">You may click <Link to={'/createMessage/'}><span>here</span> </Link> to create a new message. </h1>
+            let sent = <button className="apply" onClick={this.handleSentButton}>Go to Sent messages</button>
+            let received = <button className="apply" onClick={this.handleReceivedButton}>Go to Received messages</button>
 
             let not_found_msg 
             let paginate 
@@ -206,7 +205,7 @@ class MessageList extends Component{
             
 
             }else{ //Defining a message if no messages exist yet.
-                not_found_msg = <h1 className="message">Sorry, nothing found</h1>
+                not_found_msg = <h1 className="message">Sorry, nothing found.</h1>
             }
 
             return(

@@ -67,7 +67,7 @@ class RoomImageDetail extends Component{
     
                         //If the room doesn't belong to the host viewing the page, he may not access this Room Image page.
                         if(this.state.host_id != this.props.app_state.user_primary_key){
-                            alert('You can only edit your own images')
+                            alert('You can only edit your own images!')
                             this.props.history.push("/")
                         }
                     }
@@ -114,7 +114,7 @@ class RoomImageDetail extends Component{
         axios.patch(`rooms/roomImages/${this.state.pk}/`, formData, {headers: {
             'Content-Type': 'application/json',
             Authorization: `JWT ${localStorage.getItem('storage_token')}`
-          }}).then(response => {alert('Your image has been updated. ');  
+          }}).then(response => {alert('Your image has been updated.');  
             }).catch(error => {
                 console.log(error.response);   
                 alert('Some kind of error occured, please try again.')
@@ -128,7 +128,7 @@ class RoomImageDetail extends Component{
         axios.delete(`rooms/roomImages/${this.state.pk}/`, {headers: {
             'Content-Type': 'application/json',
             Authorization: `JWT ${localStorage.getItem('storage_token')}`
-          }}).then(response => {alert('Your image has been deleted. ');  
+          }}).then(response => {alert('Your image has been deleted.');  
             this.props.history.push(`/roomImages/${this.state.room_id}`)
             }).catch(error => {
                 console.log(error.response);   
@@ -150,7 +150,7 @@ class RoomImageDetail extends Component{
         let permission = false
         
         let login_check = this.props.app_state.isLoggedIn;
-        if (login_check){ //MAYBE ADD CHECK FOR NON-APPROVED HOSTS
+        if (login_check){ 
             if (this.props.app_state.isHost){
              permission = true
             }
@@ -161,19 +161,20 @@ class RoomImageDetail extends Component{
                 <h1 className="message">You can't access this page!</h1>
             )
         }else{ //Rendering the page.
-            return(
-                <div>
-                    {$imagePreview} <br/>
-                    <h5 className="message" >Choose a new picture: <input type="file" accept='image/*' onChange={this.handleImageChange} /> </h5> <br/>
-                    <button className="apply" onClick={this.handleUpdate}>Update this image</button>
-                    <button className="apply" onClick={this.handleDelete}>Delete this image</button>
-                </div>
-            )
+            if(this.state.approved){ //If the host is approved return the necessary elements.
+                return(
+                    <div>
+                        {$imagePreview} <br/>
+                        <h5 className="message" >Choose a new picture: <input type="file" accept='image/*' onChange={this.handleImageChange} /> </h5> <br/>
+                        <button className="apply" onClick={this.handleUpdate}>Update this image</button>
+                        <button className="apply" onClick={this.handleDelete}>Delete this image</button>
+                    </div>
+                )
+            }else{ //Denying access to non-approved hosts.
+                return(<h1 className="message">You don't have permission to access this page yet, please be patient.</h1>)
+            }
         }
-
-        
     }
-
 }
 
 export default RoomImageDetail
