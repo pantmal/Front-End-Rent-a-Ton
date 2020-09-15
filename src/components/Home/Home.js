@@ -226,11 +226,11 @@ class Home extends Component{
                 role = 'renter'
             }else if(this.props.app_state.isRenter && this.props.app_state.isHost){
                 role = 'host and renter'
-            }else{
+            }else{ //Debug purpose only.
                 role = 'um...'
             } 
 
-            //Defining a user message depending on the user's role.
+            //Defining a welcome message depending on the user's role.
             user_message = <h1 className="message"> <span> Welcome dear user. You are logged in as a {role}. </span> </h1>       
 
         }else{ //Defining a message for visitors.

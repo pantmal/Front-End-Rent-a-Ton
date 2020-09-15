@@ -230,7 +230,6 @@ class Search extends Component{
 
                 //Sorting the items according to their price.
                 price_data.sort( (a, b) => parseFloat(a.total_price) - parseFloat(b.total_price) )
-                //console.log(price_data)
                 
                 //Getting a slice of the data according to the offset of the page we're on.
                 let slice = price_data.slice(this.state.offset, this.state.offset + this.state.perPage)
@@ -345,54 +344,74 @@ class Search extends Component{
         }})
     }
 
+    handleValidation(){
+
+        let formIsValid = true
+
+        if(this.state.max_price != ''){
+            if(!this.state.max_price.match(/^[0-9.]+$/)){ 
+                formIsValid = false;
+                alert('There is an error in the \'max price\' field.')
+            }
+        }
+
+        return formIsValid
+
+    }
+
     //After specifying additional search filters we update the URL of the page with the new values. (The values from the original search form remain the same.)
-    handleExtraFormSubmit = event => { //validation needed?
+    handleExtraFormSubmit = event => { 
+
         event.preventDefault()
 
-        let search_values
-        search_values = `hood=${this.state.hood}&city=${this.state.city}&country=${this.state.country}&start_date=${this.state.s_date}&end_date=${this.state.e_date}&people=${this.state.people}`
+        if(this.handleValidation()){
         
-        if(this.state.room_type !== '' ){
-            search_values += `&type=${this.state.room_type}`
-        }
+            let search_values
+            search_values = `hood=${this.state.hood}&city=${this.state.city}&country=${this.state.country}&start_date=${this.state.s_date}&end_date=${this.state.e_date}&people=${this.state.people}`
+            
+            if(this.state.room_type !== '' ){
+                search_values += `&type=${this.state.room_type}`
+            }
 
-        if(this.state.max_price !== '' ){ //maybe some changes needed here
-            search_values += `&max_price=${this.state.max_price}`
-        }
+            if(this.state.max_price !== '' ){ 
+                search_values += `&max_price=${this.state.max_price}`
+            }
 
-        if(this.state.wifi !== false ){
-            search_values += `&wifi=${this.state.wifi}`
-        }
+            if(this.state.wifi !== false ){
+                search_values += `&wifi=${this.state.wifi}`
+            }
 
-        if(this.state.freezer !== false ){
-            search_values += `&freezer=${this.state.freezer}`
-        }
+            if(this.state.freezer !== false ){
+                search_values += `&freezer=${this.state.freezer}`
+            }
 
-        if(this.state.heating !== false ){
-            search_values += `&heating=${this.state.heating}`
-        }
+            if(this.state.heating !== false ){
+                search_values += `&heating=${this.state.heating}`
+            }
 
-        if(this.state.kitchen !== false ){
-            search_values += `&kitchen=${this.state.kitchen}`
-        }
+            if(this.state.kitchen !== false ){
+                search_values += `&kitchen=${this.state.kitchen}`
+            }
 
-        if(this.state.TV !== false ){
-            search_values += `&TV=${this.state.TV}`
-        }
+            if(this.state.TV !== false ){
+                search_values += `&TV=${this.state.TV}`
+            }
 
-        if(this.state.parking !== false ){
-            search_values += `&parking=${this.state.parking}`
-        }
+            if(this.state.parking !== false ){
+                search_values += `&parking=${this.state.parking}`
+            }
 
-        if(this.state.elevator !== false ){
-            search_values += `&elevator=${this.state.elevator}`
-        }
+            if(this.state.elevator !== false ){
+                search_values += `&elevator=${this.state.elevator}`
+            }
 
-        console.log(search_values)
-    
-        //Updating the URL and reloading the component.
-        this.props.history.push({pathname:'/search/', search: search_values})
-        window.location.reload();
+            console.log(search_values)
+        
+            //Updating the URL and reloading the component.
+            this.props.history.push({pathname:'/search/', search: search_values})
+            window.location.reload();
+
+        }   
 
     }
 
@@ -438,7 +457,7 @@ class Search extends Component{
                 //Defining the additional search filters.
                 let extra_filters 
                 if(this.state.recom_mode === false){
-                    extra_filters = <div> <h1 className="message"> You may include additional filters here: </h1>
+                    extra_filters = <div> <h1 className="message"> You may include search additional filters here: </h1>
                             
                     <form onSubmit={this.handleExtraFormSubmit}>
                     <div className="radio">
@@ -475,6 +494,7 @@ class Search extends Component{
                     
                     <button className="apply-with">Search with additional filters</button>
                     </form>
+                    <br/>
                     </div>
                 }
                 

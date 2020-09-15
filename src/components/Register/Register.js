@@ -176,7 +176,7 @@ class Register extends Component{
 
         if(this.state.phone == ''){
             formIsValid = false;
-            errors["name"] = "\u2757Cannot be empty";
+            errors["phone"] = "\u2757Cannot be empty";
         }
        
         if(this.state.phone != ''){

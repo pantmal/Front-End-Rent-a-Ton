@@ -415,38 +415,38 @@ class HostRoomDetail extends Component{
         if(this.state.hood == ''){
             formIsValid = false;
             errors["hood"] = "\u2757Cannot be empty";
-         }
+        }
  
-         if(this.state.hood != ''){
-             if(!this.state.hood.match(/^[a-zA-Z]+$/)){
-                 formIsValid = false;
-                 errors["hood"] = "\u2757Only letters";
-             }        
-         }
- 
-         if(this.state.city == ''){
-             formIsValid = false;
-             errors["city"] = "\u2757Cannot be empty";
-         }
- 
-         if(this.state.city != ''){
-             if(!this.state.city.match(/^[a-zA-Z]+$/)){
-                 formIsValid = false;
-                 errors["city"] = "\u2757Only letters";
-             }        
-         }
- 
-         if(this.state.country == ''){
-             formIsValid = false;
-             errors["country"] = "\u2757Cannot be empty";
-         }
- 
-         if(this.state.country != ''){
-             if(!this.state.country.match(/^[a-zA-Z]+$/)){
-                 formIsValid = false;
-                 errors["country"] = "\u2757Only letters";
-             }        
-         }
+        if(this.state.hood != ''){
+            if(!this.state.hood.match(/^[a-zA-Z]+$/)){
+                formIsValid = false;
+                errors["hood"] = "\u2757Only letters";
+            }        
+        }
+
+        if(this.state.city == ''){
+            formIsValid = false;
+            errors["city"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.city != ''){
+            if(!this.state.city.match(/^[a-zA-Z]+$/)){
+                formIsValid = false;
+                errors["city"] = "\u2757Only letters";
+            }        
+        }
+
+        if(this.state.country == ''){
+            formIsValid = false;
+            errors["country"] = "\u2757Cannot be empty";
+        }
+
+        if(this.state.country != ''){
+            if(!this.state.country.match(/^[a-zA-Z]+$/)){
+                formIsValid = false;
+                errors["country"] = "\u2757Only letters";
+            }        
+        }
 
          if(this.state.transit == ''){
             formIsValid = false;

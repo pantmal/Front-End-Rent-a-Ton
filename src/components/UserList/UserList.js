@@ -44,7 +44,6 @@ class UserList extends Component{
 
                 //Now we map each room to a React Fragment so it can be rendered.
                 const postData = slice.map(pd =>
-                //add a message if it's him!
                 <React.Fragment>
                     <Link to={`/userList/${pd.pk}`}> <p>Username: {pd.username}</p> </Link>
                     <Link to={`/userList/${pd.pk}`}><img src={pd.picture} style={{width:250,height: 250}} alt=""/> </Link> <br/>

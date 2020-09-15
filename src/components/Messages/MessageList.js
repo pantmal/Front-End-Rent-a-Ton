@@ -28,7 +28,6 @@ class MessageList extends Component{
         }
 
 
-        //sort by date
         this.state = {
             sender_mode: sender_mode,
             not_found: false,
@@ -72,6 +71,12 @@ class MessageList extends Component{
                 }else{
 
                     const data = response.data;
+
+                    data.sort(function(a,b){
+                        // Turn your strings into dates, and then subtract them
+                        // to get a value that is either negative, positive, or zero.
+                        return new Date(b.date) - new Date(a.date);
+                    });
                     
                     //Getting a slice of the data according to the offset of the page we're on.
                     const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)    
@@ -81,6 +86,7 @@ class MessageList extends Component{
                     <React.Fragment>
                         <Link to={`/userMessageDetail/${pd.pk}`}> <p>Title: {pd.title}</p> </Link>
                         <p className="message">Sent to: {pd.receiver_name}</p>
+                        <p className="message">Date: {pd.date}</p>
                         <hr/> 
                     </React.Fragment>)
     
@@ -111,11 +117,19 @@ class MessageList extends Component{
                     })
                 }else{
                     const data = response.data;
+
+                    data.sort(function(a,b){
+                        // Turn your strings into dates, and then subtract them
+                        // to get a value that is either negative, positive, or zero.
+                        return new Date(b.date) - new Date(a.date);
+                    });
+
                     const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
                     const postData = slice.map(pd =>
                     <React.Fragment>
                         <Link to={`/userMessageDetail/${pd.pk}`}> <p>Title: {pd.title}</p> </Link>
                         <p className="message"> Sent by: {pd.sender_name}</p>
+                        <p className="message">Date: {pd.date}</p>
                         <hr/> 
                     </React.Fragment>)
     
@@ -175,7 +189,18 @@ class MessageList extends Component{
             let not_found_msg 
             let paginate 
             let results
+            let type
+            let view_msg
             if (this.state.not_found === false){
+
+
+                if(this.state.sender_mode){
+                    type = 'sent'
+                }else{
+                    type = 'received'
+                }
+
+                view_msg = <h1 className="message">You are now viewing {type} messages. </h1>
     
                 //Defining the pagination component.            
                 paginate = 
@@ -211,6 +236,7 @@ class MessageList extends Component{
             return(
                 <div>
                 {create_str}
+                {view_msg}
                 {sent}
                 {received}
                 {results}

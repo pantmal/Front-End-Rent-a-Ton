@@ -135,8 +135,11 @@ class CreateMessage extends Component{
                 let year = date.getFullYear()
                 let month = date.getMonth()+1
                 let day = date.getDate()
+                let hour = date.getHours()
+                let minutes = date.getMinutes()
+                let secs = date.getSeconds()
 
-                let date_now = `${year}-${month}-${day}`
+                let date_now = `${year}-${month}-${day}T${hour}:${minutes}:${secs}Z`
                 console.log(this.props.app_state.username)
                 const msg_data = {
                     sender: this.props.app_state.user_primary_key,

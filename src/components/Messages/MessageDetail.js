@@ -6,7 +6,6 @@ import {Link} from 'react-router-dom';
 
 import axios from '../AXIOS_conf'
 
-//DATE IS NOT SHOWN 
 
 //MessageDetail used so a user may update one of his messages (if he's the sender) or reply to them (if he's the receiver).
 class MessageDetail extends Component{
@@ -115,8 +114,11 @@ class MessageDetail extends Component{
             let year = date.getFullYear()
             let month = date.getMonth()+1
             let day = date.getDate()
+            let hour = date.getHours()
+            let minutes = date.getMinutes()
+            let secs = date.getSeconds()
 
-            let date_now = `${year}-${month}-${day}`
+            let date_now = `${year}-${month}-${day}T${hour}:${minutes}:${secs}Z`
             console.log(this.props.app_state.username)
             const msg_data = { //Title is same with the one he's replying on, except for the 'Re:' at the start.
                 sender: this.props.app_state.user_primary_key,
@@ -130,8 +132,8 @@ class MessageDetail extends Component{
 
             axios.post(
                 'users/messageList/', JSON.stringify(msg_data), {headers: {
-                    'Content-Type': 'application/json'/*,
-                    Authorization: `JWT ${localStorage.getItem('storage_token')}`*/
+                    'Content-Type': 'application/json',
+                    Authorization: `JWT ${localStorage.getItem('storage_token')}`
                 }}
             ).then( response => {
                 console.log(response)
@@ -178,9 +180,11 @@ class MessageDetail extends Component{
             let year = date.getFullYear()
             let month = date.getMonth()+1
             let day = date.getDate()
+            let hour = date.getHours()
+            let minutes = date.getMinutes()
+            let secs = date.getSeconds()
 
-            let date_now = `${year}-${month}-${day}`
-
+            let date_now = `${year}-${month}-${day}T${hour}:${minutes}:${secs}Z`
             const msg_data = {
                 sender: this.props.app_state.user_primary_key,
                 receiver: this.state.receiver,
@@ -233,6 +237,7 @@ class MessageDetail extends Component{
             if(this.state.sender_mode){ //Senders may update or delete a message.
                 sender_stuff = <div>
                 <h2 className="message"> Sent to: {this.state.receiver_name}</h2>
+                <h2 className="message"> Date: {this.state.date}</h2>
                 <h2 className="message"> Title: {this.state.title}</h2>
                 <h5 className="message" > Message: <textarea defaultValue={this.state.content} onChange={this.handleContentChange} /></h5> 
                 <span style={{color: "red"}}>{this.state.errors["content"]}</span> <br/>
@@ -242,6 +247,7 @@ class MessageDetail extends Component{
             }else{ //Receivers may view a message and reply to it.
                 receiver_stuff = <div>
                 <h2 className="message"> Sent by: {this.state.sender_name}</h2>
+                <h2 className="message"> Date: {this.state.date}</h2>
                 <h2 className="message"> Title: {this.state.title}</h2>
                 <h5 className="message" > Message: {this.state.content}</h5> 
                 <h5 className="message" > Add a reply: <textarea onChange={this.handleReplyChange} /></h5> 

@@ -9,11 +9,6 @@
     left: -100px;
 }
 
-.price{
-    position: relative;
-    top: -155px;
-    left: -100px;
-}
 
 /* .wifi{
     position: relative;
@@ -50,12 +45,12 @@
 .elevator{
     position: relative;
     top: -240px;
+    margin-bottom: -240px;
 }
 
 
 .apply-with{
-    position: relative;
-    top: -240px;
+    
     border: none;
     border-radius: 8px;
     cursor: pointer;
