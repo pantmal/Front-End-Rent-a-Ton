@@ -172,7 +172,9 @@ class RoomImages extends Component{
     render(){
 
         //Defining a message if there weren't any results.
-        let not_found_msg = <h1 className="message">Sorry, nothing found</h1>
+        let not_found_msg = <div> <h1 className="message">Sorry, nothing found.</h1>
+        <button className="apply" onClick={this.props.history.goBack}>Go Back</button>
+        </div>
 
         //Message for navigation.
         let nav = <h1 className="message">Click on the existing images to either update them, or delete them.</h1>

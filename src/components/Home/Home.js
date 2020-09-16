@@ -241,17 +241,17 @@ class Home extends Component{
             search = <div>
                 <h1 className="message"> You can search for rooms by filling in the following form: </h1>
                 <form onSubmit={this.handleSearchFormSubmit}>
-                        <h2 className="message"> Enter neighborhood name here:<input name="hood" onChange={this.handleHoodChange} /></h2> 
+                        <h2 className="message"> Enter neighborhood name here: <input name="hood" onChange={this.handleHoodChange} /></h2> 
                         <span style={{color: "red"}}>{this.state.errors["hood"]}</span>
-                        <h2 className="message"> Enter city name here:<input name="city" onChange={this.handleCityChange} /></h2>
+                        <h2 className="message"> Enter city name here: <input name="city" onChange={this.handleCityChange} /></h2>
                         <span style={{color: "red"}}>{this.state.errors["city"]}</span>
-                        <h2 className="message"> Enter country name here:<input name="country" onChange={this.handleCountryChange} /></h2>
+                        <h2 className="message"> Enter country name here: <input name="country" onChange={this.handleCountryChange} /></h2>
                         <span style={{color: "red"}}>{this.state.errors["country"]}</span>
-                        <h2 className="message"> Enter starting date here:<input type="date" name="start_date" onChange={this.handleStartDateChange} /></h2>
+                        <h2 className="message"> Enter starting date here: <input type="date" name="start_date" onChange={this.handleStartDateChange} /></h2>
                         <span style={{color: "red"}}>{this.state.errors["s_date"]}</span>
-                        <h2 className="message"> Enter ending date here:<input type="date" name="end_date" onChange={this.handleEndDateChange} /></h2>
+                        <h2 className="message"> Enter ending date here: <input type="date" name="end_date" onChange={this.handleEndDateChange} /></h2>
                         <span style={{color: "red"}}>{this.state.errors["e_date"]}</span>
-                        <h2 className="message"> Enter number of people here:<input name="people" onChange={this.handlePeopleChange} /></h2>
+                        <h2 className="message"> Enter number of people here: <input name="people" onChange={this.handlePeopleChange} /></h2>
                         <span style={{color: "red"}}>{this.state.errors["people"]}</span>
                         <br/>
                         <button className="apply">Search</button>

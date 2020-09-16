@@ -737,7 +737,7 @@ class HostRoomDetail extends Component{
                     return(
                     <div>
                     <h1 className="message"> You may click <Link to={'/userMessages/type=rec'}>here</Link> to check your messages. </h1>    
-                    <h1 className="message"> You may update your room by filling in the form below: </h1>
+                    <h1 className="message"> You may update your room by editing its data: </h1>
                     <form onSubmit={this.handleFormSubmit}>
                         <h5 className="message" > Name: <input name="name" defaultValue={this.state.name} onChange={this.handleNameChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["name"]}</span>
@@ -773,7 +773,7 @@ class HostRoomDetail extends Component{
                         <h5 className="message" >Choose at least one picture that represents your property: <input type="file" accept='image/*' onChange={this.handleImageChange} /> </h5> <br/>
                         <div>
                         <span style={{color: "red"}}>{this.state.errors["picture"]}</span>
-                        <h5 className="message" > Click <Link to={`/roomImages/${this.state.room_id}`}>here</Link> to manage the other images related to this room </h5>
+                        <h5 className="message" > Click <Link to={`/roomImages/${this.state.room_id}`}>here</Link> to manage the other images related to this room. </h5>
                         </div>
                         <h5 className="message" > Number of beds: <input name="beds" defaultValue={this.state.beds} onChange={this.handleBedsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["beds"]}</span>

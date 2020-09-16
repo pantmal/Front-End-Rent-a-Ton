@@ -2,6 +2,8 @@ import React from 'react';
 import {Component} from 'react';
 import {Link} from 'react-router-dom';
 import ReactStars from "react-rating-stars-component";
+import AwesomeSlider from "react-awesome-slider";
+import AwesomeSliderStyles from 'react-awesome-slider/src/styles';
 
 import axios from '../AXIOS_conf'
 
@@ -464,9 +466,15 @@ class RenterRoomDetail extends Component{
                 <br/>
                 <h5 className="message"> Photos:</h5> 
                 {$imagePreview} <br/>
+
+                <h5 className="message"> Check out more images:</h5> 
+                {imagesPreviewUrls.length > 0 && (
+                <AwesomeSlider className='aws-btn' cssModule={AwesomeSliderStyles}>
                 {imagesPreviewUrls.map(function(imagePreviewUrl, i){
-                        return <div> <img key={i} src={imagePreviewUrl} style={{width:100,height: 100}} /> <br/> </div>
+                        return <div> <img key={i} src={imagePreviewUrl} style={{width:150,height: 150}} alt='' /> </div>
                 })}
+                </AwesomeSlider>)}
+                <br/>
                 <br/>
                 <h5 className="message">Amenities this room provides:</h5> 
                 <h5 className="message" > WiFi: {this.state.wifi ? '\u2705':'\u274c' } </h5> 
@@ -481,8 +489,8 @@ class RenterRoomDetail extends Component{
                 <h5 className="message">Total number of ratings: {this.state.count} </h5>
                 <br/>
                 <h5 className="message">Host information (click on the host to get to contact him!):</h5> 
-                <Link to={`/createMessage/${this.state.host_id}`}> <h5 className="message" > Host name: {this.state.host_username} </h5> </Link>
-                <Link to={`/createMessage/${this.state.host_id}`}> <h5 className="message" > Host picture: <img src={this.state.host_picture} style={{width:100,height: 100}}/> </h5> </Link>
+                <h5 className="message" ><Link to={`/createMessage/${this.state.host_id}`}>  Host name: {this.state.host_username} </Link></h5>
+                <h5 className="message" ><Link to={`/createMessage/${this.state.host_id}`}>  Host picture: <img src={this.state.host_picture} style={{width:100,height: 100}}/> </Link></h5>
                 <h5 className="message">Average number of ratings: {this.state.h_avg} (out of 5 stars) </h5>
                 <h5 className="message">Total number of ratings: {this.state.h_count} </h5>
                 

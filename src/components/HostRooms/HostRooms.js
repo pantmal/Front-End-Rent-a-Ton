@@ -5,6 +5,8 @@ import axios from '../AXIOS_conf'
 import ReactPaginate from 'react-paginate';
 import {Link} from 'react-router-dom';
 
+import './grid.css'
+
 //HostRooms component used for the rooms that belong to the host.
 class HostRooms extends Component{
 
@@ -83,14 +85,14 @@ class HostRooms extends Component{
             //Now we map each room to a React Fragment so it can be rendered.
             const postData = slice.map(pd =>
                 
-            //add a message if it's him!
-            //this url shit will change hopefully
             <React.Fragment>
-                <Link to={`/hostRooms/${pd.pk}`}><p className="message">Name: {pd.name}</p> </Link>
-                <Link to={`/hostRooms/${pd.pk}`}><img src={"http://localhost:8000"+pd.rep_photo} style={{width:250,height: 250}} alt=""/> </Link>
-                <p className="message">Price: {pd.total_price}</p>
-                <p className="message">Type: {pd.room_type}</p>
-                <p className="message">Beds: {pd.beds}</p>
+                <div class="grid-container">
+                <div class="grid-item2"><Link to={`/hostRooms/${pd.pk}`}><img src={"http://localhost:8000"+pd.rep_photo} style={{width:250,height: 250}} alt=""/> </Link></div>
+                <div class="grid-item"><p className="message-grid"> <Link to={`/hostRooms/${pd.pk}`}> Name: {pd.name}</Link> </p> </div>
+                <div class="grid-item"> <p className="message-grid">Price: {pd.total_price}</p> </div>
+                <div class="grid-item"> <p className="message-grid">Type: {pd.room_type}</p> </div>
+                <div class="grid-item"> <p className="message-grid">Beds: {pd.beds}</p> </div>
+                </div>
                 <hr/>
             </React.Fragment>)
     
@@ -121,7 +123,9 @@ class HostRooms extends Component{
 
     //Render function displays the rooms returned.
     render(){
-        let not_found_msg = <h1 className="message">Sorry, nothing found.</h1>
+        let not_found_msg = <div> <h1 className="message">Sorry, nothing found.</h1>
+        <button className="apply" onClick={this.props.history.goBack}>Go Back</button>
+        </div>
 
         let login_check = this.props.app_state.isLoggedIn;
         if (login_check){
@@ -149,6 +153,7 @@ class HostRooms extends Component{
 
                     return(
                         <div>
+                            <h1 className="message">Click on one of the rooms to get its detailed infromation.</h1>
                             {paginate}
                             {this.state.postData}
                             {paginate}

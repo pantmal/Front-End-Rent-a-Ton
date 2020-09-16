@@ -4,6 +4,7 @@ import {Component} from 'react';
 import {Link} from 'react-router-dom';
 
 import AwesomeSlider from "react-awesome-slider";
+import AwesomeSliderStyles from 'react-awesome-slider/src/styles';
 
 import axios from '../AXIOS_conf'
 import 'leaflet/dist/leaflet.css'
@@ -747,10 +748,8 @@ class HostPage extends Component{
                         <span style={{color: "red"}}>{this.state.errors["picture"]}</span>
                         <h5 className="message" >Add more images: </h5>
                         <input className="message" type="file" accept='image/*' onChange={this.handleMultipleImageChange} multiple/>
-                        {imagesPreviewUrls.map(function(imagePreviewUrl, i){
-                        return <div> <img key={i} src={imagePreviewUrl} style={{width:100,height: 100}} /> <br/> </div>
-                        })} 
                         </div>
+                        <h5 className="message">(Preview available at the end of the form!)</h5> 
                         <h5 className="message" > Number of beds: <input name="beds" onChange={this.handleBedsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["beds"]}</span>
                         <h5 className="message" > Number of bedrooms: <input name="bedrooms" onChange={this.handleBedroomsChange} /></h5> 
@@ -778,7 +777,18 @@ class HostPage extends Component{
                         <span style={{color: "red"}}>{this.state.errors["min_nights"]}</span> <br/>
                         <button className="apply">Add a new room</button>
                     </form>
-                    
+                    {imagesPreviewUrls.length > 0 && (
+                        <div>
+                        <h5 className="message">Additional images here:</h5> 
+                        <AwesomeSlider className='aws-btn' cssModule={AwesomeSliderStyles}>
+                        {imagesPreviewUrls.map(function(imagePreviewUrl, i){
+                        return <div> <img key={i} src={imagePreviewUrl} style={{width:150,height: 150}} /> <br/> </div>
+                        })} 
+                        </AwesomeSlider>
+                        </div>)}
+                    <br/>
+                    <br/>
+                    <br/>
                     </div>
                     )
                 }else{ //Denying access to non-approved hosts.

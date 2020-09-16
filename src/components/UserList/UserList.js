@@ -38,21 +38,23 @@ class UserList extends Component{
 
                 //check results if picture is null
                 const data = res.data;
-                
+                console.log(data)
                 //Getting a slice of the data according to the offset of the page we're on.
                 const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
 
-                //Now we map each room to a React Fragment so it can be rendered.
+                //Now we map each user to a React Fragment so it can be rendered.
                 const postData = slice.map(pd =>
                 <React.Fragment>
-                    <Link to={`/userList/${pd.pk}`}> <p>Username: {pd.username}</p> </Link>
-                    <Link to={`/userList/${pd.pk}`}><img src={pd.picture} style={{width:250,height: 250}} alt=""/> </Link> <br/>
-                    <p className="message">Fist name: {pd.first_name}</p>
-                    <p className="message">Last name: {pd.last_name}</p>
-                    <p className="message"> Admin: {pd.is_staff ? '\u2705':'\u274c'}</p>
-                    <p className="message"> Host: {pd.is_host ? '\u2705':'\u274c'}</p>
-                    <p className="message"> Renter: {pd.is_renter ? '\u2705':'\u274c'}</p>
-                    <p className="message"> Approved: {pd.approved ? '\u2705':'\u274c'}</p>
+                    <div class="grid-container">
+                    <div class="grid-item2"><Link to={`/userList/${pd.pk}`}><img src={pd.picture} style={{width:250,height: 250}} alt=""/> </Link> <br/></div>
+                    <div class="grid-item3"><p className="message-grid"><Link to={`/userList/${pd.pk}`}> Username: {pd.username} </Link> </p></div>
+                    <div class="grid-item"><p className="message-grid">Fist name: {pd.first_name}</p></div>
+                    <div class="grid-item"><p className="message-grid">Last name: {pd.last_name}</p></div>
+                    <div class="grid-item"><p className="message-grid"> Admin: {pd.is_staff ? '\u2705':'\u274c'}</p></div>
+                    <div class="grid-item"><p className="message-grid"> Host: {pd.is_host ? '\u2705':'\u274c'}</p></div>
+                    <div class="grid-item"><p className="message-grid"> Renter: {pd.is_renter ? '\u2705':'\u274c'}</p></div>
+                    <div class="grid-item"><p className="message-grid"> Approved: {pd.approved ? '\u2705':'\u274c'}</p></div>
+                    </div>
                     <hr/> 
                 </React.Fragment>)
 

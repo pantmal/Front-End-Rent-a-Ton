@@ -190,6 +190,11 @@ class Register extends Component{
             formIsValid = false;
             errors['role'] = '\u2757Pick at least one role'
         }
+
+        if(this.state.picture == ''){
+            formIsValid = false;
+            errors["picture"] = "\u2757Cannot be empty";
+        }
         
 
         this.setState({errors: errors});
@@ -302,6 +307,7 @@ class Register extends Component{
                         <span style={{color: "red"}}>{this.state.errors["role"]}</span> <br/>
                         {$imagePreview} <br/>
                         <h5 className="message" >Choose your picture here: <input type="file" accept='image/*' onChange={this.handleImageChange} /> </h5> <br/> <br/>
+                        <span style={{color: "red"}}>{this.state.errors["picture"]}</span> <br/>
                         <button className="apply" >Submit!</button>
                     </form>
                 </div>

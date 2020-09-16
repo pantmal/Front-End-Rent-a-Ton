@@ -6,6 +6,8 @@ import {Link} from 'react-router-dom';
 
 import axios from '../AXIOS_conf'
 
+import './message-grid.css'
+
 //MessageList component so a user may see his list of messages, sent and received.
 class MessageList extends Component{
 
@@ -84,7 +86,7 @@ class MessageList extends Component{
                     //Now we map each message to a React Fragment so it can be rendered.
                     const postData = slice.map(pd =>
                     <React.Fragment>
-                        <Link to={`/userMessageDetail/${pd.pk}`}> <p>Title: {pd.title}</p> </Link>
+                        <p className="message"><Link to={`/userMessageDetail/${pd.pk}`}> Title: {pd.title} </Link> </p>
                         <p className="message">Sent to: {pd.receiver_name}</p>
                         <p className="message">Date: {pd.date}</p>
                         <hr/> 
@@ -127,9 +129,11 @@ class MessageList extends Component{
                     const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
                     const postData = slice.map(pd =>
                     <React.Fragment>
-                        <Link to={`/userMessageDetail/${pd.pk}`}> <p>Title: {pd.title}</p> </Link>
-                        <p className="message"> Sent by: {pd.sender_name}</p>
-                        <p className="message">Date: {pd.date}</p>
+                        <div class="grid-container-msg">
+                        <div class="grid-item-msg"><p className="message-grid"><Link to={`/userMessageDetail/${pd.pk}`}> Title: {pd.title}</Link> </p></div>
+                        <div class="grid-item-msg"><p className="message-grid"> Sent by: {pd.sender_name}</p> </div>
+                        <div class="grid-item-msg"><p className="message-grid"> Date: {pd.date}</p> </div>
+                        </div>
                         <hr/> 
                     </React.Fragment>)
     

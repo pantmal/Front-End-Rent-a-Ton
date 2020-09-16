@@ -3,6 +3,7 @@ import './App.css';
 
 import {Component} from 'react';
 import {Switch, Route, withRouter } from 'react-router-dom';
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import NavbarClass from '../Navbar/Navbar'
 import Register from '../Register/Register'

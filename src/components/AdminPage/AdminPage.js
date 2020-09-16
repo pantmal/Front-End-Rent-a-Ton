@@ -75,7 +75,7 @@ class AdminPage extends Component{
         }else{ //Rendering the page.
             return(
                 <div>
-                <h1 className="message">Welcome dear admin. You make click <Link to={'/userList/'}><span>here</span> </Link> to manage users. </h1>
+                <h1 className="message">Welcome dear admin. You make click <Link to={'/userList/'}><span>here</span></Link> to manage users. </h1>
                 <h1 className="message">If you want to export data choose between <button className="apply" onClick={this.handleXMLClick}>XML</button> or <button className="apply" onClick={this.handleJSONClick}>JSON</button> format. </h1>
                 </div>
             )
