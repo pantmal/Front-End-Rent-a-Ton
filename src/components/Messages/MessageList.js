@@ -74,9 +74,8 @@ class MessageList extends Component{
 
                     const data = response.data;
 
+                    //Sorting messages by date
                     data.sort(function(a,b){
-                        // Turn your strings into dates, and then subtract them
-                        // to get a value that is either negative, positive, or zero.
                         return new Date(b.date) - new Date(a.date);
                     });
                     
@@ -86,9 +85,11 @@ class MessageList extends Component{
                     //Now we map each message to a React Fragment so it can be rendered.
                     const postData = slice.map(pd =>
                     <React.Fragment>
-                        <p className="message"><Link to={`/userMessageDetail/${pd.pk}`}> Title: {pd.title} </Link> </p>
-                        <p className="message">Sent to: {pd.receiver_name}</p>
-                        <p className="message">Date: {pd.date}</p>
+                        <div class="grid-container-msg">
+                        <div class="grid-item-msg"><p className="message-grid"><Link to={`/userMessageDetail/${pd.pk}`}> Title: {pd.title} </Link> </p></div>
+                        <div class="grid-item-msg"><p className="message-grid">Sent to: {pd.receiver_name}</p></div>
+                        <div class="grid-item-msg"><p className="message-grid">Date: {pd.date}</p></div>
+                        </div>
                         <hr/> 
                     </React.Fragment>)
     
@@ -120,9 +121,8 @@ class MessageList extends Component{
                 }else{
                     const data = response.data;
 
+                    //Sorting messages by date
                     data.sort(function(a,b){
-                        // Turn your strings into dates, and then subtract them
-                        // to get a value that is either negative, positive, or zero.
                         return new Date(b.date) - new Date(a.date);
                     });
 

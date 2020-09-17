@@ -39,11 +39,7 @@ class ViewMap extends Component{
         }).addTo(this.map)
 
 
-        //let marker = L.marker([this.props.form_state.lat, this.props.form_state.lng]).addTo(this.map);
-        //marker.bindPopup("This is your original location.").openPopup()
-        this.map.on('mouseover', this.popupPop);
-
-        
+        this.map.on('mouseover', this.popupPop);        
     }
 
     //Rendering the map.

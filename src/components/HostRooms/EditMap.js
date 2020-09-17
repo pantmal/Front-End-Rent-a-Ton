@@ -53,13 +53,9 @@ class EditMap extends Component{
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(this.map)
 
-
-        //let marker = L.marker([this.props.form_state.lat, this.props.form_state.lng]).addTo(this.map);
-        //marker.bindPopup("This is your original location.").openPopup();
-        this.map.on('click', this.onMapClick);
-        this.map.on('mouseover', this.popupPop);
-
         
+        this.map.on('click', this.onMapClick);
+        this.map.on('mouseover', this.popupPop);        
     }
 
     //Rendering the map.

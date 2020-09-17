@@ -58,8 +58,6 @@ class RenterRooms extends Component{
 
                 //Now we map each room to a React Fragment so it can be rendered.
                 const postData = slice.map(pd =>
-                //add a message if it's him!
-                //this url shit will change hopefully
                 <React.Fragment>
                     <div class="grid-container">
                     <div class="grid-item2"><Link to={`/renterRooms/${pd.pk}`}><img src={"http://localhost:8000"+pd.rep_photo} style={{width:250,height: 250}} alt=""/> </Link> </div>

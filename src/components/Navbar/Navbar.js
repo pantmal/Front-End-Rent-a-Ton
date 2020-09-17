@@ -44,27 +44,21 @@ class NavbarClass extends Component{
             //Defining links for the Admin and Host pages.
             if (this.props.app_state.isAdmin){
                 role = 'admin'
-                //admin_link = <Link to={'/adminPage/'}><button className="admin-host"><span>Admin Page</span></button> </Link>
                 admin_link = <button className="admin-host" onClick={this.handleAdminPageClick} ><span>Admin Page</span></button>
             }else if(this.props.app_state.isHost && !this.props.app_state.isRenter ){
                 role = 'host'
-                //host_link = <Link to={'/hostPage/'}> <button className="admin-host"><span>Host Page</span></button> </Link>
                 host_link = <button className="admin-host" onClick={this.handleHostPageClick} ><span>Host Page</span></button>
             }else if(this.props.app_state.isRenter && !this.props.app_state.isHost){
                 role = 'renter'
             }else if(this.props.app_state.isRenter && this.props.app_state.isHost){
                 role = 'host and renter'
-                //host_link = <Link to={'/hostPage/'}> <button className="admin-host"><span>Host Page</span></button> </Link>
                 host_link = <button className="admin-host" onClick={this.handleHostPageClick} ><span>Host Page</span></button>
-            }else{
+            }else{ //Debug purpose only.
                 role = 'um...'
             }
 
-            //Link for the Edit Profile page.
-            //edit_link = <Link to={`/editProfile/${this.props.app_state.user_primary_key}`}> <button className="edit" ><span>Edit Profile</span></button> </Link>
-            // edit_link = <button className="editProfile" onClick={this.handleEditClick} ><span>Edit Profile</span></button>
-
-            //Returning a link to the home page, the other pages if needed, and a Logout button.
+            
+            //Returning a link to the home page, the other pages if needed, a link to the Edit Profile and a Logout button.
             return(
         
                 <nav className="nav">
@@ -86,8 +80,6 @@ class NavbarClass extends Component{
                 <Link to="/"><h3><span className="logo">Rent-a-Ton</span></h3></Link> 
                 <button className="register" onClick={this.handleRegisterClick} ><span>Register</span></button>
                 <button className="login" onClick={this.handleNavLogInClick} ><span>Login</span></button>
-                {/* <Link to="/register"><button className="register"><span >Register</span></button></Link> */}
-                {/* <Link to="/login"><button className="login" ><span >Login</span></button></Link> */}
             </nav>
 
         )

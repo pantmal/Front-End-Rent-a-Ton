@@ -95,10 +95,8 @@ class RoomImages extends Component{
                     const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
                     //console.log(slice)
 
-                    //Now we map each room to a React Fragment so it can be rendered.
+                    //Now we map each image to a React Fragment so it can be rendered.
                     const postData = slice.map(pd =>
-                 
-                    //this url shit will change hopefully
                     <React.Fragment>
                         <Link to={`/roomImageDetail/${pd.pk}`}><img src={"http://localhost:8000"+pd.picture} style={{width:250,height: 250}} alt=""/> </Link>
                         <hr/>
