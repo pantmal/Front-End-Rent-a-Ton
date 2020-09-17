@@ -3,7 +3,6 @@ import './App.css';
 
 import {Component} from 'react';
 import {Switch, Route, withRouter } from 'react-router-dom';
-import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 import NavbarClass from '../Navbar/Navbar'
 import Register from '../Register/Register'
@@ -35,7 +34,7 @@ class App extends Component {
     super(props);
 
     let login_check = false 
-    if (localStorage.getItem('storage_token')){ //If there is a token in the local storage it means the user is logged in.
+    if (localStorage.getItem('storage_token')){ //A token in the local storage means the user is logged in.
       login_check = true
     }
 
@@ -43,9 +42,14 @@ class App extends Component {
     if (localStorage.getItem('storage_pk')){ //Here we will get the primary key of the user, if he is logged in.
       user_id = localStorage.getItem('storage_pk') 
     }
+
+    let username_check = ''
+    if (localStorage.getItem('storage_username')){ //Here we will get the username, if he is logged in.
+      username_check = localStorage.getItem('storage_username') 
+    }
     
     this.state = { //This information will be used in all the other components rendered through the App.
-      username: '',
+      username: username_check,
       user_primary_key: user_id,
       isLoggedIn: login_check,
       isAdmin: false,
@@ -57,10 +61,48 @@ class App extends Component {
 
     this.handleLoginSubmission = this.handleLoginSubmission.bind(this)
     this.handleLogoutClick = this.handleLogoutClick.bind(this)
+    this.setLoggedInState = this.setLoggedInState.bind(this)
     this.setDefaultState = this.setDefaultState.bind(this)
+    this.setAdminRole = this.setAdminRole.bind(this)
+    this.setHostRole = this.setHostRole.bind(this)
+    this.setRenterRole = this.setRenterRole.bind(this)
+    this.setDoubleRole = this.setDoubleRole.bind(this)
 
   }
 
+  //Functions used for role settings.
+
+  setAdminRole = () => {
+    this.setState({
+      isAdmin: true,
+      isHost: false,
+      isRenter: false
+    });
+  }
+
+  setHostRole = () => {
+    this.setState({
+      isAdmin: false,
+      isHost: true,
+      isRenter: false
+    });
+  }
+
+  setRenterRole = () => {
+    this.setState({
+      isAdmin: false,
+      isHost: false,
+      isRenter: true
+    });
+  }
+
+  setDoubleRole = () => {
+    this.setState({
+      isAdmin: false,
+      isHost: true,
+      isRenter: true
+    });
+  }
   
   componentDidMount(){ //The following code is used when the user refreshes the page, or if he closes the tab and reopens it. If he is still logged in, we must set the state with his information.
 
@@ -73,45 +115,37 @@ class App extends Component {
           Authorization: `JWT ${localStorage.getItem('storage_token')}`
         }}*/).then( response => { 
            
-           //Setting the state with the information we retrieved.
-           const user = response.data;
-           this.setState({
-             username: user.username
-           })
+          //Setting the state with the information we retrieved.
+          const user = response.data;
 
           //Assigning the correct role.
-          if (user.is_staff === true){ 
-            this.setState({
-              isAdmin: true,
-              isHost: false,
-              isRenter: false
-            });
+          if (user.is_staff){ 
+            this.setAdminRole();
           }
           if (user.is_host && !user.is_renter ){
-            this.setState({
-              isAdmin: false,
-              isHost: true,
-              isRenter: false
-            });
+            this.setHostRole();
           }
           if (!user.is_host && user.is_renter ){
-            this.setState({
-              isAdmin: false,
-              isHost: false,
-              isRenter: true
-            });
+            this.setRenterRole();
           }
           if (user.is_host && user.is_renter ){
-            this.setState({
-              isAdmin: false,
-              isHost: true,
-              isRenter: true
-            });
+            this.setDoubleRole();
           }
+
         }
       ).catch(error => {console.log(error.response);})
     }
   }
+
+  //State used by logged in users.
+  setLoggedInState = (pk, username) => {
+    this.setState({
+      isLoggedIn: true,
+      user_primary_key: pk,
+      username: username
+    });
+  }
+
 
   //Handling a login submission. This handling must be done in the App component because information such as whether the user is logged in or not is used in every other compoenent.
   handleLoginSubmission = (credentials) =>{
@@ -128,13 +162,10 @@ class App extends Component {
       
       const res_user = response.data.user;
       localStorage.setItem('storage_pk',res_user.pk);
+      localStorage.setItem('storage_username',res_user.username);
 
       //Updating the state.
-      this.setState({
-        isLoggedIn: true,
-        user_primary_key: res_user.pk,
-        username: res_user.username
-      });
+      this.setLoggedInState(res_user.pk, res_user.username);
 
       //Getting from the server the user item we located
       axios.get(`users/userList/${this.state.user_primary_key}`/*,
@@ -147,33 +178,17 @@ class App extends Component {
           const user = response.data;
 
           //Assigning the correct role.
-          if (user.is_staff === true){ 
-            this.setState({
-              isAdmin: true,
-              isHost: false,
-              isRenter: false
-            });
+          if (user.is_staff){ 
+            this.setAdminRole();
           }
           if (user.is_host && !user.is_renter ){
-            this.setState({
-              isAdmin: false,
-              isHost: true,
-              isRenter: false
-            });
+            this.setHostRole();
           }
           if (!user.is_host && user.is_renter ){
-            this.setState({
-              isAdmin: false,
-              isHost: false,
-              isRenter: true
-            });
+            this.setRenterRole();
           }
           if (user.is_host && user.is_renter ){
-            this.setState({
-              isAdmin: false,
-              isHost: true,
-              isRenter: true
-            });
+            this.setDoubleRole();
           }
         }
       )

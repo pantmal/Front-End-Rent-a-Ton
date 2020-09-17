@@ -710,6 +710,7 @@ class HostPage extends Component{
                     return(
                     <div>
                     <h1 className="message">You may click  <Link to={'/hostRooms/'}><span>here</span> </Link> to manage your existing rooms, or </h1>
+                    <h1 className="message"> You may click <Link to={'/userMessages/type=rec'}>here</Link> to check your messages, or </h1>    
                     <h1 className="message"> You may add a new room by filling in the form below: </h1>
                     <form onSubmit={this.handleFormSubmit}>
                         <h5 className="message" > Name: <input name="name" onChange={this.handleNameChange} /></h5> 
