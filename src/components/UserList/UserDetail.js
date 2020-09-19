@@ -16,7 +16,9 @@ class UserDetail extends Component{
             email: '',
             phone: '',
             picture: '',
+            admin: false,
             host: false,
+            renter: false,
             approval: false
         }
 
@@ -43,6 +45,8 @@ class UserDetail extends Component{
                     email: res_user.email,
                     phone: res_user.telephone,
                     host: res_user.is_host,
+                    admin: res_user.is_staff,
+                    renter: res_user.is_renter,
                     approval: res_user.approved
                 })
             }
@@ -104,8 +108,11 @@ class UserDetail extends Component{
                     <div className="message">Profile picture: <img src={this.state.picture} style={{width:500,height: 500}} /> </div> <br/>
                     <div className="message">First name: {this.state.first_name}</div>  <br/>  
                     <div className="message">Last name: {this.state.last_name}</div>   <br/> 
-                    <div className="message">Email: {this.state.email}</div>   <br/> 
-                    <div className="message">Phone: {this.state.phone}</div>   <br/> 
+                    <div className="message">Email: {this.state.email}</div>  <br/> 
+                    <div className="message">Phone: {this.state.phone}</div>  <br/> 
+                    <div className="message">Admin: {this.state.admin ? '\u2705':'\u274c'}</div> <br/>
+                    <div className="message">Host: {this.state.host ? '\u2705':'\u274c'} </div> <br/>
+                    <div className="message">Renter: {this.state.renter ? '\u2705':'\u274c'} </div> <br/>
                     {button_obj}        
                 </div>
             )

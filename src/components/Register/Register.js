@@ -279,7 +279,7 @@ class Register extends Component{
         let login_check = this.props.app_state.isLoggedIn;
         if (login_check === true){ //Appropriate message for users who are already logged in.
             return(
-                <h1>You are already logged in!</h1>
+                <h1 className="message">You are already a registered user!</h1>
             )
         }else{ //Defining the register form.
             return(

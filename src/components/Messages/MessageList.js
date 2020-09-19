@@ -186,7 +186,7 @@ class MessageList extends Component{
 
         if(this.props.app_state.isRenter || this.props.app_state.isHost){
 
-            let create_str = <h1 className="message">You may click <Link to={'/createMessage/'}><span>here</span> </Link> to create a new message. </h1>
+            let create_str = <h1 className="message">You may click <Link to={'/createMessage/'}><span>here</span></Link> to create a new message. </h1>
             let sent = <button className="apply" onClick={this.handleSentButton}>Go to Sent messages</button>
             let received = <button className="apply" onClick={this.handleReceivedButton}>Go to Received messages</button>
 
@@ -197,7 +197,7 @@ class MessageList extends Component{
             let view_msg
             if (this.state.not_found === false){
 
-
+                //Letting the user know what messages he is currently viewing.
                 if(this.state.sender_mode){
                     type = 'sent'
                 }else{

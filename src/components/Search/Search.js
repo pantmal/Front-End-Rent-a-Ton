@@ -230,7 +230,8 @@ class Search extends Component{
 
                 //Sorting the items according to their price.
                 price_data.sort( (a, b) => parseFloat(a.total_price) - parseFloat(b.total_price) )
-                console.log(price_data)
+                //console.log(price_data)
+                
                 //Getting a slice of the data according to the offset of the page we're on.
                 let slice = price_data.slice(this.state.offset, this.state.offset + this.state.perPage)
                 //console.log(slice)
@@ -405,9 +406,9 @@ class Search extends Component{
                 search_values += `&elevator=${this.state.elevator}`
             }
 
-            console.log(search_values)
+            //console.log(search_values)
         
-            //Updating the URL and reloading the component.
+            //Updating the URL and reloading the page.
             this.props.history.push({pathname:'/search/', search: search_values})
             window.location.reload();
 
@@ -438,7 +439,6 @@ class Search extends Component{
 
 
         let not_found_msg = <div> <h1 className="message">Sorry, nothing found.</h1>
-        <button className="apply" onClick={this.props.history.goBack}>Go Back</button>
         </div>
 
 

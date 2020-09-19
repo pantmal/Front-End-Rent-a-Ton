@@ -464,10 +464,12 @@ class RenterRoomDetail extends Component{
                 <h5 className="message" > Starting price: {this.state.price} </h5> 
                 <h5 className="message" > Price per extra person: {this.state.extra_price}</h5> 
                 <br/>
-                <h5 className="message"> Photos:</h5> 
+                <h5 className="message"> Main photograph:</h5> 
                 {$imagePreview} <br/>
 
+                {imagesPreviewUrls.length > 0 && (    
                 <h5 className="message"> Check out more images:</h5> 
+                )}
                 {imagesPreviewUrls.length > 0 && (
                 <AwesomeSlider className='aws-btn' cssModule={AwesomeSliderStyles}>
                 {imagesPreviewUrls.map(function(imagePreviewUrl, i){
@@ -488,7 +490,7 @@ class RenterRoomDetail extends Component{
                 <h5 className="message">Average number of ratings: {this.state.avg} (out of 5 stars) </h5>
                 <h5 className="message">Total number of ratings: {this.state.count} </h5>
                 <br/>
-                <h5 className="message">Host information (click on the host to get to contact him!):</h5> 
+                <h5 className="message">Host information (click on the host to contact him!):</h5> 
                 <h5 className="message" ><Link to={`/createMessage/${this.state.host_id}`}>  Host name: {this.state.host_username} </Link></h5>
                 <h5 className="message" ><Link to={`/createMessage/${this.state.host_id}`}>  Host picture: <img src={this.state.host_picture} style={{width:100,height: 100}}/> </Link></h5>
                 <h5 className="message">Average number of ratings: {this.state.h_avg} (out of 5 stars) </h5>
