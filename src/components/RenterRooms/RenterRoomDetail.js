@@ -276,11 +276,11 @@ class RenterRoomDetail extends Component{
                 axios.post('rooms/ratCount/',revData, {headers: {
                         'Content-Type': 'application/json'
                 }}).then(response => {
-                console.log(response.data)
-                this.setState({
-                    count: response.data.count,
-                    avg: response.data.avg.rating__avg
-                })  
+                    //console.log(response.data)
+                    this.setState({
+                        count: response.data.count,
+                        avg: response.data.avg.rating__avg
+                    })  
                 }).catch(error => {console.log(error.response);})
 
                 //Getting host ratings count and average number.

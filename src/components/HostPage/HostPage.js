@@ -691,7 +691,7 @@ class HostPage extends Component{
                     
     }
 
-    //Render function provides a link to the existing rooms and a form to add a new one.
+    //Render function provides a link to the existing rooms, a link to the host's messages and a form to add a new room.
     render(){
 
         let {imagePreviewUrl} = this.state;

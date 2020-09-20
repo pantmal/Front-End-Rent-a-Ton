@@ -786,18 +786,18 @@ class HostRoomDetail extends Component{
                         <h5 className="message" > Description: <textarea defaultValue={this.state.desc} onChange={this.handleDescChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["desc"]}</span>
                         <h5 className="message">Amenities this room provides:</h5> 
-                        <h5 className="message" > WiFi:<input type="checkbox" name="WiFi" defaultChecked={this.state.wifi} onChange={this.handleWiFiChange}/></h5> 
-                        <h5 className="message" > Freezer:<input type="checkbox" name="Freezer" defaultChecked={this.state.freezer} onChange={this.handleFreezerChange}/></h5> 
-                        <h5 className="message" > Heating:<input type="checkbox" name="Heating" defaultChecked={this.state.heating} onChange={this.handleHeatingChange}/></h5> 
-                        <h5 className="message" > Kitchen:<input type="checkbox" name="Kitchen" defaultChecked={this.state.kitchen} onChange={this.handleKitchenChange}/></h5> 
-                        <h5 className="message" > TV:<input type="checkbox" name="TV" defaultChecked={this.state.TV} onChange={this.handleTVChange}/></h5> 
-                        <h5 className="message" > Parking:<input type="checkbox" name="Parking" defaultChecked={this.state.parking} onChange={this.handleParkingChange}/></h5> 
-                        <h5 className="message" > Elevator:<input type="checkbox" name="Elevator" defaultChecked={this.state.elevator} onChange={this.handleElevatorChange}/></h5> 
-                        <h5 className="message" > Living room:<input type="checkbox" name="LivingRoom" defaultChecked={this.state.living_room} onChange={this.handleLivingRoomChange}/></h5> 
+                        <h5 className="message" > WiFi:<input type="checkbox" name="WiFi" defaultChecked={this.state.wifi} onChange={this.handleWiFiChange}/> Currently:{this.state.wifi ? '\u2705':'\u274c'} </h5> 
+                        <h5 className="message" > Freezer:<input type="checkbox" name="Freezer" defaultChecked={this.state.freezer} onChange={this.handleFreezerChange}/> Currently:{this.state.freezer ? '\u2705':'\u274c'} </h5> 
+                        <h5 className="message" > Heating:<input type="checkbox" name="Heating" defaultChecked={this.state.heating} onChange={this.handleHeatingChange}/> Currently:{this.state.heating ? '\u2705':'\u274c'}</h5> 
+                        <h5 className="message" > Kitchen:<input type="checkbox" name="Kitchen" defaultChecked={this.state.kitchen} onChange={this.handleKitchenChange}/> Currently:{this.state.kitchen ? '\u2705':'\u274c'}</h5> 
+                        <h5 className="message" > TV:<input type="checkbox" name="TV" defaultChecked={this.state.TV} onChange={this.handleTVChange}/> Currently:{this.state.TV ? '\u2705':'\u274c'}</h5> 
+                        <h5 className="message" > Parking:<input type="checkbox" name="Parking" defaultChecked={this.state.parking} onChange={this.handleParkingChange}/> Currently:{this.state.parking ? '\u2705':'\u274c'}</h5> 
+                        <h5 className="message" > Elevator:<input type="checkbox" name="Elevator" defaultChecked={this.state.elevator} onChange={this.handleElevatorChange}/>Currently:{this.state.elevator ? '\u2705':'\u274c'} </h5> 
+                        <h5 className="message" > Living room:<input type="checkbox" name="LivingRoom" defaultChecked={this.state.living_room} onChange={this.handleLivingRoomChange}/> Currently:{this.state.living_room ? '\u2705':'\u274c'}</h5> 
                         <h5 className="message">Specify rules:</h5> 
-                        <h5 className="message" > Smoking:<input type="checkbox" name="Smoking" defaultChecked={this.state.smoking} onChange={this.handleSmokingChange}/></h5> 
-                        <h5 className="message" > Pets:<input type="checkbox" name="Pets" defaultChecked={this.state.pets} onChange={this.handlePetsChange}/></h5> 
-                        <h5 className="message" > Events:<input type="checkbox" name="Events" defaultChecked={this.state.events} onChange={this.handleEventsChange}/></h5> 
+                        <h5 className="message" > Smoking:<input type="checkbox" name="Smoking" defaultChecked={this.state.smoking} onChange={this.handleSmokingChange}/> Currently:{this.state.smoking ? '\u2705':'\u274c'}</h5> 
+                        <h5 className="message" > Pets:<input type="checkbox" name="Pets" defaultChecked={this.state.pets} onChange={this.handlePetsChange}/> Currently:{this.state.pets ? '\u2705':'\u274c'}</h5> 
+                        <h5 className="message" > Events:<input type="checkbox" name="Events" defaultChecked={this.state.events} onChange={this.handleEventsChange}/> Currently:{this.state.events ? '\u2705':'\u274c'}</h5> 
                         <h5 className="message" > Minimum nights: <input name="min_nights" defaultValue={this.state.min_nights} onChange={this.handleMinNightsChange} /></h5> 
                         <span style={{color: "red"}}>{this.state.errors["min_nights"]}</span> <br/>
                         <button className="apply">Update your room</button>
