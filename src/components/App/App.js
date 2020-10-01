@@ -266,6 +266,9 @@ class App extends Component {
   }
 }
 
+
 //Exporting App with the 'withRouter' function so it can use the Route props (history for example).
 //The wrapping around BrowserRouter which is necessary for the App to use the Router props is done in the index.js file.
 export default withRouter(App)
+
+
